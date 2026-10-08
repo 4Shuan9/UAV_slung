@@ -29,30 +29,6 @@ This project is refactored from [rain_ws](https://github.com/RainbowSeeker/rain_
 | Gazebo Harmonic | 8.x |
 | ros_gz_bridge | gzharmonic |
 
-## Project Structure
-
-```text
-UAV_slung/
-├── docs/                       # Project notes and documentation
-├── media/                      # Images / demos used by the documentation
-├── ros2_ws/
-│   └── src/
-│       └── slung_ctrl/         # ROS 2 estimation and control package
-├── sim/
-│   ├── models/                 # Project-specific Gazebo models
-│   └── worlds/                 # Project-specific Gazebo worlds
-├── data_analysis/              # MATLAB / Python / CSV analysis tools
-└── README.md
-```
-
-The external PX4 source tree is expected to remain at:
-
-```text
-~/PX4-Autopilot
-```
-
-and is **not** included inside this repository.
-
 ## Build
 
 ```bash
@@ -119,26 +95,6 @@ ros2 launch slung_ctrl slung_antiswing_square.launch.py
 ```
 
 > Run only **one** flight-control launch at a time to avoid multiple nodes publishing conflicting PX4 Offboard setpoints.
-
-## Useful Checks
-
-Check PX4 → ROS 2 communication:
-
-```bash
-ros2 topic hz /fmu/out/vehicle_odometry
-```
-
-Check the vision payload-pose topic:
-
-```bash
-ros2 topic echo /uav/cv/payload_pose
-```
-
-List the active ROS 2 nodes:
-
-```bash
-ros2 node list
-```
 
 ## PlotJuggler
 
