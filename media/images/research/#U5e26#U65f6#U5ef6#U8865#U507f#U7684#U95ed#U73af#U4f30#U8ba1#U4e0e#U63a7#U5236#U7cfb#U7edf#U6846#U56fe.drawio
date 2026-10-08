@@ -1,0 +1,77 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="第 1 页" id="OfyVDDkq67pef5q7xg6h">
+    <mxGraphModel dx="1336" dy="801" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-104" parent="1" style="ellipse;aspect=fixed;strokeWidth=2;whiteSpace=wrap;fillColor=light-dark(#E64532,#E64532);strokeColor=light-dark(#000000,#000000);fontColor=light-dark(#000000,#000000);labelBackgroundColor=none;textShadow=0;fontFamily=Times New Roman;fontSize=14;fontStyle=1" value="UAV &amp;&#xa;Slung Load" vertex="1">
+          <mxGeometry height="92" width="92" x="204" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-105" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#F5A65B,#F5A65B);strokeColor=light-dark(#000000,#000000);fontColor=light-dark(#000000,#000000);rotation=0;fontFamily=Times New Roman;labelBackgroundColor=none;fontSize=14;fontStyle=1" value="Camera" vertex="1">
+          <mxGeometry height="50" width="120" x="50" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-106" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#F5A65B,#F5A65B);strokeColor=light-dark(#000000,#000000);fontColor=light-dark(#000000,#000000);rotation=0;fontFamily=Times New Roman;labelBackgroundColor=none;fontSize=14;fontStyle=1" value="IMU / Flight Ctrl" vertex="1">
+          <mxGeometry height="50" width="120" x="190" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-107" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#F5A65B,#F5A65B);strokeColor=light-dark(#000000,#000000);fontColor=light-dark(#000000,#000000);rotation=0;fontFamily=Times New Roman;labelBackgroundColor=none;fontSize=14;fontStyle=1" value="Vision Algorithm &#xa; Delay: Δt" vertex="1">
+          <mxGeometry height="60" width="120" x="50" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-108" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#F6E09D,#F6E09D);strokeColor=light-dark(#000000,#000000);fontColor=light-dark(#000000,#000000);rotation=0;fontFamily=Times New Roman;labelBackgroundColor=none;fontSize=14;fontStyle=1" value="Forward Predictor &#xa; &amp; Fusion" vertex="1">
+          <mxGeometry height="60" width="160" x="129" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-109" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=light-dark(#44A05C,#44A05C);strokeColor=light-dark(#000000,#000000);fontColor=light-dark(#000000,#000000);rotation=0;fontFamily=Times New Roman;labelBackgroundColor=none;fontSize=14;fontStyle=1" value="Anti-Swing &#xa; Controller" vertex="1">
+          <mxGeometry height="60" width="160" x="170" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-110" edge="1" parent="1" source="eBz_ZRnFpisge1-WPfQX-104" style="curved=1;dashed=1;dashPattern=2 3;startArrow=none;endArrow=block;exitX=0;exitY=0.5;entryX=0.5;entryY=0;rounded=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;fontFamily=Times New Roman;labelBackgroundColor=light-dark(#FFFFFF,#FFFFFF);fontSize=14;fontColor=light-dark(#000000,#000000);fontStyle=1;strokeWidth=2;" target="eBz_ZRnFpisge1-WPfQX-105" value="Visual Feature">
+          <mxGeometry relative="1" x="0.3481" y="20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="110" y="90" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-111" edge="1" parent="1" source="eBz_ZRnFpisge1-WPfQX-104" style="curved=1;dashed=1;dashPattern=2 3;startArrow=none;endArrow=block;entryX=0.5;entryY=0;rounded=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Times New Roman;labelBackgroundColor=light-dark(#FFFFFF,#FFFFFF);fontSize=14;fontColor=light-dark(#000000,#000000);fontStyle=1;strokeWidth=2;" target="eBz_ZRnFpisge1-WPfQX-106" value="Rigid Motion">
+          <mxGeometry relative="1" x="-0.0526" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points" />
+            <mxPoint x="330" y="140" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-112" edge="1" parent="1" source="eBz_ZRnFpisge1-WPfQX-105" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;labelBackgroundColor=light-dark(#FFFFFF,#FFFFFF);fontSize=14;fontColor=light-dark(#000000,#000000);fontStyle=1;fontFamily=Times New Roman;strokeWidth=2;" target="eBz_ZRnFpisge1-WPfQX-107" value="Image 25Hz">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-113" edge="1" parent="1" source="eBz_ZRnFpisge1-WPfQX-107" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.25;entryY=0;rounded=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;fontFamily=Times New Roman;labelBackgroundColor=light-dark(#FFFFFF,#FFFFFF);fontSize=14;fontColor=light-dark(#000000,#000000);fontStyle=1;strokeWidth=2;" target="eBz_ZRnFpisge1-WPfQX-108" value="Delayed Angle: θ_vis">
+          <mxGeometry relative="1" x="-0.5666" y="10" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="110" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-114" edge="1" parent="1" source="eBz_ZRnFpisge1-WPfQX-106" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.75;entryY=0;rounded=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;fontFamily=Times New Roman;labelBackgroundColor=light-dark(#FFFFFF,#FFFFFF);fontSize=14;fontColor=light-dark(#000000,#000000);fontStyle=1;strokeWidth=2;" target="eBz_ZRnFpisge1-WPfQX-108" value="Accel &amp; Att 200Hz">
+          <mxGeometry relative="1" x="-0.0839" y="4" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-115" edge="1" parent="1" source="eBz_ZRnFpisge1-WPfQX-108" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.25;entryY=0;rounded=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;fontFamily=Times New Roman;labelBackgroundColor=light-dark(#FFFFFF,#FFFFFF);fontSize=14;fontColor=light-dark(#000000,#000000);fontStyle=1;strokeWidth=2;" target="eBz_ZRnFpisge1-WPfQX-109" value="Compensated Angle: θ_comp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eBz_ZRnFpisge1-WPfQX-116" edge="1" parent="1" source="eBz_ZRnFpisge1-WPfQX-109" style="curved=1;startArrow=none;endArrow=block;exitX=0.75;exitY=0;entryX=1;entryY=0.5;rounded=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;fontFamily=Times New Roman;labelBackgroundColor=light-dark(#FFFFFF,#FFFFFF);fontSize=14;fontColor=light-dark(#000000,#000000);fontStyle=1;strokeWidth=2;" target="eBz_ZRnFpisge1-WPfQX-104" value="Velocity Cmd: u_cmd">
+          <mxGeometry relative="1" x="0.0863" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="380" y="430" />
+              <mxPoint x="380" y="140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,4 @@
+slung_antiswing_square:
+  ros__parameters:
+    square_side_length: 9.0  # 菱形单边长 (m)
+    cruise_speed: 3.0         # 巡航飞行速度 (m/s)

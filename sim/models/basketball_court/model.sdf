@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>      <!-- XML声明：定义文档版本与编码格式 -->
+<sdf version='1.9'>                         <!-- SDF根标签：指定SDF格式版本为1.11 -->
+  <model name='basketball_court'>           <!-- 模型定义：创建名为"basketball_court"的模型 -->
+    <pose>0 0 0 0 0 0</pose>                <!-- 模型位姿：设置初始位置(x,y,z)与姿态(roll,pitch,yaw) -->
+    <self_collide>false</self_collide>      <!-- 自碰撞：禁用模型内部连杆间的碰撞检测 -->
+    <static>true</static>                   <!-- 静态属性：设为静态模型（不受重力/外力影响） -->
+    <link name="map">                       <!-- 连杆定义：创建名为"map"的连杆（模型的物理实体单元） -->
+      <gravity>true</gravity>               <!-- 重力：启用重力对该连杆的作用 -->
+      <self_collide>false</self_collide>    <!-- 连杆自碰撞：禁用该连杆自身的碰撞检测 -->
+      <pose>0 0 0 0 0 0</pose>              <!-- 连杆位姿：设置连杆相对于模型的位姿 -->
+      <visual name="visual">                <!-- 视觉元素：定义连杆的可视化外观 -->
+        <pose>0 0 0 0 0 0</pose>            <!-- 视觉位姿：设置视觉元素相对于连杆的位姿 -->
+        <geometry>                          <!-- 几何形状：定义视觉元素的几何属性 -->
+          <mesh>                            <!-- 网格模型：使用外部网格文件作为视觉形状 -->
+            <uri>model://basketball_court/meshes/basketball_court.dae</uri> <!-- 网格路径：指定.dae网格文件的资源路径 -->
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="collision">          <!-- 碰撞元素：定义连杆的物理碰撞属性 -->
+        <pose>0 0 0 0 0 0 </pose>           <!-- 碰撞位姿：设置碰撞元素相对于连杆的位姿 -->
+        <geometry>                          <!-- 几何形状：定义碰撞元素的几何属性 -->
+          <mesh>                            <!-- 网格模型：使用外部网格文件作为碰撞形状 -->
+            <uri>model://basketball_court/meshes/basketball_court.dae</uri> <!-- 网格路径：指定碰撞检测用的.dae网格文件 -->
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

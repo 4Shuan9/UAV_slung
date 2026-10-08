@@ -1,0 +1,13 @@
+swing_angle_eso:
+  ros__parameters:
+    g: 9.81
+    l: 1.0
+    omega_o: 8.0
+
+swing_angle_eso_fusion:
+  ros__parameters:
+    g: 9.81
+    l: 1.0
+    omega_o: 8.0
+    tau: 0.030
+    filter_alpha: 0.5

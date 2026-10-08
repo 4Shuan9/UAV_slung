@@ -1,0 +1,1368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdf version='1.9'>
+  <model name='rope'>
+    <enable_wind>true</enable_wind>
+    <static>false</static>
+    <link name='begin_link'>
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>4e-08</ixx>
+          <iyy>4e-08</iyy>
+          <izz>4e-08</izz>
+        </inertia>
+      </inertial>
+       <collision name='begin_link_collision'>
+        <geometry>
+          <sphere>
+            <radius>0.002</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name='begin_link_visual'>
+        <geometry>
+          <sphere>
+            <radius>0.002</radius>
+          </sphere>
+        </geometry>
+      </visual>
+    </link>
+    <link name='link_0'>
+      <pose>0.025 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_0_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_0_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='begin_joint_2' type='universal'>
+      <pose relative_to='begin_link'/>
+      <child>link_0</child>
+      <parent>begin_link</parent>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz>0 1 0</xyz>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+
+    <link name='link_1'>
+      <pose>0.07500000000000001 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_1_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_1_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_1_2' type='universal'>
+      <pose relative_to='link_0'>0 0 0.025 0 0 0</pose>
+      <child>link_1</child>
+      <parent>link_0</parent>
+      <axis>
+        <xyz expressed_in='link_0'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_0'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_2'>
+      <pose>0.125 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_2_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_2_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_2_2' type='universal'>
+      <pose relative_to='link_1'>0 0 0.025 0 0 0</pose>
+      <child>link_2</child>
+      <parent>link_1</parent>
+      <axis>
+        <xyz expressed_in='link_1'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_1'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_3'>
+      <pose>0.17500000000000002 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_3_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_3_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_3_2' type='universal'>
+      <pose relative_to='link_2'>0 0 0.025 0 0 0</pose>
+      <child>link_3</child>
+      <parent>link_2</parent>
+      <axis>
+        <xyz expressed_in='link_2'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_2'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_4'>
+      <pose>0.225 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_4_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_4_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_4_2' type='universal'>
+      <pose relative_to='link_3'>0 0 0.025 0 0 0</pose>
+      <child>link_4</child>
+      <parent>link_3</parent>
+      <axis>
+        <xyz expressed_in='link_3'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_3'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_5'>
+      <pose>0.275 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_5_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_5_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_5_2' type='universal'>
+      <pose relative_to='link_4'>0 0 0.025 0 0 0</pose>
+      <child>link_5</child>
+      <parent>link_4</parent>
+      <axis>
+        <xyz expressed_in='link_4'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_4'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_6'>
+      <pose>0.32500000000000007 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_6_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_6_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_6_2' type='universal'>
+      <pose relative_to='link_5'>0 0 0.025 0 0 0</pose>
+      <child>link_6</child>
+      <parent>link_5</parent>
+      <axis>
+        <xyz expressed_in='link_5'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_5'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_7'>
+      <pose>0.37500000000000006 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_7_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_7_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_7_2' type='universal'>
+      <pose relative_to='link_6'>0 0 0.025 0 0 0</pose>
+      <child>link_7</child>
+      <parent>link_6</parent>
+      <axis>
+        <xyz expressed_in='link_6'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_6'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_8'>
+      <pose>0.42500000000000004 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_8_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_8_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_8_2' type='universal'>
+      <pose relative_to='link_7'>0 0 0.025 0 0 0</pose>
+      <child>link_8</child>
+      <parent>link_7</parent>
+      <axis>
+        <xyz expressed_in='link_7'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_7'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_9'>
+      <pose>0.47500000000000003 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_9_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_9_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_9_2' type='universal'>
+      <pose relative_to='link_8'>0 0 0.025 0 0 0</pose>
+      <child>link_9</child>
+      <parent>link_8</parent>
+      <axis>
+        <xyz expressed_in='link_8'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_8'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_10'>
+      <pose>0.525 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_10_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_10_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+      <sensor name="rope_imu" type="imu">
+        <always_on>1</always_on>
+        <update_rate>250</update_rate>
+        <visualize>true</visualize>
+      </sensor>
+    </link>
+    <joint name='joint_10_2' type='universal'>
+      <pose relative_to='link_9'>0 0 0.025 0 0 0</pose>
+      <child>link_10</child>
+      <parent>link_9</parent>
+      <axis>
+        <xyz expressed_in='link_9'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_9'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_11'>
+      <pose>0.5750000000000001 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_11_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_11_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_11_2' type='universal'>
+      <pose relative_to='link_10'>0 0 0.025 0 0 0</pose>
+      <child>link_11</child>
+      <parent>link_10</parent>
+      <axis>
+        <xyz expressed_in='link_10'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_10'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_12'>
+      <pose>0.6250000000000001 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_12_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_12_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_12_2' type='universal'>
+      <pose relative_to='link_11'>0 0 0.025 0 0 0</pose>
+      <child>link_12</child>
+      <parent>link_11</parent>
+      <axis>
+        <xyz expressed_in='link_11'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_11'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_13'>
+      <pose>0.675 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_13_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_13_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_13_2' type='universal'>
+      <pose relative_to='link_12'>0 0 0.025 0 0 0</pose>
+      <child>link_13</child>
+      <parent>link_12</parent>
+      <axis>
+        <xyz expressed_in='link_12'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_12'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_14'>
+      <pose>0.7250000000000001 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_14_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_14_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_14_2' type='universal'>
+      <pose relative_to='link_13'>0 0 0.025 0 0 0</pose>
+      <child>link_14</child>
+      <parent>link_13</parent>
+      <axis>
+        <xyz expressed_in='link_13'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_13'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_15'>
+      <pose>0.775 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_15_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_15_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_15_2' type='universal'>
+      <pose relative_to='link_14'>0 0 0.025 0 0 0</pose>
+      <child>link_15</child>
+      <parent>link_14</parent>
+      <axis>
+        <xyz expressed_in='link_14'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_14'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_16'>
+      <pose>0.8250000000000001 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_16_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_16_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_16_2' type='universal'>
+      <pose relative_to='link_15'>0 0 0.025 0 0 0</pose>
+      <child>link_16</child>
+      <parent>link_15</parent>
+      <axis>
+        <xyz expressed_in='link_15'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_15'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_17'>
+      <pose>0.8750000000000001 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_17_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_17_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_17_2' type='universal'>
+      <pose relative_to='link_16'>0 0 0.025 0 0 0</pose>
+      <child>link_17</child>
+      <parent>link_16</parent>
+      <axis>
+        <xyz expressed_in='link_16'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_16'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_18'>
+      <pose>0.925 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_18_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_18_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_18_2' type='universal'>
+      <pose relative_to='link_17'>0 0 0.025 0 0 0</pose>
+      <child>link_18</child>
+      <parent>link_17</parent>
+      <axis>
+        <xyz expressed_in='link_17'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_17'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='link_19'>
+      <pose>0.9750000000000001 0 0 0 1.570796326794896558 0</pose>
+      <inertial>
+        <mass>0.0024</mass>
+        <inertia>
+          <ixx>5.1e-05</ixx>
+          <iyy>5.1e-05</iyy>
+          <izz>3.0e-06</izz>
+        </inertia>
+      </inertial>
+       <collision name='link_19_collision'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='link_19_vis'>
+        <geometry>
+          <cylinder>
+            <length>0.05</length>
+            <radius>0.002</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.1</linear>
+        <angular>0.1</angular>
+      </velocity_decay>
+    </link>
+    <joint name='joint_19_2' type='universal'>
+      <pose relative_to='link_18'>0 0 0.025 0 0 0</pose>
+      <child>link_19</child>
+      <parent>link_18</parent>
+      <axis>
+        <xyz expressed_in='link_18'>1 0 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz expressed_in='link_18'>0 1 0</xyz>
+        <limit>
+          <lower>-3.141592653589793</lower>
+          <upper>3.141592653589793</upper>
+          <effort>50.0</effort>
+          <velocity>10</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+    <link name='end_link'>
+      <pose>1.0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>4e-08</ixx>
+          <iyy>4e-08</iyy>
+          <izz>4e-08</izz>
+        </inertia>
+      </inertial>
+       <collision name='end_link_collision'>
+        <geometry>
+          <sphere>
+            <radius>0.002</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name='end_link_visual'>
+        <geometry>
+          <sphere>
+            <radius>0.002</radius>
+          </sphere>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='joint_end_1' type='universal'>
+      <pose relative_to='end_link'/>
+      <child>end_link</child>
+      <parent>link_19</parent>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis>
+      <axis2>
+        <xyz>0 1 0</xyz>
+        <dynamics>
+          <damping>0.05</damping>
+        </dynamics>
+      </axis2>
+    </joint>
+  </model>
+</sdf>

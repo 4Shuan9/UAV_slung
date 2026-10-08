@@ -1,0 +1,25 @@
+slung_antiswing:
+  ros__parameters:
+
+    # =========================
+    # Takeoff
+    # =========================
+    takeoff_height: 10.0
+    takeoff_speed: 0.5
+
+    # =========================
+    # Position PD
+    # =========================
+    kp_pos: 1.2
+    kd_pos: 0.8
+
+    # =========================
+    # Swing PD
+    # =========================
+    kp_swing: 1.5
+    kd_swing: 0.5
+
+    # =========================
+    # Acceleration limit
+    # =========================
+    max_comp_acc: 3.0
