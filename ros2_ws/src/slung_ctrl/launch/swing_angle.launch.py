@@ -45,6 +45,15 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Stage 1C: convert the visual acquisition timestamp from Gazebo sim-time
+    # into the existing ROS/system-time domain and publish measured delay.
+    # This node does not alter the original visual topic or any controller.
+    vision_time_aligner_node = Node(
+        package='slung_ctrl',
+        executable='vision_time_aligner.py',
+        output='screen'
+    )
+
     swing_angle_cv_comp_node = Node(
         package='slung_ctrl',
         executable='swing_angle_cv_comp',
@@ -75,6 +84,7 @@ def generate_launch_description():
         bridge_node,
         swing_angle_truth_node,
         swing_angle_cv_node,
+        vision_time_aligner_node,
         swing_angle_cv_comp_node,
         swing_angle_eso_node,
         swing_angle_eso_fusion_node,

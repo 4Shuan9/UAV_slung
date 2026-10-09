@@ -131,8 +131,8 @@ def main(args=None):
     ros_node = VisionPublisher()
     
     if SHOW_IMAGE_WINDOW:
-        cv2.namedWindow('UAV Downward Camera', cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)
-        cv2.resizeWindow('UAV Downward Camera', 960, 720)
+        # Window always follows the camera image's native resolution.
+        cv2.namedWindow('UAV Downward Camera', cv2.WINDOW_AUTOSIZE)
     
     cam = GzCamRaw(CAMERA_TOPIC)
     

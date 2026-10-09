@@ -73,7 +73,7 @@ target_link_libraries(swing_angle_eso_fusion "${cpp_typesupport_target}")
 target_link_libraries(slung_antiswing_ADRC "${cpp_typesupport_target}")
 
 add_executable(swing_error_eval src/swing_error_eval.cpp)
-ament_target_dependencies(swing_error_eval rclcpp geometry_msgs std_msgs)
+ament_target_dependencies(swing_error_eval rclcpp geometry_msgs std_msgs px4_msgs)
 target_link_libraries(swing_error_eval "${cpp_typesupport_target}")
 
 # --- 4. Installation ---
@@ -97,6 +97,7 @@ install(TARGETS
 install(PROGRAMS
   scripts/gz_cam_raw.py
   scripts/gz_cam_cv.py
+  scripts/vision_time_aligner.py
   scripts/swing_angle.py
   DESTINATION lib/${PROJECT_NAME}
 )

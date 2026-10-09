@@ -6,7 +6,7 @@
 # 
 # @Main Work: 
 #   * 节点启动：启动 `slung_ctrl` 包下的 `slung_antiswing` 核心控制节点
-#   * 参数加载：动态加载外部配置文件 `antiswing_params.yaml`，用于配置无人机的起飞高度、起飞速度、位置追踪增益以及防摆 PD 控制参数
+#   * 参数加载：动态加载外部配置文件 `antiswing_params.yaml`，用于配置起飞、位置环、ADRC 参数，以及 disturbance 预限幅/低通/最终安全限幅参数
 #   * 环境配置：标准输出定向至终端屏幕，方便开发人员实时监控无人机的状态机切换（起飞、防摆控制段）日志
 # ==============================================================================
 
@@ -23,7 +23,7 @@ def generate_launch_description():
         Node(
             package='slung_ctrl',
             executable='slung_antiswing_ADRC', 
-            name='slung_antiswing_ADRC',
+            name='slung_antiswing',
             output='screen',
             parameters=[config_file]
         )
