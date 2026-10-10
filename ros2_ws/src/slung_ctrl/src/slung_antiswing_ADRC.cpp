@@ -3,19 +3,14 @@
 // @Author   : 4Shuan9
 // @Date     : 2026-09-16
 // @Brief    : 核心飞行控制与吊挂防摆 ADRC 节点
-//             East/North + synchronized LESO state + P/D/F debug/ablation
+//             East/North + synchronized LESO state + runtime ablation parameters
 //
 // @Note     : 1) 保持现有 ADRC 数学结构和状态机不变；
 //             2) 新增 enable_rate_term / enable_disturbance_comp 两个运行时参数；
-//             3) 新增 P_swing / D_swing / F_comp_raw / F_comp_used 调试 topic；
-//             4) 新增 disturbance_gain，用于逐步恢复 disturbance 补偿；
-//             5) 默认两个开关均为 true、disturbance_gain=1.0，因此默认行为与修改前一致；
-//             6) ADRC now consumes theta/rate/disturbance from one synchronized message;
-//             7) Legacy ESO topics remain available for PlotJuggler but are not used by control;
-//             8) disturbance 链路升级为：raw F -> 预限幅 -> 一阶低通 -> gain -> 最终限幅；
-//             9) 预限幅用于阻止异常尖峰“灌入”LPF内部状态，最终限幅约束真实注入控制器的F；
-//            10) 所有限幅/滤波均可运行时开关与调参；
-//            11) Debug Vector3 convention: vector.x = East, vector.y = North.
+//             3) disturbance_gain 与限幅/滤波参数支持运行时调节；
+//             4) ADRC consumes theta/rate/disturbance from one synchronized message;
+//             5) disturbance 链路：raw F -> 预限幅 -> 一阶低通 -> gain -> 最终限幅；
+//             6) 所有限幅/滤波均可运行时开关与调参；
 //
 // Coordinate conventions:
 //   Gazebo World: X = East, Y = North
@@ -27,7 +22,6 @@
 #include <px4_msgs/msg/trajectory_setpoint.hpp>
 #include <px4_msgs/msg/vehicle_command.hpp>
 #include <px4_msgs/msg/vehicle_odometry.hpp>
-#include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <geometry_msgs/msg/point.hpp>
 #include <std_msgs/msg/float32.hpp>
 #include <std_msgs/msg/bool.hpp>
@@ -47,7 +41,7 @@ public:
         // ----------------------------------------------------------------------
         // Flight / position-loop parameters
         // ----------------------------------------------------------------------
-        this->declare_parameter("takeoff_height", 5.0);
+        this->declare_parameter("takeoff_height", 10.0);
         this->declare_parameter("takeoff_speed", 0.5);
         this->declare_parameter("kp_pos", 1.2);
         this->declare_parameter("kd_pos", 0.8);
@@ -56,7 +50,7 @@ public:
         // ADRC parameters
         // ----------------------------------------------------------------------
         this->declare_parameter("omega_c", 3.0);      // controller bandwidth
-        this->declare_parameter("zeta", 0.05);        // damping ratio
+        this->declare_parameter("zeta", 0.10);        // damping ratio
         this->declare_parameter("l", 1.0);            // cable length [m]
         this->declare_parameter("g", 9.81);           // gravity [m/s^2]
         this->declare_parameter("max_comp_acc", 3.0); // total horizontal acceleration limit [m/s^2]
@@ -68,7 +62,7 @@ public:
         // ----------------------------------------------------------------------
         this->declare_parameter("enable_rate_term", true);
         this->declare_parameter("enable_disturbance_comp", true);
-        this->declare_parameter("disturbance_gain", 1.0);
+        this->declare_parameter("disturbance_gain", 0.50);
 
         // Disturbance-only low-pass filter.
         // Continuous-time form: tau_f * y_dot + y = x
@@ -94,10 +88,9 @@ public:
 
         // Final safety limit on the disturbance contribution that is ACTUALLY
         // injected into the controller after LPF and disturbance_gain.
-        // With l=1 and gain=0.25 this is normally inactive; it becomes a safety
-        // guard for future higher disturbance_gain tests.
+        // This is a final safety guard on the disturbance term actually injected.
         this->declare_parameter("enable_disturbance_used_limit", true);
-        this->declare_parameter("disturbance_used_limit", 0.08); // [m/s^2]
+        this->declare_parameter("disturbance_used_limit", 0.15); // [m/s^2]
 
         // ----------------------------------------------------------------------
         // PX4 publishers
@@ -110,32 +103,13 @@ public:
             "/fmu/in/vehicle_command", 10);
 
         // ----------------------------------------------------------------------
-        // Debug publishers
-        // Vector convention for every debug topic:
-        //   vector.x = East
-        //   vector.y = North
-        // Units are acceleration [m/s^2].
+        // Experiment-state publisher
         // ----------------------------------------------------------------------
-        pub_debug_p_swing = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/adrc_debug/p_swing/cartesian", 10);
-        pub_debug_d_swing = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/adrc_debug/d_swing/cartesian", 10);
-        pub_debug_f_comp = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/adrc_debug/f_comp/cartesian", 10);
-        pub_debug_f_comp_prelimited = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/adrc_debug/f_comp_prelimited/cartesian", 10);
-        pub_debug_f_comp_filtered = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/adrc_debug/f_comp_filtered/cartesian", 10);
-        pub_debug_f_comp_used_unlimited = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/adrc_debug/f_comp_used_unlimited/cartesian", 10);
-        pub_debug_f_comp_used = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/adrc_debug/f_comp_used/cartesian", 10);
-
         // Explicit controller-state flag for experiments/evaluation.
         // false during INIT/TAKEOFF, true only after the configured takeoff
         // height has been reached and the anti-swing CONTROL state is active.
         pub_control_active = this->create_publisher<std_msgs::msg::Bool>(
-            "/uav/adrc_debug/control_active", 10);
+            "/uav/adrc/control_active", 10);
 
         // ----------------------------------------------------------------------
         // Synchronized LESO state subscription
@@ -176,7 +150,7 @@ public:
 
         RCLCPP_INFO(
             this->get_logger(),
-            "ADRC Node Init (Synchronized LESO State + East/North + Debug). Waiting for Odom...");
+            "ADRC Node Init (Synchronized LESO State + East/North). Waiting for Odom...");
     }
 
 private:
@@ -227,13 +201,6 @@ private:
     rclcpp::Publisher<px4_msgs::msg::TrajectorySetpoint>::SharedPtr pub_trajectory;
     rclcpp::Publisher<px4_msgs::msg::VehicleCommand>::SharedPtr pub_cmd;
 
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_debug_p_swing;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_debug_d_swing;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_debug_f_comp;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_debug_f_comp_prelimited;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_debug_f_comp_filtered;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_debug_f_comp_used_unlimited;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_debug_f_comp_used;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr pub_control_active;
 
     rclcpp::Subscription<slung_ctrl::msg::SwingADRCState>::SharedPtr sub_adrc_state;
@@ -254,7 +221,7 @@ private:
         disturbance_north = msg->disturbance_north_rad_s2;
 
         // ------------------------------------------------------------------
-        // Stage 1: wide raw-F pre-limit [rad/s^2].
+        // Wide raw-F pre-limit [rad/s^2].
         // This is NOT intended to shape normal disturbance dynamics.  It only
         // prevents a rare observer/vision spike from charging the LPF state and
         // creating a long artificial tail.
@@ -345,74 +312,6 @@ private:
 
             odom_received = true;
         }
-    }
-
-    void publish_debug_terms(
-        double p_east, double p_north,
-        double d_east, double d_north,
-        double f_raw_east, double f_raw_north,
-        double f_prelimited_east, double f_prelimited_north,
-        double f_filtered_east, double f_filtered_north,
-        double f_used_unlimited_east, double f_used_unlimited_north,
-        double f_used_east, double f_used_north)
-    {
-        const auto stamp = this->get_clock()->now();
-
-        geometry_msgs::msg::Vector3Stamped msg_p;
-        msg_p.header.stamp = stamp;
-        msg_p.header.frame_id = "world";
-        msg_p.vector.x = p_east;
-        msg_p.vector.y = p_north;
-        msg_p.vector.z = 0.0;
-        pub_debug_p_swing->publish(msg_p);
-
-        geometry_msgs::msg::Vector3Stamped msg_d;
-        msg_d.header.stamp = stamp;
-        msg_d.header.frame_id = "world";
-        msg_d.vector.x = d_east;
-        msg_d.vector.y = d_north;
-        msg_d.vector.z = 0.0;
-        pub_debug_d_swing->publish(msg_d);
-
-        geometry_msgs::msg::Vector3Stamped msg_f;
-        msg_f.header.stamp = stamp;
-        msg_f.header.frame_id = "world";
-        msg_f.vector.x = f_raw_east;
-        msg_f.vector.y = f_raw_north;
-        msg_f.vector.z = 0.0;
-        pub_debug_f_comp->publish(msg_f);
-
-        geometry_msgs::msg::Vector3Stamped msg_f_prelimited;
-        msg_f_prelimited.header.stamp = stamp;
-        msg_f_prelimited.header.frame_id = "world";
-        msg_f_prelimited.vector.x = f_prelimited_east;
-        msg_f_prelimited.vector.y = f_prelimited_north;
-        msg_f_prelimited.vector.z = 0.0;
-        pub_debug_f_comp_prelimited->publish(msg_f_prelimited);
-
-        geometry_msgs::msg::Vector3Stamped msg_f_filtered;
-        msg_f_filtered.header.stamp = stamp;
-        msg_f_filtered.header.frame_id = "world";
-        msg_f_filtered.vector.x = f_filtered_east;
-        msg_f_filtered.vector.y = f_filtered_north;
-        msg_f_filtered.vector.z = 0.0;
-        pub_debug_f_comp_filtered->publish(msg_f_filtered);
-
-        geometry_msgs::msg::Vector3Stamped msg_f_used_unlimited;
-        msg_f_used_unlimited.header.stamp = stamp;
-        msg_f_used_unlimited.header.frame_id = "world";
-        msg_f_used_unlimited.vector.x = f_used_unlimited_east;
-        msg_f_used_unlimited.vector.y = f_used_unlimited_north;
-        msg_f_used_unlimited.vector.z = 0.0;
-        pub_debug_f_comp_used_unlimited->publish(msg_f_used_unlimited);
-
-        geometry_msgs::msg::Vector3Stamped msg_f_used;
-        msg_f_used.header.stamp = stamp;
-        msg_f_used.header.frame_id = "world";
-        msg_f_used.vector.x = f_used_east;
-        msg_f_used.vector.y = f_used_north;
-        msg_f_used.vector.z = 0.0;
-        pub_debug_f_comp_used->publish(msg_f_used);
     }
 
     void control_loop() {
@@ -513,8 +412,6 @@ private:
             double rate_north_rad_s;
             double disturbance_east_local;
             double disturbance_north_local;
-            double disturbance_east_prelimited_local;
-            double disturbance_north_prelimited_local;
             double disturbance_east_filtered_local;
             double disturbance_north_filtered_local;
             bool has_synced_state_local;
@@ -531,8 +428,6 @@ private:
 
                 disturbance_east_local = disturbance_east;
                 disturbance_north_local = disturbance_north;
-                disturbance_east_prelimited_local = disturbance_east_prelimited;
-                disturbance_north_prelimited_local = disturbance_north_prelimited;
                 disturbance_east_filtered_local = disturbance_east_filtered;
                 disturbance_north_filtered_local = disturbance_north_filtered;
             }
@@ -546,8 +441,6 @@ private:
                 rate_north_rad_s = 0.0;
                 disturbance_east_local = 0.0;
                 disturbance_north_local = 0.0;
-                disturbance_east_prelimited_local = 0.0;
-                disturbance_north_prelimited_local = 0.0;
                 disturbance_east_filtered_local = 0.0;
                 disturbance_north_filtered_local = 0.0;
             }
@@ -573,11 +466,6 @@ private:
                 l * disturbance_north_local;
             const double f_comp_east_raw =
                 l * disturbance_east_local;
-
-            const double f_comp_north_prelimited =
-                l * disturbance_north_prelimited_local;
-            const double f_comp_east_prelimited =
-                l * disturbance_east_prelimited_local;
 
             const double f_comp_north_filtered =
                 l * disturbance_north_filtered_local;
@@ -614,8 +502,8 @@ private:
                     ? disturbance_gain * f_comp_east_selected
                     : 0.0;
 
-            // Stage 4: final safety limit on the ACTUAL F contribution [m/s^2].
-            // At the current baseline (gain=0.25, l=1), the 0.08 m/s^2 default
+            // Final safety limit on the ACTUAL F contribution [m/s^2].
+            // At the current baseline, the configured limit
             // should normally stay inactive.  It is intentionally a guardrail,
             // not a normal-operation shaping element.
             double f_comp_north = f_comp_north_unlimited;
@@ -631,21 +519,6 @@ private:
                     -disturbance_used_limit,
                     disturbance_used_limit);
             }
-
-            // IMPORTANT debug semantics:
-            // f_comp                : raw F contribution (before pre-limit/LPF/gain)
-            // f_comp_prelimited     : after wide raw-F protection
-            // f_comp_filtered       : after LPF, before disturbance_gain
-            // f_comp_used_unlimited : after gain, before final safety limit
-            // f_comp_used           : actual F contribution entering controller
-            publish_debug_terms(
-                p_swing_east, p_swing_north,
-                d_swing_east_raw, d_swing_north_raw,
-                f_comp_east_raw, f_comp_north_raw,
-                f_comp_east_prelimited, f_comp_north_prelimited,
-                f_comp_east_filtered, f_comp_north_filtered,
-                f_comp_east_unlimited, f_comp_north_unlimited,
-                f_comp_east, f_comp_north);
 
             const float a_anti_north = static_cast<float>(
                 p_swing_north + d_swing_north + f_comp_north);

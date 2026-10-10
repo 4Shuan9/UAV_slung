@@ -17,12 +17,12 @@ public:
     SwingAngleESOFusion() : Node("swing_angle_eso_fusion") {
         this->declare_parameter("g", 9.81);
         this->declare_parameter("l", 1.0);
-        this->declare_parameter("omega_o", 15.0);
+        this->declare_parameter("omega_o", 8.0);
         this->declare_parameter("tau", 0.030);
         this->declare_parameter("dt", 0.005);
         this->declare_parameter("filter_alpha", 0.5);
 
-        // Stage 1E: fixed-delay behavior remains the safe default.
+        // Delay compensation: fixed tau is the safe default; dynamic age is optional.
         this->declare_parameter("use_dynamic_delay", false);
         this->declare_parameter("dynamic_delay_max", 0.100);
 
@@ -44,18 +44,11 @@ public:
         first_imu_run_ = true;
         has_vision_ = false;
 
-        // Stage 1E: use the aligned visual message as the ONLY visual input
-        // to this estimator, so angle and timestamp always belong to one frame.
-        // The original raw visual topic remains unchanged for other nodes.
+        // Use the aligned visual message as the only visual input to this
+        // estimator, so angle and timestamp always belong to the same frame.
         vision_subscriber_ = this->create_subscription<geometry_msgs::msg::Vector3Stamped>(
             "/uav/cv/swing_angle_aligned/world_frame/cartesian", 10,
             std::bind(&SwingAngleESOFusion::vision_callback, this, std::placeholders::_1));
-
-        vision_delay_debug_publisher_ = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/eso_fusion/vision_delay_debug", 10);
-
-        prediction_tau_debug_publisher_ = this->create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/eso_fusion/prediction_tau_debug", 10);
 
         imu_subscriber_ = this->create_subscription<px4_msgs::msg::VehicleLocalPosition>(
             "/fmu/out/vehicle_local_position", rclcpp::QoS(10).best_effort(),
@@ -104,7 +97,7 @@ private:
                 use_dynamic_delay_ = param.as_bool();
                 RCLCPP_INFO(
                     this->get_logger(),
-                    "Stage 1E delay mode switched to: %s",
+                    "Delay compensation mode: %s",
                     use_dynamic_delay_ ? "DYNAMIC" : "FIXED");
             } else if (param.get_name() == "dynamic_delay_max") {
                 if (param.as_double() <= 0.0 || param.as_double() > 1.0) {
@@ -144,37 +137,13 @@ private:
         if (measured_delay_s >= 0.0 && measured_delay_s <= dynamic_delay_max_) {
             latest_measured_delay_s_ = measured_delay_s;
             has_measured_delay_ = true;
-            ++measured_delay_count_;
-
-            // Preserve Stage 1D debug semantics:
-            // x = measured visual age at Fusion [ms]
-            // y = fixed tau parameter [ms]
-            // z = measured - fixed [ms]
-            geometry_msgs::msg::Vector3Stamped delay_msg;
-            delay_msg.header.stamp = now;
-            delay_msg.header.frame_id = "time_debug";
-            delay_msg.vector.x = measured_delay_s * 1000.0;
-            delay_msg.vector.y = delay_compensation_time_ * 1000.0;
-            delay_msg.vector.z =
-                (measured_delay_s - delay_compensation_time_) * 1000.0;
-            vision_delay_debug_publisher_->publish(delay_msg);
-
-            if (measured_delay_count_ % 25 == 0) {
-                RCLCPP_INFO(
-                    this->get_logger(),
-                    "Stage 1E delay @ Fusion: measured=%.3f ms | fixed=%.3f ms | diff=%+.3f ms | mode=%s",
-                    delay_msg.vector.x,
-                    delay_msg.vector.y,
-                    delay_msg.vector.z,
-                    use_dynamic_delay_ ? "DYNAMIC" : "FIXED");
-            }
         } else {
             // Keep the visual angle, but never allow an invalid timestamp to
-            // drive the predictor. Prediction falls back to fixed tau.
+            // drive the predictor. Dynamic mode falls back to fixed tau.
             has_measured_delay_ = false;
             RCLCPP_WARN_THROTTLE(
                 this->get_logger(), *this->get_clock(), 2000,
-                "Stage 1E: invalid aligned visual delay %.3f ms; using fixed tau.",
+                "Invalid aligned visual delay %.3f ms; using fixed tau.",
                 measured_delay_s * 1000.0);
         }
 
@@ -226,10 +195,10 @@ private:
         update_eso(eso_state_east_, accel_east_, error_east);
         update_eso(eso_state_north_, accel_north_, error_north);
 
-        // Stage 1E prediction horizon:
-        // FIXED   -> existing tau parameter (default 30 ms)
-        // DYNAMIC -> latest valid per-frame delay measured at Fusion.
-        // Invalid / unavailable dynamic timing automatically falls back to fixed.
+        // Prediction horizon:
+        //   fixed mode   -> configured tau
+        //   dynamic mode -> latest valid visual sample age measured at Fusion
+        // Invalid / unavailable dynamic timing falls back to fixed tau.
         double prediction_delay_s = delay_compensation_time_;
         if (use_dynamic_delay_ && has_measured_delay_) {
             prediction_delay_s = std::clamp(
@@ -255,19 +224,6 @@ private:
 
         auto prediction_east = predict_state(eso_state_east_, accel_east_);
         auto prediction_north = predict_state(eso_state_north_, accel_north_);
-
-        // Explicitly expose what prediction horizon is actually used:
-        // x = latest measured delay [ms] (-1 if unavailable)
-        // y = fixed tau parameter [ms]
-        // z = tau actually used by predict_state() [ms]
-        geometry_msgs::msg::Vector3Stamped tau_debug_msg;
-        tau_debug_msg.header.stamp = now;
-        tau_debug_msg.header.frame_id = "time_debug";
-        tau_debug_msg.vector.x =
-            has_measured_delay_ ? latest_measured_delay_s_ * 1000.0 : -1.0;
-        tau_debug_msg.vector.y = delay_compensation_time_ * 1000.0;
-        tau_debug_msg.vector.z = prediction_delay_s * 1000.0;
-        prediction_tau_debug_publisher_->publish(tau_debug_msg);
 
         if (first_filter_run_) {
             filtered_angle_east_ = prediction_east.first;
@@ -303,7 +259,7 @@ private:
         msg_adrc_state.disturbance_north_rad_s2 = filtered_dist_north_;
         adrc_state_publisher_->publish(msg_adrc_state);
 
-        // Keep the three legacy topics unchanged for PlotJuggler and A/B checks.
+        // Keep the three public estimator topics for PlotJuggler and offline analysis.
         geometry_msgs::msg::Vector3Stamped msg_angle, msg_rate, msg_dist;
         msg_angle.header.stamp = msg_rate.header.stamp = msg_dist.header.stamp = now;
         msg_angle.header.frame_id = "world";
@@ -331,10 +287,9 @@ private:
     double measured_angle_east_ = 0.0, measured_angle_north_ = 0.0;     
     bool has_vision_;
 
-    // Stage 1E timing state.
+    // Delay-compensation timing state.
     double latest_measured_delay_s_ = 0.0;
     bool has_measured_delay_ = false;
-    std::size_t measured_delay_count_ = 0;
     bool use_dynamic_delay_ = false;
     double dynamic_delay_max_ = 0.100;
 
@@ -354,8 +309,6 @@ private:
 
     rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr vision_subscriber_;
     rclcpp::Subscription<px4_msgs::msg::VehicleLocalPosition>::SharedPtr imu_subscriber_;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr vision_delay_debug_publisher_;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr prediction_tau_debug_publisher_;
     rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr fusion_angle_publisher_;
     rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr fusion_rate_publisher_;
     rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr fusion_dist_publisher_;

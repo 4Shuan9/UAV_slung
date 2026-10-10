@@ -10,7 +10,6 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(px4_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(message_filters REQUIRED)
@@ -28,11 +27,11 @@ add_executable(slung_takeoff src/slung_takeoff.cpp)
 ament_target_dependencies(slung_takeoff rclcpp px4_msgs)
 
 add_executable(slung_antiswing_PD src/slung_antiswing_PD.cpp)
-ament_target_dependencies(slung_antiswing_PD rclcpp px4_msgs sensor_msgs geometry_msgs std_msgs)
+ament_target_dependencies(slung_antiswing_PD rclcpp px4_msgs geometry_msgs std_msgs)
 target_link_libraries(slung_antiswing_PD Eigen3::Eigen)
 
 add_executable(slung_antiswing_ADRC src/slung_antiswing_ADRC.cpp)
-ament_target_dependencies(slung_antiswing_ADRC rclcpp px4_msgs sensor_msgs geometry_msgs std_msgs)
+ament_target_dependencies(slung_antiswing_ADRC rclcpp px4_msgs geometry_msgs std_msgs)
 target_link_libraries(slung_antiswing_ADRC Eigen3::Eigen)
 
 add_executable(slung_antiswing_waypoint src/slung_antiswing_waypoint.cpp)
@@ -95,10 +94,8 @@ install(TARGETS
 )
 
 install(PROGRAMS
-  scripts/gz_cam_raw.py
   scripts/gz_cam_cv.py
   scripts/vision_time_aligner.py
-  scripts/swing_angle.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
