@@ -32,6 +32,7 @@
 #include <message_filters/synchronizer.h>
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
+#include "slung_ctrl/swing_geometry.hpp"
 #include <cmath>
 #include <algorithm>
 
@@ -47,7 +48,7 @@ public:
         const double hfov = 1.74;
         fx_ = cx_ / std::tan(hfov / 2.0);
         fy_ = fx_;
-        nominal_rope_length_ = 1.0;
+        nominal_rope_length_ = slung_ctrl::nominal_rope_length;
 
         theta_east_ = 0.0;
         theta_north_ = 0.0;
@@ -133,17 +134,10 @@ private:
     void sync_callback(const geometry_msgs::msg::PointStamped::ConstSharedPtr& pixel_msg,
                        const geometry_msgs::msg::PoseStamped::ConstSharedPtr& uav_msg) {
 
-        const double u = pixel_msg->point.x;
-        const double v = pixel_msg->point.y;
-        const double x_c = (u - cx_) / fx_;
-        const double y_c = (v - cy_) / fy_;
-
-        // Camera/body-frame mapping. Body-frame variables are intentionally not
-        // renamed to East/North because the body frame rotates with vehicle yaw.
-        const double xb = -y_c;
-        const double yb = -x_c;
-        const double zb = -1.0;
-        Eigen::Vector3d V_body(xb, yb, zb);
+        // Same suspension-point geometry as the raw vision measurement.
+        Eigen::Vector3d V_body;
+        if (!slung_ctrl::payload_vector_body(pixel_msg->point.x, pixel_msg->point.y,
+                cx_, cy_, fx_, fy_, nominal_rope_length_, V_body)) return;
 
         Eigen::Quaterniond q(
             uav_msg->pose.orientation.w,
@@ -151,7 +145,7 @@ private:
             uav_msg->pose.orientation.y,
             uav_msg->pose.orientation.z);
 
-        if (q.norm() < 1e-5) return;
+        if (!q.coeffs().allFinite() || q.norm() < 1e-5) return;
         q.normalize();
         last_q_ = q;
 

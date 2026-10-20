@@ -42,7 +42,7 @@ add_executable(trajectory_square src/trajectory_square.cpp)
 ament_target_dependencies(trajectory_square rclcpp geometry_msgs px4_msgs)
 
 add_executable(trajectory_eight src/trajectory_eight.cpp)
-ament_target_dependencies(trajectory_eight rclcpp geometry_msgs px4_msgs)
+ament_target_dependencies(trajectory_eight rclcpp geometry_msgs px4_msgs std_msgs)
 
 add_executable(swing_truth src/swing_truth.cpp)
 ament_target_dependencies(swing_truth rclcpp geometry_msgs message_filters)

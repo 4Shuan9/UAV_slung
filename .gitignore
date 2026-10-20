@@ -34,6 +34,9 @@ bags/
 *.db3-wal
 *.db3-shm
 *.mcap
+*.bag
+*.bag.active
+*_DELETE_ME/
 
 # Python and editor caches
 __pycache__/
@@ -41,3 +44,8 @@ __pycache__/
 .vscode/
 .idea/
 .DS_Store
+.pytest_cache/
+*.swp
+*.swo
+*~
+~$*.docx

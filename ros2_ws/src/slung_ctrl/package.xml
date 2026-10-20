@@ -23,6 +23,7 @@
   <exec_depend>launch</exec_depend>
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>rosgraph_msgs</exec_depend>
   <member_of_group>rosidl_interface_packages</member_of_group>
   <export>
     <build_type>ament_cmake</build_type>

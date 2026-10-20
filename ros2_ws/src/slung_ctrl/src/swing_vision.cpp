@@ -7,9 +7,9 @@
 // @Main Work: 
 //   * 节点注册：创建名为 `swing_vision` 的 ROS 2 节点
 //   * 数据输入：订阅图像处理输出的像素坐标 `/uav/vision/payload_pixel` 
-//             以及相机在世界系下的位姿 `/model/x500_mono_cam_down/pose`，使用时间同步器 (`ApproximateTime`) 严格对齐数据
+//             以及无人机在世界系下的位姿 `/model/x500_mono_cam_down/pose`，使用时间同步器 (`ApproximateTime`) 近似配对数据
 //   * 核心处理：基于相机内参矩阵将 2D 像素坐标反投影为相机坐标系下的三维方向向量，
-//             随后利用无人机的四元数姿态将其转换至世界坐标系；最终解算出笛卡尔系投影角（X/Y向）与极坐标系夹角
+//             利用相机外参与定长约束恢复挂点到吊载的位移，再转换至世界系计算投影角与极坐标角
 //   * 数据输出：将带有时间戳的解算摆角发布至 `/uav/swing/vision/...` 的机体系与世界系话题，作为后续高级估计器的原始观测输入
 // ==============================================================================
 
@@ -23,6 +23,7 @@
 #include <message_filters/synchronizer.h>
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
+#include "slung_ctrl/swing_geometry.hpp"
 #include <cmath>
 #include <algorithm>
 
@@ -38,7 +39,7 @@ public:
         const double hfov = 1.74; 
         fx_ = cx_ / std::tan(hfov / 2.0); 
         fy_ = fx_; 
-        nominal_rope_length_ = 1.0; 
+        nominal_rope_length_ = slung_ctrl::nominal_rope_length;
 
         sub_pixel_pos_.subscribe(this, "/uav/vision/payload_pixel");
         sub_uav_pose_.subscribe(this, "/model/x500_mono_cam_down/pose");
@@ -62,19 +63,14 @@ private:
     void sync_callback(const geometry_msgs::msg::PointStamped::ConstSharedPtr& pixel_msg,
                        const geometry_msgs::msg::PoseStamped::ConstSharedPtr& uav_msg) {
         
-        double u = pixel_msg->point.x;
-        double v = pixel_msg->point.y;
-        double x_c = (u - cx_) / fx_;
-        double y_c = (v - cy_) / fy_;
-
-        double xb = -y_c; 
-        double yb = -x_c; 
-        double zb = -1.0; 
-        Eigen::Vector3d V_body(xb, yb, zb);
+        Eigen::Vector3d V_body;
+        if (!slung_ctrl::payload_vector_body(pixel_msg->point.x, pixel_msg->point.y,
+                cx_, cy_, fx_, fy_, nominal_rope_length_, V_body)) return;
+        const double xb = V_body.x(), yb = V_body.y(), zb = V_body.z();
 
         Eigen::Quaterniond q(uav_msg->pose.orientation.w, uav_msg->pose.orientation.x,
                              uav_msg->pose.orientation.y, uav_msg->pose.orientation.z);
-        if (q.norm() < 1e-5) return;
+        if (!q.coeffs().allFinite() || q.norm() < 1e-5) return;
         q.normalize();
 
         Eigen::Vector3d V_world = q * V_body;

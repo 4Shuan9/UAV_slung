@@ -6,11 +6,11 @@
 // 
 // @Main Work: 
 //   * 节点注册：创建名为 `swing_truth` 的 ROS 2 节点
-//   * 数据输入：通过严格的时间同步器 (`ApproximateTime`) 订阅 Gazebo 物理引擎
-//             发布的无人机 `/model/x500_mono_cam_down/pose` 与吊挂物 `/model/payload_ball/pose` 绝对位姿
-//   * 核心处理：利用配置好的挂点物理偏置 (`hook_offset_body_`)，将吊挂物与相机的空间位置作向量相减得到绝对位移向量，
+//   * 数据输入：通过近似时间同步器 (`ApproximateTime`) 订阅 Gazebo 物理引擎
+//             配对的无人机 `/model/x500_mono_cam_down/pose` 与吊挂物 `/model/payload_ball/pose` 绝对位姿
+//   * 核心处理：利用配置好的挂点物理偏置 (`hook_offset_body_`)，将吊载质心与悬挂点位置作向量相减得到绝对位移向量，
 //             再经由无人机四元数转换阵逆变回机体坐标系；精确解算出笛卡尔投影角、极坐标偏角以及实际绳长
-//   * 数据输出：将零延迟、零噪声的摆角真值发布至 `/uav/swing/truth/angle` 话题，
+//   * 数据输出：将带仿真时间戳的几何摆角真值发布至 `/uav/swing/truth/angle` 话题，
 //             专用于作为 Benchamrk 与 EKF/ESO 等各种估计算法的性能表现进行对比评估
 // ==============================================================================
 
@@ -23,6 +23,7 @@
 #include <message_filters/synchronizer.h>
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
+#include "slung_ctrl/swing_geometry.hpp"
 #include <cmath>
 #include <algorithm>
 
@@ -31,7 +32,7 @@ class SwingAngleCalculator : public rclcpp::Node {
 public:
     SwingAngleCalculator() : Node("swing_truth") {
         // === [ Configuration ] ===
-        hook_offset_body_ = Eigen::Vector3d(0.0, 0.0, 0.10); 
+        hook_offset_body_ = slung_ctrl::suspension_offset_body();
 
         sub_uav_.subscribe(this, "/model/x500_mono_cam_down/pose");
         sub_payload_.subscribe(this, "/model/payload_ball/pose");
@@ -57,17 +58,17 @@ private:
         
         Eigen::Quaterniond q(uav_msg->pose.orientation.w, uav_msg->pose.orientation.x,
                              uav_msg->pose.orientation.y, uav_msg->pose.orientation.z);
-        if (q.norm() < 1e-5) return;
+        if (!q.coeffs().allFinite() || q.norm() < 1e-5) return;
         q.normalize();
 
         Eigen::Vector3d Pu_base(uav_msg->pose.position.x, uav_msg->pose.position.y, uav_msg->pose.position.z);
-        Eigen::Vector3d Pu_cam = Pu_base + q * hook_offset_body_; 
+        Eigen::Vector3d Pu_hook = Pu_base + q * hook_offset_body_;
 
         Eigen::Vector3d Pl(payload_msg->pose.position.x, payload_msg->pose.position.y, payload_msg->pose.position.z);
-        Eigen::Vector3d r_world = Pl - Pu_cam; 
+        Eigen::Vector3d r_world = Pl - Pu_hook;
         double rope_length = r_world.norm();
 
-        if (rope_length < 1e-5) return;
+        if (!r_world.allFinite() || rope_length < 1e-5) return;
 
         double xw = r_world.x(), yw = r_world.y(), zw = r_world.z();
         // Gazebo World / ENU: X -> East, Y -> North

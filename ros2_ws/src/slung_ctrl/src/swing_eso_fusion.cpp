@@ -25,7 +25,6 @@ public:
         parameters_.max_inputs=static_cast<std::size_t>(max_inputs);
         parameters_.validate();
         filter_=std::make_unique<slung_ctrl::DelayedSwingESO>(parameters_);
-        filter_alpha_=declare_parameter("filter_alpha",.5);
         max_vision_age_=declare_parameter("max_vision_age",.25);
         max_delay_=declare_parameter("max_visual_delay",.5);
         max_input_age_=declare_parameter("max_input_age",.05);
@@ -33,12 +32,12 @@ public:
         max_angle_=declare_parameter("max_angle_deg",35.0)*M_PI/180;
         input_delay_=declare_parameter("input_delay",0.0);
         input_time_mode_=declare_parameter("input_time_mode",std::string("synchronized"));
-        const double hz=declare_parameter("publish_hz",100.0);
+        const double hz=declare_parameter("publish_hz",200.0);
         const auto topic=declare_parameter("vision_topic",
             std::string("/uav/swing/vision/angle"));
-        for (double v:{filter_alpha_,max_vision_age_,max_delay_,max_input_age_,future_tolerance_,max_angle_,input_delay_,hz})
+        for (double v:{max_vision_age_,max_delay_,max_input_age_,future_tolerance_,max_angle_,input_delay_,hz})
             if (!std::isfinite(v)) throw std::invalid_argument("Non-finite ESO node parameter");
-        if (filter_alpha_<0 || filter_alpha_>1 || max_vision_age_<=0 || max_delay_<=0 ||
+        if (max_vision_age_<=0 || max_delay_<=0 ||
             max_delay_>=parameters_.history_sec || max_input_age_<=0 || future_tolerance_<0 ||
             future_tolerance_>max_input_age_ || max_angle_<=0 || max_angle_>=M_PI/2 || input_delay_<0 ||
             hz<=0 || hz>1000 || (input_time_mode_!="synchronized" && input_time_mode_!="offset"))
@@ -60,39 +59,36 @@ public:
         timer_=create_wall_timer(std::chrono::duration<double>(1/hz),std::bind(&SwingAngleESOFusion::publish_estimate,this));
         param_subscriber_=add_on_set_parameters_callback(
             std::bind(&SwingAngleESOFusion::parameters_callback,this,std::placeholders::_1));
-        RCLCPP_INFO(get_logger(),"ESO ready: historical LESO -> input-history prediction; clock=%s, output LPF alpha=%.2f",
-            input_time_mode_.c_str(),filter_alpha_);
+        RCLCPP_INFO(get_logger(),"ESO ready: historical LESO -> input-history prediction; clock=%s, output=%.1f Hz",
+            input_time_mode_.c_str(),hz);
     }
 
 private:
     rcl_interfaces::msg::SetParametersResult parameters_callback(const std::vector<rclcpp::Parameter> &params) {
         rcl_interfaces::msg::SetParametersResult result;
         try {
-            auto next=parameters_;double alpha=filter_alpha_;bool model_changed=false;
+            auto next=parameters_;bool model_changed=false;
             for (const auto &param:params) {
                 const auto &name=param.get_name();
-                if (name=="filter_alpha") alpha=param.as_double();
-                else if (name=="g") {next.g=param.as_double();model_changed=true;}
+                if (name=="g") {next.g=param.as_double();model_changed=true;}
                 else if (name=="l") {next.l=param.as_double();model_changed=true;}
                 else if (name=="omega_o") {next.omega=param.as_double();model_changed=true;}
                 else if (name=="dt") {next.max_step=param.as_double();model_changed=true;}
                 else throw std::invalid_argument("Timing/topic parameters require restart; tau is replaced by acquisition timestamps");
             }
             next.validate();
-            if (!std::isfinite(alpha) || alpha<0 || alpha>1) throw std::invalid_argument("Invalid filter_alpha");
             // Validate the entire transaction before changing any internal state.
             if (model_changed) {
                 filter_=std::make_unique<slung_ctrl::DelayedSwingESO>(next);
-                parameters_=next;pending_.clear();first_filter_run_=true;
+                parameters_=next;pending_.clear();
                 RCLCPP_WARN(get_logger(),"ESO model/gains changed; historical observer reset, waiting for input + vision");
             }
-            if (alpha!=filter_alpha_) first_filter_run_=true;
-            filter_alpha_=alpha;result.successful=true;
+            result.successful=true;
         } catch (const std::exception &e) {result.successful=false;result.reason=e.what();}
         return result;
     }
     void reset(const char *reason) {
-        filter_->reset();pending_.clear();first_filter_run_=true;offset_set_=false;
+        filter_->reset();pending_.clear();offset_set_=false;
         last_px4_stamp_=0;last_input_=last_published_=-1;
         RCLCPP_WARN(get_logger(),"ESO reset: %s",reason);
     }
@@ -157,8 +153,6 @@ private:
                     return;
                 }
                 pending_.pop_front();
-                if (result==slung_ctrl::ESOResult::initialized || result==slung_ctrl::ESOResult::reinitialized)
-                    first_filter_run_=true;
                 if (result==slung_ctrl::ESOResult::accepted || result==slung_ctrl::ESOResult::initialized ||
                     result==slung_ctrl::ESOResult::reinitialized) ++accepted_frames_;
                 else ++rejected_frames_;
@@ -176,16 +170,14 @@ private:
             diag.data={visual_age,input_age,last_delay_,static_cast<double>(filter_->input_count()),
                 static_cast<double>(accepted_frames_),static_cast<double>(rejected_frames_)};
             diagnostics_publisher_->publish(diag);
-            if (input_age>max_input_age_ || visual_age>max_vision_age_) {first_filter_run_=true;return;}
+            if (input_age>max_input_age_ || visual_age>max_vision_age_) return;
             const auto prediction=filter_->estimate_at(t);
-            for (const auto &axis:prediction.axis) if (std::abs(axis(0))>max_angle_) {first_filter_run_=true;return;}
-            if (first_filter_run_) {filtered_=prediction.axis;first_filter_run_=false;}
-            else for (int i=0;i<2;++i) filtered_[i]=filter_alpha_*prediction.axis[i]+(1-filter_alpha_)*filtered_[i];
+            for (const auto &axis:prediction.axis) if (std::abs(axis(0))>max_angle_) return;
             slung_ctrl::msg::SwingADRCState state;
             state.header.stamp=stamp;state.header.frame_id="world";
-            state.theta_east_deg=filtered_[0](0)*180/M_PI;state.theta_north_deg=filtered_[1](0)*180/M_PI;
-            state.rate_east_deg_s=filtered_[0](1)*180/M_PI;state.rate_north_deg_s=filtered_[1](1)*180/M_PI;
-            state.disturbance_east_rad_s2=filtered_[0](2);state.disturbance_north_rad_s2=filtered_[1](2);
+            state.theta_east_deg=prediction.axis[0](0)*180/M_PI;state.theta_north_deg=prediction.axis[1](0)*180/M_PI;
+            state.rate_east_deg_s=prediction.axis[0](1)*180/M_PI;state.rate_north_deg_s=prediction.axis[1](1)*180/M_PI;
+            state.disturbance_east_rad_s2=prediction.axis[0](2);state.disturbance_north_rad_s2=prediction.axis[1](2);
             adrc_state_publisher_->publish(state);
             geometry_msgs::msg::Vector3Stamped angle,rate,dist;
             angle.header=rate.header=dist.header=state.header;
@@ -200,11 +192,10 @@ private:
     slung_ctrl::ESOParameters parameters_;
     std::unique_ptr<slung_ctrl::DelayedSwingESO> filter_;
     std::deque<Vision> pending_;
-    std::array<Eigen::Vector3d,2> filtered_;
-    double filter_alpha_,max_vision_age_,max_delay_,max_input_age_,future_tolerance_,max_angle_,input_delay_;
+    double max_vision_age_,max_delay_,max_input_age_,future_tolerance_,max_angle_,input_delay_;
     double last_clock_=-1,last_input_=-1,last_published_=-1,last_delay_=0,input_offset_=0;
     uint64_t last_px4_stamp_=0,accepted_frames_=0,rejected_frames_=0;
-    bool first_filter_run_=true,offset_set_=false;
+    bool offset_set_=false;
     std::string input_time_mode_;
     rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr vision_subscriber_;
     rclcpp::Subscription<px4_msgs::msg::VehicleLocalPosition>::SharedPtr imu_subscriber_;

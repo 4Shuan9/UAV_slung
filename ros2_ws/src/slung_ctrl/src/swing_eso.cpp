@@ -30,7 +30,7 @@ public:
         // === [ Parameters ] ===
         this->declare_parameter("g", 9.81);
         this->declare_parameter("l", 1.0);
-        this->declare_parameter("omega_o", 15.0);
+        this->declare_parameter("omega_o", 8.0);
         this->declare_parameter("dt", 0.005);
 
         this->get_parameter("g", g_);
@@ -102,7 +102,6 @@ private:
         std::lock_guard<std::mutex> lock(data_mutex_);
         y_x_ = msg->vector.x * M_PI / 180.0;
         y_y_ = msg->vector.y * M_PI / 180.0;
-        last_vision_time_ = this->get_clock()->now();
         has_vision_ = true;
     }
 
@@ -115,34 +114,29 @@ private:
     void eso_step_callback() {
         std::lock_guard<std::mutex> lock(data_mutex_);
 
-        double err_x = 0.0;
-        double err_y = 0.0;
-
-        if (has_vision_) {
-            auto now = this->get_clock()->now();
-            double time_since_last_vision = (now - last_vision_time_).seconds();
-
-            if (time_since_last_vision < 0.1) {
-                err_x = y_x_ - state_x_.x1;
-                err_y = y_y_ - state_y_.x1;
-            }
-        }
-
-        double dot_x1_x = state_x_.x2 + beta1_ * err_x;
-        double dot_x2_x = -(g_ / l_) * state_x_.x1 + b0_ * a_x_ + state_x_.x3 + beta2_ * err_x;
-        double dot_x3_x = beta3_ * err_x;
-
-        state_x_.x1 += dot_x1_x * dt_;
-        state_x_.x2 += dot_x2_x * dt_;
-        state_x_.x3 += dot_x3_x * dt_;
-
-        double dot_x1_y = state_y_.x2 + beta1_ * err_y;
-        double dot_x2_y = -(g_ / l_) * state_y_.x1 + b0_ * a_y_ + state_y_.x3 + beta2_ * err_y;
-        double dot_x3_y = beta3_ * err_y;
-
-        state_y_.x1 += dot_x1_y * dt_;
-        state_y_.x2 += dot_x2_y * dt_;
-        state_y_.x3 += dot_x3_y * dt_;
+        // RK4 with the latest received acceleration and visual sample held
+        // throughout this step. No acquisition-time alignment or prediction.
+        const auto integrate_axis = [&](LesoState &state, double accel, double y) {
+            const auto derivative = [&](const LesoState &x) {
+                const double error = has_vision_ ? y - x.x1 : 0.0;
+                return LesoState{
+                    x.x2 + beta1_ * error,
+                    -(g_ / l_) * x.x1 + b0_ * accel + x.x3 + beta2_ * error,
+                    beta3_ * error};
+            };
+            const auto shifted = [](const LesoState &x, const LesoState &k, double h) {
+                return LesoState{x.x1 + h * k.x1, x.x2 + h * k.x2, x.x3 + h * k.x3};
+            };
+            const auto k1 = derivative(state);
+            const auto k2 = derivative(shifted(state, k1, dt_ / 2));
+            const auto k3 = derivative(shifted(state, k2, dt_ / 2));
+            const auto k4 = derivative(shifted(state, k3, dt_));
+            state.x1 += dt_ / 6 * (k1.x1 + 2 * k2.x1 + 2 * k3.x1 + k4.x1);
+            state.x2 += dt_ / 6 * (k1.x2 + 2 * k2.x2 + 2 * k3.x2 + k4.x2);
+            state.x3 += dt_ / 6 * (k1.x3 + 2 * k2.x3 + 2 * k3.x3 + k4.x3);
+        };
+        integrate_axis(state_x_, a_x_, y_x_);
+        integrate_axis(state_y_, a_y_, y_y_);
 
         // === [ Data Publishing ] ===
         auto stamp = this->get_clock()->now();

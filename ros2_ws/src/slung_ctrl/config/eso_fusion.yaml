@@ -4,11 +4,10 @@ swing_eso_fusion:
     l: 1.0
     omega_o: 8.0
     dt: 0.005
-    filter_alpha: 0.5
     vision_topic: /uav/swing/vision/angle
     input_time_mode: synchronized
     input_delay: 0.0
-    publish_hz: 100.0
+    publish_hz: 200.0
     history_sec: 2.0
     max_inputs: 2048
     max_input_gap: 0.05

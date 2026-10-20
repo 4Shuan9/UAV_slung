@@ -110,19 +110,16 @@ def process_and_find_red(img):
     if contours:
         largest_contour = max(contours, key=cv2.contourArea)
         if cv2.contourArea(largest_contour) > 30:
-            M = cv2.moments(largest_contour)
-            if M["m00"] > 0:
-                cx = int(M["m10"] / M["m00"])
-                cy = int(M["m01"] / M["m00"])
-                pos = (cx, cy)
-                
-                cv2.drawContours(img, [largest_contour], -1, (0, 255, 0), 2)
-                cv2.drawMarker(img, (cx, cy), (255, 0, 0), cv2.MARKER_CROSS, 15, 2)
-                
-                text = f"Pos: ({cx}, {cy})"
-                text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)[0]
-                cv2.putText(img, text, ((width - text_size[0]) // 2, height - 15), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+            (cx, cy), _ = cv2.minEnclosingCircle(largest_contour)
+            pos = (cx, cy)  # Keep floating-point circle center for ROS output.
+
+            cv2.drawContours(img, [largest_contour], -1, (0, 255, 0), 2)
+            cv2.drawMarker(img, (int(round(cx)), int(round(cy))), (255, 0, 0), cv2.MARKER_CROSS, 15, 2)
+
+            text = f"Pos: ({cx:.2f}, {cy:.2f})"
+            text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)[0]
+            cv2.putText(img, text, ((width - text_size[0]) // 2, height - 15),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
 
     return img, pos
 

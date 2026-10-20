@@ -6,7 +6,7 @@
 
 ## 1. 修改 DDS 转发间隔
 
-打开文件：`/home/ashuang/PX4-Autopilot/src/modules/uxrce_dds_client/dds_topics.h.em`
+打开文件：`~/PX4-Autopilot/src/modules/uxrce_dds_client/dds_topics.h.em`
 
 将：
 
