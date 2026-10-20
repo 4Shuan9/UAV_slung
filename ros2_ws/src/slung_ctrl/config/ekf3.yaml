@@ -1,0 +1,25 @@
+swing_ekf3:
+  ros__parameters:
+    g: 9.81
+    l: 1.0
+    q_omega: 0.01
+    q_f: 0.05
+    vision_std_deg: 0.5
+    vision_time_std: 0.002
+    initial_rate_std: 0.5
+    initial_disturbance_std: 0.5
+    max_step: 0.005
+    publish_hz: 200.0
+    history_sec: 1.0
+    max_events: 2048
+    nis_threshold: 9.0
+    max_visual_delay: 0.5
+    max_vision_age: 0.25
+    input_future_tolerance: 0.02
+    max_input_age: 0.05
+    max_angle_deg: 35.0
+    vision_topic: /uav/swing/vision/angle
+    input_time_mode: offset
+    input_delay: 0.0
+    accel_bias_east: 0.0
+    accel_bias_north: 0.0

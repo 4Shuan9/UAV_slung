@@ -1,4 +1,0 @@
-slung_antiswing_eight:
-  ros__parameters:
-    eight_scale: 8.0      # 8字形的大小缩放系数 (m)
-    omega: 0.2            # 角速度 (rad/s)，控制飞行的快慢

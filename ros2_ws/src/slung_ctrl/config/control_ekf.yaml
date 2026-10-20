@@ -1,0 +1,24 @@
+slung_control_adrc:
+  ros__parameters:
+    takeoff_height: 10.0
+    takeoff_speed: 0.5
+    kp_pos: 1.2
+    kd_pos: 0.8
+    omega_c: 3.0
+    zeta: 0.1
+    l: 1.0
+    g: 9.81
+    max_comp_acc: 3.0
+    state_topic: /uav/swing/ekf3/state
+    nonlinear_antiswing: true
+    max_state_age: 0.1
+    max_swing_angle_deg: 35.0
+    enable_rate_term: true
+    enable_disturbance_comp: true
+    disturbance_gain: 1.0
+    enable_disturbance_prelimit: false
+    enable_disturbance_filter: false
+    disturbance_filter_tau: 0.05
+    enable_disturbance_used_limit: false
+    disturbance_raw_limit: 0.3
+    disturbance_used_limit: 0.15

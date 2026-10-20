@@ -1,0 +1,5 @@
+swing_eso:
+  ros__parameters:
+    g: 9.81
+    l: 1.0
+    omega_o: 8.0

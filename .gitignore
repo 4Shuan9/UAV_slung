@@ -1,16 +1,43 @@
-# ROS 2 build products
-ros2_ws/build/
-ros2_ws/install/
-ros2_ws/log/
+# Build and installation outputs
+build/
+install/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+Testing/
+*.o
+*.a
+*.so
+*.so.*
 
-# Python
+# Runtime state and logs
+runtime/
+log/
+logs/
+eeprom/
+dataman
+*.bson
+*.ulg
+*.ulg.*
+*.px4log
+*.px4log.*
+*.tlog
+*.tlog.*
+*.log
+*.log.*
+
+# Recorded experiment outputs
+results/
+recordings/
+bags/
+*.db3
+*.db3-wal
+*.db3-shm
+*.mcap
+
+# Python and editor caches
 __pycache__/
 *.py[cod]
-
-# Editor / OS
 .vscode/
 .idea/
 .DS_Store
-
-# Runtime logs
-*.log

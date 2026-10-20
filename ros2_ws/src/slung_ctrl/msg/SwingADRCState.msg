@@ -1,4 +1,5 @@
-# Synchronized LESO state for ADRC control.
+# Synchronized swing state shared by ESO fusion, EKF3, and control.
+# Historical type name retained for archived experiment compatibility.
 # One message = one observer update = one coherent control-state snapshot.
 # World-frame physical directions: East / North.
 
@@ -10,6 +11,6 @@ float64 theta_north_deg
 float64 rate_east_deg_s
 float64 rate_north_deg_s
 
-# LESO lumped disturbance estimate [rad/s^2].
+# Lumped disturbance [rad/s^2]; linear residual for ESO, nonlinear residual for EKF3.
 float64 disturbance_east_rad_s2
 float64 disturbance_north_rad_s2

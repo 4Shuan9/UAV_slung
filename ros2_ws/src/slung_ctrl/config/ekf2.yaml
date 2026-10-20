@@ -1,0 +1,6 @@
+swing_ekf2:
+  ros__parameters:
+    g: 9.81
+    l: 1.0
+    damping_c: 0.2
+    dt: 0.005

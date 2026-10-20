@@ -1,0 +1,4 @@
+trajectory_square:
+  ros__parameters:
+    square_side_length: 9.0
+    cruise_speed: 3.0
