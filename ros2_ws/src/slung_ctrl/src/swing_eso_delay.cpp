@@ -1,18 +1,18 @@
-// === [ ESO Fusion: historical LESO + timestamped input-history predictor ] ===
+// === [ Delay-compensated ESO: historical visual ZOH LESO + timestamped input-history predictor ] ===
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <px4_msgs/msg/vehicle_local_position.hpp>
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include "slung_ctrl/msg/swing_adrc_state.hpp"
-#include "slung_ctrl/eso_fusion.hpp"
+#include "slung_ctrl/eso_delay.hpp"
 #include <deque>
 #include <memory>
 #include <string>
 
-class SwingAngleESOFusion : public rclcpp::Node {
+class SwingAngleESODelay : public rclcpp::Node {
 public:
-    SwingAngleESOFusion() : Node("swing_eso_fusion") {
+    SwingAngleESODelay() : Node("swing_eso_delay") {
         parameters_.g=declare_parameter("g",9.81);
         parameters_.l=declare_parameter("l",1.0);
         parameters_.omega=declare_parameter("omega_o",8.0);
@@ -29,37 +29,36 @@ public:
         max_delay_=declare_parameter("max_visual_delay",.5);
         max_input_age_=declare_parameter("max_input_age",.05);
         future_tolerance_=declare_parameter("input_future_tolerance",.02);
-        max_angle_=declare_parameter("max_angle_deg",35.0)*M_PI/180;
         input_delay_=declare_parameter("input_delay",0.0);
         input_time_mode_=declare_parameter("input_time_mode",std::string("synchronized"));
         const double hz=declare_parameter("publish_hz",200.0);
         const auto topic=declare_parameter("vision_topic",
             std::string("/uav/swing/vision/angle"));
-        for (double v:{max_vision_age_,max_delay_,max_input_age_,future_tolerance_,max_angle_,input_delay_,hz})
+        for (double v:{max_vision_age_,max_delay_,max_input_age_,future_tolerance_,input_delay_,hz})
             if (!std::isfinite(v)) throw std::invalid_argument("Non-finite ESO node parameter");
         if (max_vision_age_<=0 || max_delay_<=0 ||
             max_delay_>=parameters_.history_sec || max_input_age_<=0 || future_tolerance_<0 ||
-            future_tolerance_>max_input_age_ || max_angle_<=0 || max_angle_>=M_PI/2 || input_delay_<0 ||
+            future_tolerance_>max_input_age_ || input_delay_<0 ||
             hz<=0 || hz>1000 || (input_time_mode_!="synchronized" && input_time_mode_!="offset"))
             throw std::invalid_argument("Invalid ESO timing/domain parameters");
 
         vision_subscriber_=create_subscription<geometry_msgs::msg::Vector3Stamped>(topic,20,
-            std::bind(&SwingAngleESOFusion::vision_callback,this,std::placeholders::_1));
+            std::bind(&SwingAngleESODelay::vision_callback,this,std::placeholders::_1));
         imu_subscriber_=create_subscription<px4_msgs::msg::VehicleLocalPosition>(
             "/fmu/out/vehicle_local_position",rclcpp::SensorDataQoS(),
-            std::bind(&SwingAngleESOFusion::imu_callback,this,std::placeholders::_1));
-        adrc_state_publisher_=create_publisher<slung_ctrl::msg::SwingADRCState>("/uav/swing/eso_fusion/state",10);
-        fusion_angle_publisher_=create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/swing/eso_fusion/angle",10);
-        fusion_rate_publisher_=create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/swing/eso_fusion/rate",10);
-        fusion_dist_publisher_=create_publisher<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/swing/eso_fusion/disturbance",10);
-        diagnostics_publisher_=create_publisher<std_msgs::msg::Float64MultiArray>("/uav/swing/eso_fusion/diagnostics",10);
-        timer_=create_wall_timer(std::chrono::duration<double>(1/hz),std::bind(&SwingAngleESOFusion::publish_estimate,this));
+            std::bind(&SwingAngleESODelay::imu_callback,this,std::placeholders::_1));
+        adrc_state_publisher_=create_publisher<slung_ctrl::msg::SwingADRCState>("/uav/swing/eso_delay/state",10);
+        angle_publisher_=create_publisher<geometry_msgs::msg::Vector3Stamped>(
+            "/uav/swing/eso_delay/angle",10);
+        rate_publisher_=create_publisher<geometry_msgs::msg::Vector3Stamped>(
+            "/uav/swing/eso_delay/rate",10);
+        dist_publisher_=create_publisher<geometry_msgs::msg::Vector3Stamped>(
+            "/uav/swing/eso_delay/disturbance",10);
+        diagnostics_publisher_=create_publisher<std_msgs::msg::Float64MultiArray>("/uav/swing/eso_delay/diagnostics",10);
+        timer_=create_wall_timer(std::chrono::duration<double>(1/hz),std::bind(&SwingAngleESODelay::publish_estimate,this));
         param_subscriber_=add_on_set_parameters_callback(
-            std::bind(&SwingAngleESOFusion::parameters_callback,this,std::placeholders::_1));
-        RCLCPP_INFO(get_logger(),"ESO ready: historical LESO -> input-history prediction; clock=%s, output=%.1f Hz",
+            std::bind(&SwingAngleESODelay::parameters_callback,this,std::placeholders::_1));
+        RCLCPP_INFO(get_logger(),"ESO ready: historical visual ZOH LESO -> input-history prediction; clock=%s, output=%.1f Hz",
             input_time_mode_.c_str(),hz);
     }
 
@@ -127,7 +126,7 @@ private:
         const double capture=rclcpp::Time(msg->header.stamp,get_clock()->get_clock_type()).seconds();
         const double east=msg->vector.x*M_PI/180,north=msg->vector.y*M_PI/180;
         if (!std::isfinite(east) || !std::isfinite(north) || capture<=0 || capture>t ||
-            t-capture>max_delay_ || std::abs(east)>max_angle_ || std::abs(north)>max_angle_) {
+            t-capture>max_delay_) {
             RCLCPP_WARN_THROTTLE(get_logger(),*get_clock(),2000,"ESO visual frame rejected: time/domain invalid");return;
         }
         // Ordered camera stream: duplicated/out-of-order captures are not fused.
@@ -172,7 +171,6 @@ private:
             diagnostics_publisher_->publish(diag);
             if (input_age>max_input_age_ || visual_age>max_vision_age_) return;
             const auto prediction=filter_->estimate_at(t);
-            for (const auto &axis:prediction.axis) if (std::abs(axis(0))>max_angle_) return;
             slung_ctrl::msg::SwingADRCState state;
             state.header.stamp=stamp;state.header.frame_id="world";
             state.theta_east_deg=prediction.axis[0](0)*180/M_PI;state.theta_north_deg=prediction.axis[1](0)*180/M_PI;
@@ -184,7 +182,7 @@ private:
             angle.vector.x=state.theta_east_deg;angle.vector.y=state.theta_north_deg;
             rate.vector.x=state.rate_east_deg_s;rate.vector.y=state.rate_north_deg_s;
             dist.vector.x=state.disturbance_east_rad_s2;dist.vector.y=state.disturbance_north_rad_s2;
-            fusion_angle_publisher_->publish(angle);fusion_rate_publisher_->publish(rate);fusion_dist_publisher_->publish(dist);
+            angle_publisher_->publish(angle);rate_publisher_->publish(rate);dist_publisher_->publish(dist);
             last_published_=t;
         } catch (const std::exception &e) {reset(e.what());}
     }
@@ -192,7 +190,7 @@ private:
     slung_ctrl::ESOParameters parameters_;
     std::unique_ptr<slung_ctrl::DelayedSwingESO> filter_;
     std::deque<Vision> pending_;
-    double max_vision_age_,max_delay_,max_input_age_,future_tolerance_,max_angle_,input_delay_;
+    double max_vision_age_,max_delay_,max_input_age_,future_tolerance_,input_delay_;
     double last_clock_=-1,last_input_=-1,last_published_=-1,last_delay_=0,input_offset_=0;
     uint64_t last_px4_stamp_=0,accepted_frames_=0,rejected_frames_=0;
     bool offset_set_=false;
@@ -200,7 +198,7 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr vision_subscriber_;
     rclcpp::Subscription<px4_msgs::msg::VehicleLocalPosition>::SharedPtr imu_subscriber_;
     rclcpp::Publisher<slung_ctrl::msg::SwingADRCState>::SharedPtr adrc_state_publisher_;
-    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr fusion_angle_publisher_,fusion_rate_publisher_,fusion_dist_publisher_;
+    rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr angle_publisher_,rate_publisher_,dist_publisher_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr diagnostics_publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_subscriber_;
@@ -208,7 +206,7 @@ private:
 
 int main(int argc,char *argv[]) {
     rclcpp::init(argc,argv);
-    try {rclcpp::spin(std::make_shared<SwingAngleESOFusion>());}
-    catch (const std::exception &e) {RCLCPP_FATAL(rclcpp::get_logger("swing_eso_fusion"),"%s",e.what());rclcpp::shutdown();return 1;}
+    try {rclcpp::spin(std::make_shared<SwingAngleESODelay>());}
+    catch (const std::exception &e) {RCLCPP_FATAL(rclcpp::get_logger("swing_eso_delay"),"%s",e.what());rclcpp::shutdown();return 1;}
     rclcpp::shutdown();return 0;
 }

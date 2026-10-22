@@ -1,4 +1,4 @@
 trajectory_eight:
   ros__parameters:
     eight_scale: 8.0
-    omega: 0.2
+    omega: 0.150

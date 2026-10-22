@@ -34,7 +34,7 @@ def create_nodes(context):
         params = [clock]
         if method != 'vision_predictor':
             params.insert(0, os.path.join(share, 'config', method + '.yaml'))
-        if method in ['eso_fusion', 'ekf3']:
+        if method in ['eso_delay', 'ekf3']:
             params.append({'input_time_mode': mode})
         nodes.append(Node(package='slung_ctrl', executable='swing_' + method, parameters=params,
                           remappings=[('/uav/swing/vision/angle', vision)], output='screen'))
@@ -43,8 +43,8 @@ def create_nodes(context):
 
 def generate_launch_description():
     return LaunchDescription([
-        DeclareLaunchArgument('estimator', default_value='eso_fusion',
-                              choices=['eso_fusion', 'ekf3', 'eso', 'ekf2', 'vision_predictor', 'none']),
+        DeclareLaunchArgument('estimator', default_value='eso_delay',
+                              choices=['eso_delay', 'ekf3', 'eso', 'ekf2', 'vision_predictor', 'none']),
         DeclareLaunchArgument('baselines', default_value='false', choices=['true', 'false']),
         DeclareLaunchArgument('use_sim_time', default_value='true', choices=['true', 'false']),
         DeclareLaunchArgument('vision_topic', default_value='/uav/swing/vision/angle'),

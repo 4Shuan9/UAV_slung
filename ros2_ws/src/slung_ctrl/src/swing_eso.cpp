@@ -17,6 +17,7 @@
 #include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <px4_msgs/msg/vehicle_local_position.hpp>
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
+#include "slung_ctrl/msg/swing_adrc_state.hpp"
 #include <cmath>
 #include <mutex>
 #include <algorithm>
@@ -55,6 +56,8 @@ public:
         pub_eso_angle_ = this->create_publisher<geometry_msgs::msg::Vector3Stamped>("/uav/swing/eso/angle", 10);
         pub_eso_rate_  = this->create_publisher<geometry_msgs::msg::Vector3Stamped>("/uav/swing/eso/rate", 10);
         pub_eso_dist_  = this->create_publisher<geometry_msgs::msg::Vector3Stamped>("/uav/swing/eso/disturbance", 10);
+
+        pub_eso_state_ = this->create_publisher<slung_ctrl::msg::SwingADRCState>("/uav/swing/eso/state", 10);
 
         // === [ Timer ] ===
         auto timer_period = std::chrono::duration<double>(dt_);
@@ -161,6 +164,17 @@ private:
         msg_dist.vector.x = state_x_.x3;
         msg_dist.vector.y = state_y_.x3;
         pub_eso_dist_->publish(msg_dist);
+
+        // Package this update only; no input-time alignment or delay compensation.
+        slung_ctrl::msg::SwingADRCState msg_state;
+        msg_state.header = msg_angle.header;
+        msg_state.theta_east_deg = msg_angle.vector.x;
+        msg_state.theta_north_deg = msg_angle.vector.y;
+        msg_state.rate_east_deg_s = msg_rate.vector.x;
+        msg_state.rate_north_deg_s = msg_rate.vector.y;
+        msg_state.disturbance_east_rad_s2 = msg_dist.vector.x;
+        msg_state.disturbance_north_rad_s2 = msg_dist.vector.y;
+        pub_eso_state_->publish(msg_state);
     }
 
     // === [ Member Variables ] ===
@@ -184,6 +198,7 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_eso_angle_;
     rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_eso_rate_;
     rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr pub_eso_dist_;
+    rclcpp::Publisher<slung_ctrl::msg::SwingADRCState>::SharedPtr pub_eso_state_;
     rclcpp::TimerBase::SharedPtr timer_200hz_;
     rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_sub_;
 };

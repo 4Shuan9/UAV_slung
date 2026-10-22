@@ -1,6 +1,6 @@
 slung_control_adrc:
   ros__parameters:
-    takeoff_height: 10.0
+    takeoff_height: 8.0
     takeoff_speed: 0.5
     kp_pos: 1.2
     kd_pos: 0.8

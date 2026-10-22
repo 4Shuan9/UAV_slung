@@ -10,7 +10,7 @@ Based on [rain_ws](https://github.com/RainbowSeeker/rain_ws.git) and [PX4-ROS2-G
 
 * **Basketball Court Environment:** Court markings provide visual references for manual flight and trajectory tracking.
 * **Tether & Payload Dynamics:** A 1-meter tether is represented by 20 articulated segments and connected to a spherical payload.
-* **Swing-Angle Estimation:** Vision measurements, traditional ESO, delay-compensated ESO fusion, two-state EKF and three-state EKF.
+* **Swing-Angle Estimation:** Vision measurements, traditional ESO, delay-compensated ESO with historical visual ZOH, two-state EKF and three-state EKF.
 * **Anti-Swing Control:** ADRC and PD control with figure-eight, square and waypoint references.
 
 ## System Requirements
@@ -58,10 +58,10 @@ Open QGroundControl, then run each command in a separate terminal:
 ros2 launch slung_ctrl sim.launch.py
 
 # 2. Vision, ground truth and swing-angle estimation
-ros2 launch slung_ctrl estimation.launch.py estimator:=eso_fusion
+ros2 launch slung_ctrl estimation.launch.py estimator:=eso_delay
 
-# 3. Automatic takeoff and anti-swing hover; default takeoff height: 10 m
-ros2 launch slung_ctrl control.launch.py estimator:=eso_fusion
+# 3. Automatic takeoff and anti-swing hover; default takeoff height: 8 m
+ros2 launch slung_ctrl control.launch.py estimator:=eso_delay
 
 # 4. Optional: start the figure-eight trajectory after reaching hover
 ros2 launch slung_ctrl trajectory.launch.py type:=eight
@@ -80,22 +80,26 @@ PX4 runtime files are stored outside the project, by default in `~/.local/state/
 
 | `estimator` | Method | Controller |
 | :--- | :--- | :---: |
-| `eso_fusion` | Historical ESO with prediction to the current time | ADRC / PD |
+| `eso_delay` | Historical visual ZOH ESO with delay compensation and prediction | ADRC / PD |
 | `ekf3` | Three-state EKF with delayed-measurement replay | ADRC / PD |
-| `eso` | Traditional ESO | PD |
+| `eso` | Visual ZOH ESO without time alignment or delay compensation | ADRC / PD |
 | `ekf2` | Original two-state EKF | PD |
 | `vision_predictor` | Vision prediction baseline | Observation only |
 | `none` | Vision and ground truth only | None |
 
-Use the same `estimator` in estimation and control. Add `controller:=pd` for PD control; ESO and EKF2 require PD. Add `baselines:=true` to estimation to also run ESO, EKF2 and the vision predictor.
+`eso_delay` holds the previous visual sample over each past capture interval, integrates with time-aligned acceleration, then predicts to the current time without visual correction. It uses RK4 and no visual interpolation; out-of-order visual frames are rejected.
+
+Use the same `estimator` in estimation and control. Add `controller:=pd` for PD control; EKF2 requires PD. Add `baselines:=true` to estimation to also run ESO, EKF2 and the vision predictor.
 
 Trajectory `type` accepts `eight`, `square` or `waypoint`. The waypoint node accepts `geometry_msgs/msg/Point` on `/uav/reference/waypoint`.
 
-Parameters are in `ros2_ws/src/slung_ctrl/config/`. Use `control_eso.yaml` for ESO_fusion + ADRC, `control_ekf.yaml` for EKF3 + ADRC, and `control_pd.yaml` for PD. Set `takeoff_height` before launch.
+Parameters are in `ros2_ws/src/slung_ctrl/config/`. Use `control_eso.yaml` for ESO / ESO_delay + ADRC, `control_ekf.yaml` for EKF3 + ADRC, and `control_pd.yaml` for PD. Set `takeoff_height` before launch.
+
+The fixed baseline uses ESO_delay + ADRC; EKF3 + ADRC is the companion configuration. Parameter values and validation are summarized in [the parameter report](docs/config/parameter_selection.md). The figure-eight defaults to `eight_scale=8`, `omega=0.150` (maximum reference speed approximately 1.70 m/s).
 
 ## Main Topics
 
-`<method>`: `eso`, `eso_fusion`, `ekf2`, `ekf3` or `vision_predictor`. Rate is available for all except `vision_predictor`; disturbance for ESO, ESO_fusion and EKF3; state for ESO_fusion and EKF3 only.
+`<method>`: `eso`, `eso_delay`, `ekf2`, `ekf3` or `vision_predictor`. Rate is available for all except `vision_predictor`; disturbance for ESO, ESO_delay and EKF3; state for ESO, ESO_delay and EKF3.
 
 | Topic | Message type | Purpose |
 | :--- | :--- | :--- |
@@ -111,12 +115,12 @@ Parameters are in `ros2_ws/src/slung_ctrl/config/`. Use `control_eso.yaml` for E
 | `/fmu/out/vehicle_odometry` | `px4_msgs/VehicleOdometry` | Position and velocity feedback |
 | `/fmu/out/vehicle_local_position` | `px4_msgs/VehicleLocalPosition` | PX4 local position, velocity and acceleration |
 
-Default rates: camera 25 Hz, ESO_fusion/EKF3 output 200 Hz, control 50 Hz. The detector reads Gazebo Transport images directly.
+Default rates: camera 25 Hz, ESO/ESO_delay/EKF3 output 200 Hz, control 50 Hz. The detector reads Gazebo Transport images directly.
 
 ## Coordinates and Units
 
-* **Gazebo ENU:** x=East, y=North, z=Up. **PX4 NED:** x=North, y=East, z=Down; 10 m above the PX4 origin is z=-10 m. Their position origins may differ.
+* **Gazebo ENU:** x=East, y=North, z=Up. **PX4 NED:** x=North, y=East, z=Down; 8 m above the PX4 origin is z=-8 m. Their position origins may differ.
 * **Swing messages:** vector.x=East angle, vector.y=North angle, in deg; rates in deg/s, disturbances in rad/s². These are payload swing angles, not UAV attitude.
 * **Acceleration:** PX4 `ax`=North, `ay`=East; these are local velocity derivatives, not raw accelerometer measurements.
 * **Geometry:** 1 m rope, suspension at the vehicle model origin; camera +0.10 m and base_link +0.24 m above it.
-* **Time:** simulation uses `/clock` with `use_sim_time=true`. Vision stamps are image capture time; observer state stamps are prediction time.
+* **Time:** simulation uses `/clock` with `use_sim_time=true`. Vision stamps are image capture time; ESO state stamps are update time; ESO_delay/EKF3 state stamps are prediction time.

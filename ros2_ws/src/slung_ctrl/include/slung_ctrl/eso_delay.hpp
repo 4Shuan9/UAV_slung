@@ -1,5 +1,5 @@
 #pragma once
-// LESO on the acquisition timeline, followed by a correction-free predictor.
+// Historical visual ZOH LESO on the acquisition timeline, then a correction-free predictor.
 // The disturbance is the LINEAR-model residual, in rad/s^2.
 #include <Eigen/Core>
 #include <algorithm>
@@ -72,14 +72,14 @@ public:
             measured_=y;initialized_=true;
             return was_initialized ? ESOResult::reinitialized : ESOResult::initialized;
         }
-        // The next endpoint is already received, so retrospective interpolation
-        // over [previous capture,current capture] is causal at publication time.
+        // Reconstruct the past visual signal with left-endpoint ZOH:
+        // y(s)=y_previous for s in [previous capture,current capture).
+        // The newly received value applies from its capture time onward;
+        // it must not influence the preceding interval or cause a state jump.
         auto next=anchor_;
-        const double begin=anchor_.time, duration=t-begin;
-        const auto y0=measured_;
-        integrate(next,t,[&](const Eigen::Vector3d &x,int axis,double accel,double s) {
-            const double measurement=y0[axis]+(y[axis]-y0[axis])*(s-begin)/duration;
-            return eso_correction(x,accel,measurement,p_);
+        const auto held_measurement=measured_;
+        integrate(next,t,[&](const Eigen::Vector3d &x,int axis,double accel,double) {
+            return eso_correction(x,accel,held_measurement[axis],p_);
         });
         anchor_=next;measured_=y;
         return ESOResult::accepted;

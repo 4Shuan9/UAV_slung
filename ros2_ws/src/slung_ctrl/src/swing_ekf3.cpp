@@ -33,7 +33,6 @@ public:
         filter_ = std::make_unique<slung_ctrl::DelayedSwingEKF>(p);
         vision_std_ = declare_parameter("vision_std_deg", 0.5) * M_PI / 180.0;
         time_std_ = declare_parameter("vision_time_std", 0.002);
-        max_angle_ = declare_parameter("max_angle_deg", 35.0) * M_PI / 180.0;
         max_vision_age_ = declare_parameter("max_vision_age", 0.25);
         max_input_age_ = declare_parameter("max_input_age", 0.05);
         input_future_tolerance_ = declare_parameter("input_future_tolerance", 0.02);
@@ -45,11 +44,11 @@ public:
         const double publish_hz = declare_parameter("publish_hz", 200.0);
         const auto vision_topic = declare_parameter("vision_topic",
             std::string("/uav/swing/vision/angle"));
-        for (double value : {vision_std_, time_std_, max_angle_, max_vision_age_, max_input_age_,
+        for (double value : {vision_std_, time_std_, max_vision_age_, max_input_age_,
                              max_delay_, input_future_tolerance_, input_delay_, bias_east_, bias_north_, publish_hz}) {
             if (!std::isfinite(value)) throw std::invalid_argument("Non-finite node parameter");
         }
-        if (vision_std_ <= 0 || time_std_ < 0 || max_angle_ <= 0 || max_angle_ >= M_PI / 2 ||
+        if (vision_std_ <= 0 || time_std_ < 0 ||
             max_vision_age_ <= 0 || max_input_age_ <= 0 || input_future_tolerance_ < 0 ||
             input_future_tolerance_ > max_input_age_ || max_delay_ <= 0 ||
             max_delay_ >= p.history_sec || input_delay_ < 0 || publish_hz <= 0 || publish_hz > 1000 ||
@@ -132,7 +131,7 @@ private:
         const double east = msg->vector.x * M_PI / 180.0;
         const double north = msg->vector.y * M_PI / 180.0;
         if (!std::isfinite(east) || !std::isfinite(north) || capture <= 0 || capture > t ||
-            t - capture > max_delay_ || std::abs(east) > max_angle_ || std::abs(north) > max_angle_) {
+            t - capture > max_delay_) {
             RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Visual frame rejected: time/domain invalid");
             return;
         }
@@ -158,7 +157,7 @@ private:
                 static_cast<double>(filter_->event_count()), s.nis[0], s.nis[1], last_delay_};
             pub_diag_->publish(diag);
             for (int i = 0; i < 2; ++i) {
-                if (t - s.last_vision[i] > max_vision_age_ || std::abs(s.axis[i].x(0)) > max_angle_) return;
+                if (t - s.last_vision[i] > max_vision_age_) return;
             }
             slung_ctrl::msg::SwingADRCState state;
             state.header.stamp = stamp; state.header.frame_id = "world";
@@ -188,7 +187,7 @@ private:
     }
 
     std::unique_ptr<slung_ctrl::DelayedSwingEKF> filter_;
-    double vision_std_, time_std_, max_angle_, max_vision_age_, max_input_age_, max_delay_;
+    double vision_std_, time_std_, max_vision_age_, max_input_age_, max_delay_;
     double input_future_tolerance_, input_delay_, bias_east_, bias_north_, input_offset_ = 0;
     double last_clock_ = -1, last_input_ = -1, last_published_ = -1, last_delay_ = 0;
     uint64_t last_px4_stamp_ = 0;

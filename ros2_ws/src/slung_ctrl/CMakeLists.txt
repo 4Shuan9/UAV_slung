@@ -59,9 +59,9 @@ target_link_libraries(swing_vision_predictor Eigen3::Eigen)
 add_executable(swing_eso src/swing_eso.cpp)
 ament_target_dependencies(swing_eso rclcpp geometry_msgs px4_msgs)
 
-add_executable(swing_eso_fusion src/swing_eso_fusion.cpp)
-ament_target_dependencies(swing_eso_fusion rclcpp geometry_msgs px4_msgs std_msgs)
-target_link_libraries(swing_eso_fusion Eigen3::Eigen)
+add_executable(swing_eso_delay src/swing_eso_delay.cpp)
+ament_target_dependencies(swing_eso_delay rclcpp geometry_msgs px4_msgs std_msgs)
+target_link_libraries(swing_eso_delay Eigen3::Eigen)
 
 add_executable(swing_ekf2 src/swing_ekf2.cpp)
 ament_target_dependencies(swing_ekf2 rclcpp geometry_msgs px4_msgs)
@@ -71,10 +71,10 @@ add_executable(swing_ekf3 src/swing_ekf3.cpp)
 ament_target_dependencies(swing_ekf3 rclcpp px4_msgs geometry_msgs std_msgs)
 target_link_libraries(swing_ekf3 Eigen3::Eigen)
 
-# The ADRC controller and LESO fusion node use the custom interface generated
-# in this same package.
+# The ADRC controller and three-state observers share this generated interface.
 rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
-target_link_libraries(swing_eso_fusion "${cpp_typesupport_target}")
+target_link_libraries(swing_eso "${cpp_typesupport_target}")
+target_link_libraries(swing_eso_delay "${cpp_typesupport_target}")
 target_link_libraries(slung_control_adrc "${cpp_typesupport_target}")
 target_link_libraries(swing_ekf3 "${cpp_typesupport_target}")
 
@@ -89,7 +89,7 @@ install(TARGETS
   swing_vision
   swing_vision_predictor
   swing_eso
-  swing_eso_fusion
+  swing_eso_delay
   swing_ekf2
   swing_ekf3
   DESTINATION lib/${PROJECT_NAME}

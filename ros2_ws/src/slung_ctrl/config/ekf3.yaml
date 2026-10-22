@@ -17,7 +17,6 @@ swing_ekf3:
     max_vision_age: 0.25
     input_future_tolerance: 0.02
     max_input_age: 0.05
-    max_angle_deg: 35.0
     vision_topic: /uav/swing/vision/angle
     input_time_mode: offset
     input_delay: 0.0

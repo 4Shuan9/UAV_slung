@@ -17,7 +17,7 @@ class SlungAntiswingEight : public rclcpp::Node {
 public:
     SlungAntiswingEight() : Node("trajectory_eight") {
         this->declare_parameter("eight_scale", 8.0); 
-        this->declare_parameter("omega", 0.2);       
+        this->declare_parameter("omega", 0.150);
 
         pub_target = this->create_publisher<geometry_msgs::msg::Point>("/uav/reference/position", 10);
         pub_yaw = this->create_publisher<std_msgs::msg::Float32>("/uav/reference/yaw", 10); // 新增Yaw发布器

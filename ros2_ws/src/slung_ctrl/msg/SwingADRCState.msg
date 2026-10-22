@@ -1,4 +1,4 @@
-# Synchronized swing state shared by ESO fusion, EKF3, and control.
+# Synchronized swing state shared by delay-compensated ESO, EKF3, and control.
 # Historical type name retained for archived experiment compatibility.
 # One message = one observer update = one coherent control-state snapshot.
 # World-frame physical directions: East / North.

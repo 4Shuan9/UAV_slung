@@ -1,4 +1,4 @@
-swing_eso_fusion:
+swing_eso_delay:
   ros__parameters:
     g: 9.81
     l: 1.0
@@ -16,4 +16,3 @@ swing_eso_fusion:
     max_vision_age: 0.25
     max_input_age: 0.05
     input_future_tolerance: 0.02
-    max_angle_deg: 35.0

@@ -31,7 +31,7 @@ enum class FlightState { INIT, TAKEOFF, CONTROL };
 class SlungAntiswing : public rclcpp::Node {
 public:
     SlungAntiswing() : Node("slung_control_pd") {
-        this->declare_parameter("takeoff_height", 5.0);   
+        this->declare_parameter("takeoff_height", 8.0);
         this->declare_parameter("takeoff_speed", 0.5);    
         this->declare_parameter("kp_pos", 1.2);       
         this->declare_parameter("kd_pos", 0.8);       
@@ -44,11 +44,11 @@ public:
         pub_cmd = this->create_publisher<px4_msgs::msg::VehicleCommand>("/fmu/in/vehicle_command", 10);
 
         sub_eso_angle = this->create_subscription<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/swing/eso_fusion/angle", 10,
+            "/uav/swing/eso_delay/angle", 10,
             std::bind(&SlungAntiswing::angle_cb, this, std::placeholders::_1));
         
         sub_eso_rate = this->create_subscription<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/swing/eso_fusion/rate", 10,
+            "/uav/swing/eso_delay/rate", 10,
             std::bind(&SlungAntiswing::rate_cb, this, std::placeholders::_1));
 
         sub_odom = this->create_subscription<px4_msgs::msg::VehicleOdometry>(

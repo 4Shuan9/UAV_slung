@@ -42,7 +42,7 @@ public:
         // ----------------------------------------------------------------------
         // Flight / position-loop parameters
         // ----------------------------------------------------------------------
-        this->declare_parameter("takeoff_height", 10.0);
+        this->declare_parameter("takeoff_height", 8.0);
         this->declare_parameter("takeoff_speed", 0.5);
         this->declare_parameter("kp_pos", 1.2);
         this->declare_parameter("kd_pos", 0.8);
@@ -57,15 +57,12 @@ public:
         this->declare_parameter("max_comp_acc", 3.0); // total horizontal acceleration limit [m/s^2]
 
         // Phase-1 EKF interface. Legacy launch keeps its original source/law.
-        this->declare_parameter("state_topic", "/uav/swing/eso_fusion/state");
+        this->declare_parameter("state_topic", "/uav/swing/eso_delay/state");
         this->declare_parameter("nonlinear_antiswing", false);
         this->declare_parameter("max_state_age", 0.10);
-        this->declare_parameter("max_swing_angle_deg", 35.0);
         const double max_state_age = this->get_parameter("max_state_age").as_double();
-        const double max_angle = this->get_parameter("max_swing_angle_deg").as_double();
-        if (!std::isfinite(max_state_age) || max_state_age <= 0 ||
-            !std::isfinite(max_angle) || max_angle <= 0 || max_angle >= 89.0) {
-            throw std::invalid_argument("Invalid state freshness/angle limits");
+        if (!std::isfinite(max_state_age) || max_state_age <= 0) {
+            throw std::invalid_argument("Invalid state freshness limit");
         }
 
         // ----------------------------------------------------------------------
@@ -233,9 +230,7 @@ private:
                             msg->disturbance_east_rad_s2, msg->disturbance_north_rad_s2}) {
             if (!std::isfinite(value)) return;
         }
-        const double max_angle = this->get_parameter("max_swing_angle_deg").as_double();
-        if (!std::isfinite(age) || age < 0 || age > this->get_parameter("max_state_age").as_double() ||
-            std::abs(msg->theta_east_deg) > max_angle || std::abs(msg->theta_north_deg) > max_angle) return;
+        if (!std::isfinite(age) || age < 0 || age > this->get_parameter("max_state_age").as_double()) return;
         last_valid_state_time = stamp_time;
 
         // Atomic snapshot: theta/rate/f belong to the same estimator update.
@@ -549,17 +544,15 @@ private:
             }
 
             const bool nonlinear = this->get_parameter("nonlinear_antiswing").as_bool();
-            const double max_angle_rad = this->get_parameter("max_swing_angle_deg").as_double() * M_PI / 180.0;
             const bool valid_gains = std::isfinite(l) && l > 0 && std::isfinite(g) && g > 0 &&
                 std::isfinite(omega_c) && omega_c > 0 && std::isfinite(zeta) && zeta > 0 &&
-                std::isfinite(a_max) && a_max > 0 && std::isfinite(max_angle_rad) &&
-                max_angle_rad > 0 && max_angle_rad < M_PI / 2;
+                std::isfinite(a_max) && a_max > 0;
             if (!valid_gains) {
                 RCLCPP_ERROR_THROTTLE(this->get_logger(), *this->get_clock(), 2000, "Invalid controller gains");
                 return;
             }
             const auto antiswing = [&](double theta, double rate, double f_acc, double linear) {
-                if (!has_synced_state_local || std::abs(theta) > max_angle_rad) return 0.0;
+                if (!has_synced_state_local) return 0.0;
                 if (!nonlinear) return linear;
                 return slung_ctrl::antiswing_acceleration(theta,
                     enable_rate_term ? rate : 0.0, f_acc / l, l, g, kp_swing, kd_swing);
