@@ -26,6 +26,15 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   DEPENDENCIES std_msgs
 )
 
+# Gazebo Harmonic sensor interface (environment ENU / tesla).
+find_package(gz-sim8 REQUIRED)
+find_package(gz-sensors8 REQUIRED COMPONENTS magnetometer)
+find_package(gz-plugin2 REQUIRED COMPONENTS register)
+add_library(slung_magnetometer_system SHARED src/magnetometer_system.cpp)
+target_link_libraries(slung_magnetometer_system
+  gz-sim8::gz-sim8 gz-sensors8::magnetometer gz-plugin2::register)
+install(TARGETS slung_magnetometer_system LIBRARY DESTINATION lib)
+
 # --- 3. C++ Executables ---
 add_executable(slung_control_pd src/slung_control_pd.cpp)
 ament_target_dependencies(slung_control_pd rclcpp px4_msgs geometry_msgs std_msgs)
@@ -49,7 +58,7 @@ ament_target_dependencies(swing_truth rclcpp geometry_msgs message_filters)
 target_link_libraries(swing_truth Eigen3::Eigen)
 
 add_executable(swing_vision src/swing_vision.cpp)
-ament_target_dependencies(swing_vision rclcpp geometry_msgs message_filters)
+ament_target_dependencies(swing_vision rclcpp geometry_msgs px4_msgs)
 target_link_libraries(swing_vision Eigen3::Eigen)
 
 add_executable(swing_vision_predictor src/swing_vision_predictor.cpp)

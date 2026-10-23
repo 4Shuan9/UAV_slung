@@ -38,4 +38,30 @@ inline bool payload_vector_body(double u, double v, double cx, double cy,
     payload = offset + distance * ray;
     return payload.allFinite();
 }
+// Inverse perspective geometry for the center of a spherical silhouette.
+// The enclosing circle of the ideal projected ellipse shares its center.
+// With camera-frame sphere center (x,y,z), its normalized silhouette center
+// is (x*y/(x*x-r*r), x*z/(x*x-r*r)), rather than (y/x,z/x).
+// Jointly recover optical depth using the same taut-rope constraint. No
+// estimated angle offsets, temporal smoothing, or truth feedback are used.
+inline bool payload_sphere_vector_body(double u, double v, double cx, double cy,
+                                       double fx, double fy, double length,
+                                       double radius, Eigen::Vector3d &payload) {
+    if (!std::isfinite(radius) || radius < 0 ||
+        !payload_vector_body(u, v, cx, cy, fx, fy, length, payload)) return false;
+    const Eigen::Vector3d offset = camera_offset_body() - suspension_offset_body();
+    const Eigen::Matrix3d body_to_camera = camera_to_body().transpose();
+    // Fixed-point inversion converges rapidly for this camera and 5 cm sphere.
+    // Eight iterations also resolve the full visible image to double precision.
+    for (int i = 0; i < 8; ++i) {
+        const double depth = (body_to_camera * (payload - offset)).x();
+        if (!std::isfinite(depth) || depth <= radius) return false;
+        const double scale = 1.0 - radius * radius / (depth * depth);
+        const double center_u = cx - 0.5 + (u + 0.5 - cx) * scale;
+        const double center_v = cy - 0.5 + (v + 0.5 - cy) * scale;
+        if (!payload_vector_body(center_u, center_v, cx, cy, fx, fy, length, payload))
+            return false;
+    }
+    return true;
+}
 } // namespace slung_ctrl

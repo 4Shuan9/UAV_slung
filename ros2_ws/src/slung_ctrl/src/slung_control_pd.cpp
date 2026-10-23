@@ -16,6 +16,7 @@
 #include <px4_msgs/msg/trajectory_setpoint.hpp>
 #include <px4_msgs/msg/vehicle_command.hpp>
 #include <px4_msgs/msg/vehicle_odometry.hpp>
+#include <px4_msgs/msg/vehicle_local_position.hpp>
 #include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <geometry_msgs/msg/point.hpp>
 #include <std_msgs/msg/float32.hpp>
@@ -55,6 +56,24 @@ public:
             "/fmu/out/vehicle_odometry", rclcpp::SensorDataQoS(),
             std::bind(&SlungAntiswing::odom_cb, this, std::placeholders::_1));
 
+        sub_heading = this->create_subscription<px4_msgs::msg::VehicleLocalPosition>(
+            "/fmu/out/vehicle_local_position", rclcpp::SensorDataQoS(),
+            [this](const px4_msgs::msg::VehicleLocalPosition::SharedPtr msg) {
+                if (!heading_initialized) {
+                    if (!std::isfinite(msg->heading)) return;
+                    target_yaw = msg->heading;
+                    heading_initialized = true;
+                } else if (msg->heading_reset_counter != heading_reset_counter &&
+                           !external_yaw_reference && std::isfinite(msg->delta_heading)) {
+                    // Preserve relative takeoff/hover heading across an EKF reset.
+                    target_yaw = std::atan2(std::sin(target_yaw + msg->delta_heading),
+                                            std::cos(target_yaw + msg->delta_heading));
+                    RCLCPP_INFO(get_logger(), "Heading reset: hover target updated by %.4f rad",
+                                msg->delta_heading);
+                }
+                heading_reset_counter = msg->heading_reset_counter;
+            });
+
         sub_target_pos = this->create_subscription<geometry_msgs::msg::Point>(
             "/uav/reference/position", 10, [this](const geometry_msgs::msg::Point::SharedPtr msg) {
                 if (state_ == FlightState::CONTROL) {
@@ -68,7 +87,10 @@ public:
 
         sub_target_yaw = this->create_subscription<std_msgs::msg::Float32>(
             "/uav/reference/yaw", 10, [this](const std_msgs::msg::Float32::SharedPtr msg) {
-                if (state_ == FlightState::CONTROL) target_yaw = msg->data;
+                if (state_ == FlightState::CONTROL) {
+                    target_yaw = msg->data;
+                    external_yaw_reference = true;
+                }
             });
 
         timer = this->create_wall_timer(20ms, std::bind(&SlungAntiswing::control_loop, this));
@@ -88,6 +110,10 @@ private:
     float target_yaw = 0.0f; 
     float current_sp_z = 0; 
     
+    bool heading_initialized = false;
+    bool external_yaw_reference = false;
+    uint8_t heading_reset_counter = 0;
+    rclcpp::Subscription<px4_msgs::msg::VehicleLocalPosition>::SharedPtr sub_heading;
     bool odom_received = false;
     bool is_mid_air = false; 
 
@@ -132,7 +158,8 @@ private:
             current_sp_z = current_z;
 
             float w = msg->q[0], x = msg->q[1], y = msg->q[2], z = msg->q[3];
-            target_yaw = std::atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z));
+            if (!heading_initialized)
+                target_yaw = std::atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z));
 
             if (current_z < -0.5f) {
                 is_mid_air = true;
@@ -146,7 +173,7 @@ private:
     }
 
     void control_loop() {
-        if (!odom_received) return;
+        if (!odom_received || !heading_initialized) return;
 
         publish_offboard_control_mode();
         px4_msgs::msg::TrajectorySetpoint sp{};

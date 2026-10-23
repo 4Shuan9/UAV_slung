@@ -10,7 +10,7 @@
 #   * 节点注册：创建名为 `payload_detector` 的 ROS 2 节点。
 #   * 数据输入：通过 gz-transport 订阅 Gazebo 底层相机图像，输入话题为
 #             /world/UAV_slung_world/model/x500_mono_cam_down/link/camera_link/sensor/imager/image
-#   * 核心处理：利用 OpenCV 对原始图像进行 HSV 颜色阈值分割与形态学处理，提取红色吊挂物的中心像素坐标
+#   * 核心处理：利用 OpenCV 对原始图像进行 HSV 颜色阈值分割，提取红色吊挂物的中心像素坐标
 #   * 数据输出：将带有时间戳的像素坐标发布至 ROS 2 网络，输出话题为 /uav/vision/payload_pixel (消息类型: PointStamped)
 # ==============================================================================
 
@@ -103,7 +103,8 @@ def process_and_find_red(img):
     mask1 = cv2.inRange(hsv, np.array([0, 100, 100]), np.array([10, 255, 255]))
     mask2 = cv2.inRange(hsv, np.array([160, 100, 100]), np.array([180, 255, 255]))
     mask = cv2.bitwise_or(mask1, mask2)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    # Preserve the observed outer boundary: opening can split an occluded ball
+    # or change the support points of its enclosing circle.
     
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
@@ -176,7 +177,7 @@ def main(args=None):
     finally:
         cam.cleanup() 
         ros_node.destroy_node()
-        rclpy.shutdown()
+        rclpy.try_shutdown()
         sys.exit(0)
 
 if __name__ == "__main__":

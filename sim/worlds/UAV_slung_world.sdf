@@ -17,7 +17,7 @@
 
     <!-- 传感器系统插件 -->
     <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"></plugin>
-    <plugin filename="gz-sim-magnetometer-system" name="gz::sim::systems::Magnetometer"></plugin>
+    <plugin filename="libslung_magnetometer_system.so" name="slung_ctrl::MagnetometerSystem"></plugin>
     <plugin filename="gz-sim-altimeter-system" name="gz::sim::systems::Altimeter"></plugin>
     <plugin filename="gz-sim-navsat-system" name="gz::sim::systems::NavSat"></plugin>
     <plugin filename="gz-sim-air-pressure-system" name="gz::sim::systems::AirPressure"></plugin>
@@ -31,7 +31,9 @@
 
     <!-- 环境参数 -->
     <gravity>0 0 -9.81</gravity>
-    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <!-- PX4 WMM at the spherical_coordinates below; ENU, tesla.
+         Recompute from the PX4 geomagnetic model if the site/model changes. -->
+    <magnetic_field>-2.9037200468e-06 3.69207212335e-05 -2.76691811238e-05</magnetic_field>
     <atmosphere type="adiabatic"/>
     
     <scene>

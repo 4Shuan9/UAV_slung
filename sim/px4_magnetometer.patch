@@ -1,0 +1,55 @@
+diff --git a/src/modules/simulation/gz_bridge/GZBridge.cpp b/src/modules/simulation/gz_bridge/GZBridge.cpp
+index 3042edc..cc035bb 100644
+--- a/src/modules/simulation/gz_bridge/GZBridge.cpp
++++ b/src/modules/simulation/gz_bridge/GZBridge.cpp
+@@ -40,6 +40,8 @@
+ 
+ #include <px4_platform_common/getopt.h>
+ 
++#include <cstdlib>
++#include <cstring>
+ #include <iostream>
+ #include <string>
+ 
+@@ -49,6 +51,8 @@ GZBridge::GZBridge(const std::string &world, const std::string &model_name) :
+ 	_world_name(world),
+ 	_model_name(model_name)
+ {
++	const char *mag_interface = std::getenv("PX4_GZ_MAGNETOMETER");
++	_magnetometer_enu_tesla = mag_interface && std::strcmp(mag_interface, "enu_tesla") == 0;
+ 	updateParams();
+ }
+ 
+@@ -247,9 +251,17 @@ void GZBridge::magnetometerCallback(const gz::msgs::Magnetometer &msg)
+ 	// FIMEX: once we're on jetty or later
+ 	// The magnetometer plugin publishes in units of gauss and in a weird left handed coordinate system
+ 	// https://github.com/gazebosim/gz-sim/pull/2460
+-	report.x = -msg.field_tesla().y();
+-	report.y = -msg.field_tesla().x();
+-	report.z = msg.field_tesla().z();
++	if (_magnetometer_enu_tesla) {
++		// Physical FLU sensor [tesla] -> PX4 FRD sensor [gauss].
++		report.x = static_cast<float>(1e4 * msg.field_tesla().x());
++		report.y = static_cast<float>(-1e4 * msg.field_tesla().y());
++		report.z = static_cast<float>(-1e4 * msg.field_tesla().z());
++	} else {
++		// Stock Harmonic compatibility for worlds using the legacy plugin.
++		report.x = -msg.field_tesla().y();
++		report.y = -msg.field_tesla().x();
++		report.z = msg.field_tesla().z();
++	}
+ 
+ 	_sensor_mag_pub.publish(report);
+ }
+diff --git a/src/modules/simulation/gz_bridge/GZBridge.hpp b/src/modules/simulation/gz_bridge/GZBridge.hpp
+index 3dd4f09..8dcc38a 100644
+--- a/src/modules/simulation/gz_bridge/GZBridge.hpp
++++ b/src/modules/simulation/gz_bridge/GZBridge.hpp
+@@ -162,6 +162,7 @@ private:
+ 
+ 	float _temperature{288.15};  // 15 degrees
+ 
++	bool _magnetometer_enu_tesla{false};
+ 	bool _realtime_clock_set{false};
+ 	gz::transport::Node _node;
+ 

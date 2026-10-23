@@ -16,6 +16,9 @@
   <depend>std_msgs</depend>
   <depend>message_filters</depend>
   <depend>eigen</depend>
+  <build_depend>gz-sim8</build_depend>
+  <build_depend>gz-sensors8</build_depend>
+  <build_depend>gz-plugin2</build_depend>
   <exec_depend>python3-numpy</exec_depend>
   <exec_depend>python3-opencv</exec_depend>
   <exec_depend>launch_ros</exec_depend>

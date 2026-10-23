@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import time
 
+from ament_index_python.packages import get_package_prefix
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
@@ -122,7 +123,11 @@ def _build_runtime_actions(context, *args, **kwargs):
             )
         )
 
-    common_env = {"GZ_SIM_RESOURCE_PATH": resource_path}
+    plugin_dir = str(Path(get_package_prefix("slung_ctrl")) / "lib")
+    inherited_plugins = os.environ.get("GZ_SIM_SYSTEM_PLUGIN_PATH", "")
+    plugin_path = plugin_dir + (os.pathsep + inherited_plugins if inherited_plugins else "")
+    common_env = {"GZ_SIM_RESOURCE_PATH": resource_path,
+                  "GZ_SIM_SYSTEM_PLUGIN_PATH": plugin_path}
 
     agent = ExecuteProcess(
         cmd=["MicroXRCEAgent", "udp4", "-p", agent_port],
@@ -136,6 +141,7 @@ def _build_runtime_actions(context, *args, **kwargs):
     )
 
     px4_env = dict(common_env)
+    px4_env["PX4_GZ_MAGNETOMETER"] = "enu_tesla"
     px4_env["PX4_GZ_MODEL_NAME"] = model_name
     px4_env["PX4_UXRCE_DDS_PORT"] = agent_port
     px4_env["PX4_GZ_WORLD"] = world_file.stem

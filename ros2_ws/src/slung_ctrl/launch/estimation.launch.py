@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One vision/truth chain, with a selected observer and optional baselines."""
+"""One vision/truth chain, with one observer or all four observers."""
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -27,9 +27,10 @@ def create_nodes(context):
         Node(package='slung_ctrl', executable='swing_truth', parameters=[clock], output='screen'),
         Node(package='slung_ctrl', executable='swing_vision', parameters=[clock], output='screen'),
     ]
-    methods = [] if selected == 'none' else [selected]
+    methods = ['eso', 'eso_delay', 'ekf2', 'ekf3'] if selected == 'all' else ([] if selected == 'none' else [selected])
     if baselines:
         methods += [m for m in ['eso', 'ekf2', 'vision_predictor'] if m not in methods]
+    methods = list(dict.fromkeys(methods))
     for method in methods:
         params = [clock]
         if method != 'vision_predictor':
@@ -44,7 +45,8 @@ def create_nodes(context):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('estimator', default_value='eso_delay',
-                              choices=['eso_delay', 'ekf3', 'eso', 'ekf2', 'vision_predictor', 'none']),
+                              choices=['eso_delay', 'ekf3', 'eso', 'ekf2', 'vision_predictor', 'all', 'none'],
+                              description='all starts eso, eso_delay, ekf2 and ekf3 once each'),
         DeclareLaunchArgument('baselines', default_value='false', choices=['true', 'false']),
         DeclareLaunchArgument('use_sim_time', default_value='true', choices=['true', 'false']),
         DeclareLaunchArgument('vision_topic', default_value='/uav/swing/vision/angle'),
