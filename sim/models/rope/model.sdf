@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sdf version='1.9'>
+  <!-- Codex-generated update: 5 mm diameter; original 50 g mass/inertia and damping retained as the validated baseline. -->
   <model name='rope'>
     <enable_wind>true</enable_wind>
     <static>false</static>
@@ -16,14 +17,14 @@
        <collision name='begin_link_collision'>
         <geometry>
           <sphere>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </sphere>
         </geometry>
       </collision>
       <visual name='begin_link_visual'>
         <geometry>
           <sphere>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </sphere>
         </geometry>
       </visual>
@@ -42,7 +43,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -50,7 +51,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -96,7 +97,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -104,7 +105,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -161,7 +162,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -169,7 +170,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -226,7 +227,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -234,7 +235,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -291,7 +292,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -299,7 +300,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -356,7 +357,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -364,7 +365,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -421,7 +422,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -429,7 +430,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -486,7 +487,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -494,7 +495,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -551,7 +552,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -559,7 +560,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -616,7 +617,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -624,7 +625,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -681,7 +682,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -689,7 +690,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -751,7 +752,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -759,7 +760,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -816,7 +817,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -824,7 +825,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -881,7 +882,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -889,7 +890,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -946,7 +947,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -954,7 +955,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -1011,7 +1012,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -1019,7 +1020,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -1076,7 +1077,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -1084,7 +1085,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -1141,7 +1142,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -1149,7 +1150,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -1206,7 +1207,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -1214,7 +1215,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -1271,7 +1272,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
       </collision>
@@ -1279,7 +1280,7 @@
         <geometry>
           <cylinder>
             <length>0.05</length>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </cylinder>
         </geometry>
         <material>
@@ -1335,14 +1336,14 @@
        <collision name='end_link_collision'>
         <geometry>
           <sphere>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </sphere>
         </geometry>
       </collision>
       <visual name='end_link_visual'>
         <geometry>
           <sphere>
-            <radius>0.002</radius>
+            <radius>0.0025</radius>
           </sphere>
         </geometry>
       </visual>

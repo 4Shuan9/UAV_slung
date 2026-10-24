@@ -56,7 +56,8 @@
             <height>480</height>
           </image>
           <clip>
-            <near>0.1</near>
+            <!-- Codex-generated update: owner requested 95 mm rendering near plane only. -->
+            <near>0.095</near>
             <far>3000</far>
           </clip>
         </camera>

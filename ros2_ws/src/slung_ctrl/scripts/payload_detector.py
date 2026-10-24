@@ -111,10 +111,19 @@ def process_and_find_red(img):
     if contours:
         largest_contour = max(contours, key=cv2.contourArea)
         if cv2.contourArea(largest_contour) > 30:
-            (cx, cy), _ = cv2.minEnclosingCircle(largest_contour)
+            # Codex-generated update: associate fragments of the same ball
+            # by overlapping enclosing circles; preserve observed boundaries.
+            seed_center, seed_radius = cv2.minEnclosingCircle(largest_contour)
+            ball_contours = []
+            for contour in contours:
+                center, radius = cv2.minEnclosingCircle(contour)
+                if np.hypot(center[0] - seed_center[0],
+                            center[1] - seed_center[1]) <= seed_radius + radius:
+                    ball_contours.append(contour)
+            (cx, cy), _ = cv2.minEnclosingCircle(np.concatenate(ball_contours))
             pos = (cx, cy)  # Keep floating-point circle center for ROS output.
 
-            cv2.drawContours(img, [largest_contour], -1, (0, 255, 0), 2)
+            cv2.drawContours(img, ball_contours, -1, (0, 255, 0), 2)
             cv2.drawMarker(img, (int(round(cx)), int(round(cy))), (255, 0, 0), cv2.MARKER_CROSS, 15, 2)
 
             text = f"Pos: ({cx:.2f}, {cy:.2f})"

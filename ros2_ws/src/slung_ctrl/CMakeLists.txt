@@ -44,15 +44,6 @@ add_executable(slung_control_adrc src/slung_control_adrc.cpp)
 ament_target_dependencies(slung_control_adrc rclcpp px4_msgs geometry_msgs std_msgs)
 target_link_libraries(slung_control_adrc Eigen3::Eigen)
 
-add_executable(trajectory_waypoint src/trajectory_waypoint.cpp)
-ament_target_dependencies(trajectory_waypoint rclcpp geometry_msgs px4_msgs std_msgs)
-
-add_executable(trajectory_square src/trajectory_square.cpp)
-ament_target_dependencies(trajectory_square rclcpp geometry_msgs px4_msgs)
-
-add_executable(trajectory_eight src/trajectory_eight.cpp)
-ament_target_dependencies(trajectory_eight rclcpp geometry_msgs px4_msgs std_msgs)
-
 add_executable(swing_truth src/swing_truth.cpp)
 ament_target_dependencies(swing_truth rclcpp geometry_msgs message_filters)
 target_link_libraries(swing_truth Eigen3::Eigen)
@@ -91,9 +82,6 @@ target_link_libraries(swing_ekf3 "${cpp_typesupport_target}")
 install(TARGETS
   slung_control_pd
   slung_control_adrc
-  trajectory_waypoint
-  trajectory_square
-  trajectory_eight
   swing_truth
   swing_vision
   swing_vision_predictor
@@ -106,8 +94,13 @@ install(TARGETS
 
 install(PROGRAMS
   scripts/payload_detector.py
+  # Codex-generated entry points for the optional interactive task layer.
+  scripts/offboard_console.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
+# Codex-generated Python reference module used by the interactive entry point.
+install(FILES scripts/offboard_reference.py DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY
   launch

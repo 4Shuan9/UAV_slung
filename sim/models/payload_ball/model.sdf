@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sdf version='1.9'>
+  <!-- Codex-generated update: 9 cm diameter, 0.5 kg equivalent uniform solid sphere. -->
   <model name="red_ball">
     <link name="ball_link">
       <pose>0 0 0 0 0 0</pose>
@@ -7,7 +8,7 @@
       <collision name="collision">
         <geometry>
           <sphere>
-            <radius>0.05</radius>
+            <radius>0.045</radius>
           </sphere>
         </geometry>
       </collision>
@@ -15,7 +16,7 @@
       <visual name="visual">
         <geometry>
           <sphere>
-            <radius>0.05</radius>
+            <radius>0.045</radius>
           </sphere>
         </geometry>
         <material>
@@ -28,9 +29,9 @@
       <inertial>
         <mass>0.5</mass>
         <inertia>
-          <ixx>0.001</ixx>
-          <iyy>0.001</iyy>
-          <izz>0.001</izz>
+          <ixx>0.000405</ixx>
+          <iyy>0.000405</iyy>
+          <izz>0.000405</izz>
           <ixy>0</ixy>
           <ixz>0</ixz>
           <iyz>0</iyz>

@@ -120,13 +120,13 @@ private:
         }
     }
 
-    // Sphere radius is 0.05 m, matching payload_ball/model.sdf.
+    // Codex-generated geometry sync: sphere radius matches payload_ball/model.sdf.
     // Camera geometry is FLU. The matched quaternion maps FLU into ENU.
     void publish_angles(const geometry_msgs::msg::PointStamped::ConstSharedPtr &pixel_msg,
                         const Eigen::Quaterniond &q) {
         Eigen::Vector3d V_body;
         if (!slung_ctrl::payload_sphere_vector_body(pixel_msg->point.x, pixel_msg->point.y,
-                cx_, cy_, fx_, fy_, nominal_rope_length_, 0.05, V_body)) return;
+                cx_, cy_, fx_, fy_, nominal_rope_length_, slung_ctrl::payload_radius, V_body)) return;
         const double xb = V_body.x(), yb = V_body.y(), zb = V_body.z();
 
         Eigen::Vector3d V_world = q * V_body;

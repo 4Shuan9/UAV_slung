@@ -11,7 +11,7 @@ Based on [rain_ws](https://github.com/RainbowSeeker/rain_ws.git) and [PX4-ROS2-G
 * **Basketball Court Environment:** Court markings provide visual references for manual flight and trajectory tracking.
 * **Tether & Payload Dynamics:** A 1-meter tether is represented by 20 articulated segments and connected to a spherical payload.
 * **Swing-Angle Estimation:** Vision measurements, traditional ESO, delay-compensated ESO with historical visual ZOH, two-state EKF and three-state EKF.
-* **Anti-Swing Control:** ADRC and PD control with figure-eight, square and waypoint references.
+* **Anti-Swing Control:** ADRC and PD control with figure-eight, square and setpoint references.
 
 ## System Requirements
 
@@ -63,13 +63,12 @@ Open QGroundControl, then run each command in a separate terminal:
 ros2 launch slung_ctrl sim.launch.py
 
 # 2. Vision, ground truth and swing-angle estimation
-ros2 launch slung_ctrl estimation.launch.py estimator:=eso_delay
+ros2 launch slung_ctrl estimation.launch.py estimator:=all
 
-# 3. Automatic takeoff and anti-swing hover; default takeoff height: 8 m
-ros2 launch slung_ctrl control.launch.py estimator:=eso_delay
+# 3. Interactive control and trajectories; enter takeoff to climb to 8 m
+ros2 launch slung_ctrl offboard.launch.py
 
-# 4. Optional: start the figure-eight trajectory after reaching hover
-ros2 launch slung_ctrl trajectory.launch.py type:=eight
+# In the interactive terminal: takeoff -> eight (continuous) -> home -> land
 
 # Optional: PlotJuggler, when installed
 ros2 run plotjuggler plotjuggler
@@ -86,9 +85,9 @@ ros2 launch slung_ctrl estimation.launch.py estimator:=all
 | Selection | Command option |
 |:---:|---|
 | Observer | Estimation: `estimator:=eso`, `eso_delay`, `ekf2` or `ekf3` |
-| ADRC | Control: `estimator:=eso`, `eso_delay` or `ekf3` |
-| PD for EKF2 | Control: `controller:=pd estimator:=ekf2` |
-| Other trajectories | Trajectory: `type:=square` or `type:=waypoint` |
+| ADRC | Offboard terminal: `controller adrc`; `estimator eso`, `eso_delay` or `ekf3` |
+| PD for EKF2 | Offboard terminal: `controller pd`, then `estimator ekf2` |
+| Other trajectories | Offboard terminal: `square` or `setpoint N E U` (metres, positive Up) |
 | Headless simulation | Simulation: `headless:=true` |
 
 <!-- Codex-generated section: Main Interfaces; added with the owner's permission. -->

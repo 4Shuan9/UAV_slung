@@ -8,6 +8,8 @@
 
 namespace slung_ctrl {
 inline constexpr double nominal_rope_length = 1.0;
+// Codex-generated geometry calibration: matches payload_ball/model.sdf.
+inline constexpr double payload_radius = 0.045;
 inline Eigen::Vector3d suspension_offset_body() { return {0.0, 0.0, 0.0}; }
 inline Eigen::Vector3d camera_offset_body() { return {0.0, 0.0, 0.10}; }
 inline Eigen::Matrix3d camera_to_body() {
@@ -51,7 +53,7 @@ inline bool payload_sphere_vector_body(double u, double v, double cx, double cy,
         !payload_vector_body(u, v, cx, cy, fx, fy, length, payload)) return false;
     const Eigen::Vector3d offset = camera_offset_body() - suspension_offset_body();
     const Eigen::Matrix3d body_to_camera = camera_to_body().transpose();
-    // Fixed-point inversion converges rapidly for this camera and 5 cm sphere.
+    // Fixed-point inversion converges rapidly for this camera and the configured sphere radius.
     // Eight iterations also resolve the full visible image to double precision.
     for (int i = 0; i < 8; ++i) {
         const double depth = (body_to_camera * (payload - offset)).x();

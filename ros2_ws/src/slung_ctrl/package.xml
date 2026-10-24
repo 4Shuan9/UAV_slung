@@ -20,6 +20,8 @@
   <build_depend>gz-sensors8</build_depend>
   <build_depend>gz-plugin2</build_depend>
   <exec_depend>python3-numpy</exec_depend>
+  <!-- Codex-generated dependency for reading the unchanged controller YAML profiles. -->
+  <exec_depend>python3-yaml</exec_depend>
   <exec_depend>python3-opencv</exec_depend>
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>

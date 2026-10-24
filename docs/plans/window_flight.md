@@ -608,7 +608,7 @@ $$
 | EKF3 模型与时序 | [ekf3.hpp](../../ros2_ws/src/slung_ctrl/include/slung_ctrl/ekf3.hpp)、[swing_ekf3.cpp](../../ros2_ws/src/slung_ctrl/src/swing_ekf3.cpp)、[ekf3.yaml](../../ros2_ws/src/slung_ctrl/config/ekf3.yaml) |
 | 延迟 ESO | [eso_delay.hpp](../../ros2_ws/src/slung_ctrl/include/slung_ctrl/eso_delay.hpp)、[swing_eso_delay.cpp](../../ros2_ws/src/slung_ctrl/src/swing_eso_delay.cpp) |
 | 同步状态接口 | [SwingADRCState.msg](../../ros2_ws/src/slung_ctrl/msg/SwingADRCState.msg) |
-| 控制与参考 | [slung_control_adrc.cpp](../../ros2_ws/src/slung_ctrl/src/slung_control_adrc.cpp)、[trajectory_eight.cpp](../../ros2_ws/src/slung_ctrl/src/trajectory_eight.cpp) |
+| 控制与参考 | [slung_control_adrc.cpp](../../ros2_ws/src/slung_ctrl/src/slung_control_adrc.cpp)、[offboard_reference.py](../../ros2_ws/src/slung_ctrl/scripts/offboard_reference.py) |
 | 启动覆盖参数与资源路径 | [estimation.launch.py](../../ros2_ws/src/slung_ctrl/launch/estimation.launch.py)、[sim.launch.py](../../ros2_ws/src/slung_ctrl/launch/sim.launch.py) |
 | 世界、绳索与负载 | [UAV_slung_world.sdf](../../sim/worlds/UAV_slung_world.sdf)、[rope/model.sdf](../../sim/models/rope/model.sdf)、[payload_ball/model.sdf](../../sim/models/payload_ball/model.sdf) |
 | PX4 飞机模型 | `~/PX4-Autopilot/Tools/simulation/gz/models/x500_base/model.sdf`、`~/PX4-Autopilot/Tools/simulation/gz/models/x500_mono_cam_down/model.sdf` |

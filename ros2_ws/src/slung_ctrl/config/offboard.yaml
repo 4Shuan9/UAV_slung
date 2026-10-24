@@ -1,0 +1,26 @@
+# Codex-generated file: operation/task defaults; controller profiles stay in their original YAMLs.
+slung_offboard:
+  ros__parameters:
+    default_estimator: eso_delay
+    default_controller: adrc
+    startup_mode: idle               # idle or takeoff; idle never arms automatically
+    after_takeoff_task: hold          # hold, eight or square
+    # The original control_eso/control_ekf/control_pd YAMLs supply ALL gains,
+    # takeoff height (8 m) and takeoff speed. eight/square YAMLs supply geometry/speed.
+    control_hz: 50.0
+    prestream_sec: 1.2
+    status_timeout: 1.5              # VehicleStatus is 2 Hz; separate from odometry/heading freshness
+    input_timeout: 0.5
+    backend_timeout: 0.3
+    handshake_timeout: 10.0
+    home_position_tolerance: 0.25     # metres; explicit switching condition, not a swing-angle limit
+    home_speed_tolerance: 0.15        # m/s, 3-D
+    home_stable_sec: 2.0
+    transition_speed: 1.0             # smooth setpoint/home/rejoin references, m/s
+    transition_acceleration: 0.5      # reference acceleration bound, m/s^2
+    trajectory_ramp_sec: 2.0          # smooth entry to eight; steady omega unchanged
+    eight_loops: 0                   # 0: continuous; positive integer: finite loops
+    cable_length: 1.0
+    payload_radius: 0.045
+    suspension_offset_bound: 0.24
+    minimum_payload_clearance: 0.10   # required NEU z >= sum of these four geometry bounds
