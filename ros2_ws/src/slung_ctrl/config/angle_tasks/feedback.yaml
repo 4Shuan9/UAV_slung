@@ -1,0 +1,11 @@
+# Codex-generated EXPERIMENTAL angle-task settings, 2026-10-25.
+# Original offboard/controller/observer YAMLs stay unchanged.
+# Position feedback stabilizes the repeating sine; finite hold remains angle-priority.
+position_p: 0.0
+position_d: 0.0
+sine_position_p: 0.15
+sine_position_d: 0.7
+angle_p: 2.0
+angle_d: 1.2
+experimental_max_acceleration: 4.5  # New entry only; baseline remains 3.0.
+TEMP_fixed_yaw: true
