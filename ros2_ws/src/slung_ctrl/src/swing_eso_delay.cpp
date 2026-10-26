@@ -1,4 +1,4 @@
-// === [ Delay-compensated ESO: historical visual ZOH LESO + timestamped input-history predictor ] ===
+// === [ Delay-compensated ESO: historical alignment + newest-visual ZOH LESO replay to now ] ===
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <px4_msgs/msg/vehicle_local_position.hpp>
@@ -58,7 +58,7 @@ public:
         timer_=create_wall_timer(std::chrono::duration<double>(1/hz),std::bind(&SwingAngleESODelay::publish_estimate,this));
         param_subscriber_=add_on_set_parameters_callback(
             std::bind(&SwingAngleESODelay::parameters_callback,this,std::placeholders::_1));
-        RCLCPP_INFO(get_logger(),"ESO ready: historical visual ZOH LESO -> input-history prediction; clock=%s, output=%.1f Hz",
+        RCLCPP_INFO(get_logger(),"ESO ready: historical alignment -> newest-visual ZOH LESO replay to now; clock=%s, output=%.1f Hz",
             input_time_mode_.c_str(),hz);
     }
 

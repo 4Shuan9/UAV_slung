@@ -134,8 +134,11 @@ def _build_runtime_actions(context, *args, **kwargs):
         output="screen",
     )
 
+    # Codex-generated: load a scene-specific GUI config, including its window style.
+    gui_config = world_file.parent / "gui.config"
+    gui_args = ["--gui-config", str(gui_config)] if not headless and gui_config.is_file() else []
     gazebo = ExecuteProcess(
-        cmd=["gz", "sim", "-r"] + (["-s", "--headless-rendering"] if headless else []) + [str(world_file)],
+        cmd=["gz", "sim", "-r"] + (["-s", "--headless-rendering"] if headless else []) + gui_args + [str(world_file)],
         additional_env=common_env,
         output="screen",
     )

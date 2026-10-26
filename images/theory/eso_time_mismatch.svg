@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Codex-generated figure, revised 2026-10-26. Owner-preferred timeline layout; illustrative simultaneous arrivals, not measured latency. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1740" height="940" viewBox="0 0 1740 940" role="img" aria-labelledby="title desc">
+<title id="title">ESO：同一时刻到达，采集时刻不同</title>
+<desc id="desc">两路输入在当前90毫秒同时到达：视觉帧采于65毫秒，经25毫秒示意延迟到达；加速度近似采于90毫秒，忽略其延迟。视觉采样周期40毫秒，前一帧采于25毫秒、到达50毫秒。本图选取视觉刚到达的更新时刻，尚无额外ZOH保持时间。所有延迟数字仅作示意，非实测。</desc>
+<rect width="1740" height="940" fill="white" />
+<g font-family="Noto Sans CJK SC, Microsoft YaHei, PingFang SC, sans-serif" stroke-linejoin="round">
+<text x="60" y="76" font-size="46" fill="#1f2f44" font-weight="700" text-anchor="start">ESO：多速率输入的时间失配</text>
+<text x="60" y="124" font-size="26" fill="#52657a" font-weight="400" text-anchor="start">25 Hz 视觉（ZOH）× 200 Hz 加速度</text>
+<text x="60" y="204" font-size="30" fill="#223247" font-weight="700" text-anchor="start">25 Hz 视觉摆角 θ</text>
+<text x="60" y="245" font-size="25" fill="#52657a" font-weight="400" text-anchor="start">最新到达的视觉，仍来自历史采集</text>
+<text x="920" y="202" font-size="28" fill="#1E63C6" font-weight="700" text-anchor="middle">本次 ESO 更新</text>
+<text x="920" y="239" font-size="26" fill="#1E63C6" font-weight="400" text-anchor="middle">当前 90 ms</text>
+<rect x="695" y="329" width="225" height="342" rx="10" fill="#1E63C6" opacity="0.035" />
+<path d="M 695 350 V 370 M 695 420 V 650" fill="none" stroke="#B2C0D1" stroke-width="1.6" stroke-dasharray="7 8" />
+<path d="M 920 260 V 370 M 920 420 V 716" fill="none" stroke="#1E63C6" stroke-width="2.3" stroke-dasharray="8 7" />
+<path d="M 335 297 L 695 297" fill="none" stroke="#52657a" stroke-width="2.2" />
+<path d="M 335 289 L 335 305" fill="none" stroke="#52657a" stroke-width="2.2" />
+<path d="M 695 289 L 695 305" fill="none" stroke="#52657a" stroke-width="2.2" />
+<text x="515.0" y="278" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">视觉周期 40 ms</text>
+<path d="M 695 297 L 920 297" fill="none" stroke="#188E42" stroke-width="2.2" />
+<path d="M 695 289 L 695 305" fill="none" stroke="#188E42" stroke-width="2.2" />
+<path d="M 920 289 L 920 305" fill="none" stroke="#188E42" stroke-width="2.2" />
+<text x="807.5" y="278" font-size="24" fill="#188E42" font-weight="400" text-anchor="middle">视觉延迟 25 ms</text>
+<path d="M 110 350 L 920 350" fill="none" stroke="#188E42" stroke-width="5.5" />
+<path d="M 335 339 L 346 350 L 335 361 L 324 350 Z" fill="white" stroke="#188E42" stroke-width="2.8" />
+<path d="M 695 339 L 706 350 L 695 361 L 684 350 Z" fill="white" stroke="#188E42" stroke-width="2.8" />
+<circle cx="920" cy="350" r="11" fill="#188E42" stroke="none" stroke-width="2" />
+<circle cx="920" cy="350" r="18" fill="none" stroke="#1E63C6" stroke-width="2.5" />
+<text x="110" y="398" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">0 ms</text>
+<text x="335" y="398" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">采集 25 ms</text>
+<text x="695" y="398" font-size="24" fill="#188E42" font-weight="700" text-anchor="middle">采集65 ms</text>
+<text x="920" y="398" font-size="25" fill="#1E63C6" font-weight="700" text-anchor="middle">到达 90 ms</text>
+<text x="1073" y="324" font-size="25" fill="#188E42" font-weight="700" text-anchor="middle">历史视觉</text>
+<path d="M 939 350 L 1218 350" fill="none" stroke="#188E42" stroke-width="6" />
+<path d="M 1216 337 L 1243 350 L 1216 363 Z" fill="#188E42" />
+<text x="60" y="556" font-size="30" fill="#223247" font-weight="700" text-anchor="start">200 Hz 加速度 a</text>
+<text x="60" y="597" font-size="25" fill="#52657a" font-weight="400" text-anchor="start">采样周期 5 ms</text>
+<path d="M 110 650 L 920 650" fill="none" stroke="#F07217" stroke-width="5.5" />
+<circle cx="110" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="155" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="200" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="245" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="290" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="335" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="380" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="425" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="470" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="515" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="560" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="605" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="650" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="695" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="740" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="785" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="830" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="875" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="920" cy="650" r="11" fill="#F07217" stroke="none" stroke-width="2" />
+<circle cx="920" cy="650" r="18" fill="none" stroke="#1E63C6" stroke-width="2.5" />
+<text x="110" y="700" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">0 ms</text>
+<text x="695" y="700" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">65 ms</text>
+<text x="920" y="739" font-size="25" fill="#1E63C6" font-weight="700" text-anchor="middle">当前 90 ms</text>
+<text x="1073" y="623" font-size="25" fill="#F07217" font-weight="700" text-anchor="middle">当前加速度</text>
+<path d="M 939 650 L 1218 650" fill="none" stroke="#F07217" stroke-width="6" />
+<path d="M 1216 637 L 1243 650 L 1216 663 Z" fill="#F07217" />
+<rect x="1260" y="265" width="420" height="450" rx="16" fill="#F8FBFE" stroke="#AAB7C7" stroke-width="1.7" />
+<text x="1470" y="314" font-size="28" fill="#1E63C6" font-weight="700" text-anchor="middle">同在 90 ms 到达</text>
+<text x="1290" y="388" font-size="30" fill="#188E42" font-weight="700" text-anchor="start">视觉：θ(65 ms)</text>
+<text x="1290" y="430" font-size="25" fill="#52657a" font-weight="400" text-anchor="start">采集于 65 ms</text>
+<text x="1470" y="518" font-size="34" fill="#1E63C6" font-weight="700" text-anchor="middle">65 ms ≠ 90 ms</text>
+<text x="1290" y="603" font-size="30" fill="#F07217" font-weight="700" text-anchor="start">加速度：a(90 ms)</text>
+<text x="1290" y="646" font-size="25" fill="#52657a" font-weight="400" text-anchor="start">采集于 90 ms</text>
+<rect x="110" y="790" width="1570" height="102" rx="16" fill="#FFF9F5" stroke="#EEB07B" stroke-width="1.4" />
+<text x="140" y="831" font-size="30" fill="#223247" font-weight="700" text-anchor="start">同一时刻到达，采集时刻不同</text>
+<text x="140" y="873" font-size="24" fill="#52657a" font-weight="400" text-anchor="start">示意：视觉延迟取 25 ms，非实测；省略加速度延迟。</text>
+<!-- Codex-generated visual annotation, 2026-10-26: the 90-ms update uses the visual sample acquired at 65 ms. -->
+<g id="vision-history-usage-arrow" fill="none" stroke="none">
+  <path d="M 709 438 C 746.47296 494.66643, 845.76180 499.54118, 893.87022 452.62425" stroke="#1E63C6" stroke-width="4.5" stroke-linecap="round" />
+  <path d="M 902.75772 461.03232 L 906 438 L 886.07543 450.00048 Z" fill="#1E63C6" />
+</g>
+</g></svg>

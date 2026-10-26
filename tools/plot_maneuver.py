@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Codex-generated reusable plot: fresh maneuver, vertically stacked panels, 2026-10-25.
-"""Replot the retained maneuver angle and North-position measurements.
+"""Plot maneuver angle and North-position measurements from an explicit data file.
 
-python3 tools/plot_maneuver.py --output /tmp/maneuver_replot.png
-The original angle_error/angle_tracking plots and their program are preserved.
+python3 tools/plot_maneuver.py --data /path/to/plot_data.csv.gz --output /tmp/maneuver_replot.png
+Historical measurement data was removed at the owner's request; the plotting program is preserved.
 """
 import argparse
 from pathlib import Path
@@ -50,12 +50,14 @@ def plot(data_path, output):
 def main():
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--data', type=Path,
-                        default=root/'images/dynamic_angle/maneuver_tracking.csv.gz')
+    parser.add_argument('--data', type=Path, required=True,
+                        help='Explicit plot-data path; no experiment data is bundled.')
     parser.add_argument('--output', type=Path, default=Path('/tmp/maneuver_replot.png'))
     args = parser.parse_args()
+    if not args.data.is_file():
+        parser.error('Plot-data file does not exist: ' + str(args.data))
     protected = [args.data, *(root/'images/dynamic_angle'/name for name in
-                 ('angle_error.png', 'angle_tracking.png', 'maneuver_tracking.png'))]
+                 ('angle_error.png', 'angle_tracking.png', 'maneuver_tracking.png', 'maneuver_20deg.png'))]
     if args.output.resolve() in [p.resolve() for p in protected]:
         parser.error('Choose a separate output path; retained figures/data are protected.')
     meta = plot(args.data, args.output)

@@ -2,10 +2,10 @@
 # Codex-generated reusable four-panel plot, archived with owner authorization, 2026-10-25.
 """KEEP: explicitly retained by the owner; exclude from temporary-data cleanup.
 
-Replot the owner-selected historical angle_error.png without simulator logs.
+Preserved plotting program for the owner-selected historical four-panel figure.
 
-Usage: python3 tools/plot_angle_tasks.py --output /tmp/angle_error_replot.png
-The companion compressed CSV stores only the plotted points and provenance.
+Usage: python3 tools/plot_angle_tasks.py --data /path/to/plot_data.csv.gz --output /tmp/angle_error_replot.png
+Historical measurement data was removed at the owner's request. Supply new data explicitly.
 It is a historical V5 result, not the final angle-task validation.
 """
 import argparse
@@ -63,9 +63,11 @@ def plot(data_path, output):
 def main():
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--data', type=Path, default=root/'images/dynamic_angle/angle_error.csv.gz')
+    parser.add_argument('--data', type=Path, required=True, help='Explicit plot-data path; no experiment data is bundled.')
     parser.add_argument('--output', type=Path, default=Path('/tmp/angle_error_replot.png'))
     args = parser.parse_args()
+    if not args.data.is_file():
+        parser.error('Plot-data file does not exist: ' + str(args.data))
     original = root/'images/dynamic_angle/angle_error.png'
     if args.output.resolve() in (original.resolve(), args.data.resolve()):
         parser.error('Choose another output path; the archived original/data are protected.')

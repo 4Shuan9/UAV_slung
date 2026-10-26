@@ -1,5 +1,5 @@
 #pragma once
-// Historical visual ZOH LESO on the acquisition timeline, then a correction-free predictor.
+// Historical visual ZOH LESO, then newest-visual ZOH replay to the current time.
 // The disturbance is the LINEAR-model residual, in rad/s^2.
 #include <Eigen/Core>
 #include <algorithm>
@@ -92,9 +92,11 @@ public:
         if (!initialized_ || !std::isfinite(t) || t<anchor_.time)
             throw std::runtime_error("ESO prediction has no valid historical anchor");
         auto predicted=anchor_;
-        // No visual innovation after the historical anchor, and no extra tau.
-        integrate(predicted,t,[&](const Eigen::Vector3d &x,int,double accel,double) {
-            return eso_drift(x,accel,p_);
+        // Codex-modified, owner-approved: hold the newest visual from its capture
+        // time and replay LESO correction with timestamped acceleration to now.
+        // No additional prediction horizon; the historical anchor is unchanged.
+        integrate(predicted,t,[&](const Eigen::Vector3d &x,int axis,double accel,double) {
+            return eso_correction(x,accel,measured_[axis],p_);
         });
         return predicted;  // Publication never advances the historical LESO.
     }

@@ -8,7 +8,8 @@ Based on [rain_ws](https://github.com/RainbowSeeker/rain_ws.git) and [PX4-ROS2-G
 
 ## Key Features
 
-* **Basketball Court Environment:** Court markings provide visual references for manual flight and trajectory tracking.
+<!-- Codex-generated scene-description update requested with removal of the basketball court. -->
+* **Football Court Environment:** A 105 × 68 m field, an origin helipad and an entrance 15 m ahead provide visual references for flight and trajectory tracking.
 * **Tether & Payload Dynamics:** A 1-meter tether is represented by 20 articulated segments and connected to a spherical payload.
 * **Swing-Angle Estimation:** Vision measurements, traditional ESO, delay-compensated ESO with historical visual ZOH, two-state EKF and three-state EKF.
 * **Anti-Swing Control:** ADRC and PD control with figure-eight, square and setpoint references.

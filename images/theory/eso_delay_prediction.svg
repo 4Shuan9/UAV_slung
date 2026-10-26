@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Codex-generated figure, revised 2026-10-26: explicit current-state extrapolation arrow; owner-requested note removed. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1740" height="940" viewBox="0 0 1740 940" role="img" aria-labelledby="title desc">
+  <title id="title">ESO_delay：历史ZOH对齐与当前状态外推</title>
+  <desc id="desc">90毫秒收到采于65毫秒的视觉帧：上一帧theta25与对应历史加速度推进25至65毫秒，再保持新theta65并校正外推至当前90毫秒。标出105毫秒下一采集点及对应加速度点，65至105毫秒为一个40毫秒视觉采集周期。所有未来延伸用淡色虚线示意，当前不能使用；不指定下一到达时刻。200Hz发布不改写历史锚点。25毫秒延迟及ZOH线高仅作示意。</desc>
+  <rect width="1740" height="940" fill="white" />
+  <g font-family="Noto Sans CJK SC, Microsoft YaHei, PingFang SC, sans-serif" stroke-linejoin="round">
+    <text x="60" y="76" font-size="46" fill="#1f2f44" font-weight="700" text-anchor="start">ESO_delay：历史对齐与状态外推</text>
+    <text x="60" y="124" font-size="26" fill="#52657a" font-weight="400" text-anchor="start">25 Hz 视觉（ZOH）× 200 Hz 加速度</text>
+    <text x="60" y="204" font-size="30" fill="#223247" font-weight="700" text-anchor="start">25 Hz 视觉摆角 θ</text>
+    <text x="60" y="245" font-size="25" fill="#52657a" font-weight="400" text-anchor="start">带采集时间戳的视觉帧</text>
+    <text x="920" y="202" font-size="28" fill="#1E63C6" font-weight="700" text-anchor="middle">本次 ESO 更新</text>
+    <text x="920" y="239" font-size="26" fill="#1E63C6" font-weight="400" text-anchor="middle">当前 90 ms</text>
+    <text x="1120" y="202" font-size="25" fill="#52657a" font-weight="700" text-anchor="middle">下一采集点</text>
+    <rect x="335.0" y="329" width="360.0" height="342" rx="10" fill="#188E42" opacity="0.035" />
+    <rect x="695.0" y="329" width="225.0" height="342" rx="10" fill="#1E63C6" opacity="0.035" />
+    <rect x="920.0" y="329" width="298.0" height="342" rx="10" fill="#52657a" opacity="0.035" />
+    <path d="M 335 350 V 370 M 335 443 V 650" fill="none" stroke="#B2C0D1" stroke-width="1.6" stroke-dasharray="7 8" />
+    <path d="M 695 350 V 370 M 695 443 V 650" fill="none" stroke="#B2C0D1" stroke-width="1.6" stroke-dasharray="7 8" />
+    <path d="M 1055 350 V 370 M 1055 443 V 650" fill="none" stroke="#B2C0D1" stroke-width="1.6" stroke-dasharray="7 8" />
+    <path d="M 920 260 V 370 M 920 443 V 671" fill="none" stroke="#1E63C6" stroke-width="2.3" stroke-dasharray="8 7" />
+    <path d="M 335 310 H 695 V 270 H 920" fill="none" stroke="#188E42" stroke-width="4.5" id="visual-zoh" />
+    <path d="M 920 270 H 1055 V 310 H 1218" fill="none" stroke="#92AB9E" stroke-width="3.5" stroke-dasharray="8 7" id="next-visual-zoh" />
+    <circle cx="335.0" cy="310" r="7" fill="#188E42" stroke="none" stroke-width="2" />
+    <circle cx="695.0" cy="270" r="7" fill="#188E42" stroke="none" stroke-width="2" />
+    <circle cx="1055.0" cy="310" r="7" fill="white" stroke="#92AB9E" stroke-width="2.5" />
+    <text x="515" y="290" font-size="25" fill="#188E42" font-weight="700" text-anchor="middle">ZOH：θ(25 ms)</text>
+    <text x="807.5" y="310" font-size="23" fill="#188E42" font-weight="700" text-anchor="middle">θ(65 ms) ZOH</text>
+    <text x="1136" y="289" font-size="24" fill="#7E96B5" font-weight="700" text-anchor="middle">θ(105 ms)</text>
+    <path d="M 110 350 H 920" fill="none" stroke="#188E42" stroke-width="5.5" />
+    <path d="M 920 350 H 1218" fill="none" stroke="#92AB9E" stroke-width="4" stroke-dasharray="8 7" />
+    <path d="M 1216 337 L 1243 350 L 1216 363 Z" fill="#92AB9E" />
+    <path d="M 335 339 L 346 350 L 335 361 L 324 350 Z" fill="white" stroke="#188E42" stroke-width="2.8" />
+    <path d="M 695 339 L 706 350 L 695 361 L 684 350 Z" fill="white" stroke="#188E42" stroke-width="2.8" />
+    <path d="M 1055 339 L 1066 350 L 1055 361 L 1044 350 Z" fill="white" stroke="#92AB9E" stroke-width="2.8" />
+    <circle cx="920.0" cy="350" r="11" fill="#188E42" stroke="none" stroke-width="2" />
+    <circle cx="920.0" cy="350" r="18" fill="none" stroke="#1E63C6" stroke-width="2.5" />
+    <text x="110" y="398" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">0 ms</text>
+    <text x="335" y="398" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">采集 25 ms</text>
+    <text x="695" y="398" font-size="24" fill="#188E42" font-weight="700" text-anchor="middle">采集 65 ms</text>
+    <text x="920" y="396" font-size="24" fill="#1E63C6" font-weight="700" text-anchor="middle">到达</text>
+    <text x="920" y="429" font-size="24" fill="#1E63C6" font-weight="700" text-anchor="middle">90 ms</text>
+    <text x="1055" y="396" font-size="24" fill="#52657a" font-weight="700" text-anchor="middle">采集</text>
+    <text x="1055" y="429" font-size="24" fill="#52657a" font-weight="700" text-anchor="middle">105 ms</text>
+    <path d="M 906 465 C 868.59553 519.73825, 769.60093 524.53857, 721.39407 479.40094" fill="none" stroke="#1E63C6" stroke-width="4.5" id="capture-alignment-arrow" stroke-linecap="round" />
+    <path d="M 729.10445 476.69663 L 709 465 L 712.59155 487.98044 Z" fill="#1E63C6" />
+    <text x="807.5" y="548" font-size="25" fill="#1E63C6" font-weight="700" text-anchor="middle">按采集戳对齐</text>
+    <text x="60" y="556" font-size="30" fill="#223247" font-weight="700" text-anchor="start">200 Hz 加速度 a</text>
+    <text x="60" y="597" font-size="25" fill="#52657a" font-weight="400" text-anchor="start">采样周期 5 ms · 保存历史</text>
+    <path d="M 110 650 H 920" fill="none" stroke="#F07217" stroke-width="5.5" />
+    <path d="M 920 650 H 1218" fill="none" stroke="#D6AB88" stroke-width="4" stroke-dasharray="8 7" />
+    <path d="M 1216 637 L 1243 650 L 1216 663 Z" fill="#D6AB88" />
+    <circle cx="110.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="155.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="200.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="245.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="290.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="335.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="380.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="425.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="470.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="515.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="560.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="605.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="650.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="695.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="740.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="785.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="830.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="875.0" cy="650" r="6.5" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="920.0" cy="650" r="11" fill="#F07217" stroke="none" stroke-width="2" />
+    <circle cx="965.0" cy="650" r="5.5" fill="white" stroke="#D6AB88" stroke-width="2" />
+    <circle cx="1010.0" cy="650" r="5.5" fill="white" stroke="#D6AB88" stroke-width="2" />
+    <circle cx="1055.0" cy="650" r="8" fill="white" stroke="#D6AB88" stroke-width="2" />
+    <circle cx="1030" cy="650" r="5.5" fill="white" stroke="#D6AB88" stroke-width="2" />
+    <circle cx="1110" cy="650" r="5.5" fill="white" stroke="#D6AB88" stroke-width="2" />
+    <circle cx="695.0" cy="650" r="10" fill="none" stroke="#1E63C6" stroke-width="2" />
+    <circle cx="920.0" cy="650" r="18" fill="none" stroke="#1E63C6" stroke-width="2.5" />
+    <text x="110" y="700" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">0 ms</text>
+    <text x="335" y="700" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">25 ms</text>
+    <text x="695" y="700" font-size="24" fill="#1E63C6" font-weight="700" text-anchor="middle">65 ms</text>
+    <text x="920" y="700" font-size="24" fill="#1E63C6" font-weight="700" text-anchor="middle">90 ms</text>
+    <text x="1055" y="700" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">105 ms</text>
+    <path d="M 335 735 H 695 M 335 727 V 743 M 695 727 V 743" fill="none" stroke="#188E42" stroke-width="2.2" />
+    <text x="515" y="770" font-size="24" fill="#188E42" font-weight="400" text-anchor="middle">历史 ZOH 推进</text>
+    <path d="M 695 735 H 1055 M 695 727 V 743 M 1055 727 V 743" fill="none" stroke="#1E63C6" stroke-width="2.2" />
+    <text x="875" y="770" font-size="24" fill="#1E63C6" font-weight="400" text-anchor="middle">θ(65 ms) 保持 40 ms</text>
+    <rect x="1260" y="265" width="420" height="450" rx="16" fill="#F8FBFE" stroke="#AAB7C7" stroke-width="1.7" />
+    <rect x="110" y="790" width="1570" height="102" rx="16" fill="#FFF9F5" stroke="#EEB07B" stroke-width="1.4" />
+    <text x="140" y="831" font-size="30" fill="#223247" font-weight="700" text-anchor="start">一个视觉周期：65 → 105 ms 保持 θ(65 ms)</text>
+    <text x="1120" y="239" font-size="24" fill="#52657a" font-weight="400" text-anchor="middle">105 ms</text>
+    <text x="1470" y="314" font-size="28" fill="#1E63C6" font-weight="700" text-anchor="middle">历史对齐 → 状态外推</text>
+    <text x="1290" y="388" font-size="30" fill="#188E42" font-weight="700" text-anchor="start">历史 ZOH 对齐</text>
+    <text x="1290" y="430" font-size="25" fill="#52657a" font-weight="400" text-anchor="start">θ(25 ms)＋历史 a(s)</text>
+    <text x="1470" y="518" font-size="34" fill="#1E63C6" font-weight="700" text-anchor="middle">65 ms → 90 ms</text>
+    <text x="1290" y="603" font-size="30" fill="#1E63C6" font-weight="700" text-anchor="start">ZOH 校正外推</text>
+    <text x="1290" y="646" font-size="25" fill="#52657a" font-weight="400" text-anchor="start">θ(65 ms)＋对应 a(s)</text>
+    <text x="1470" y="695" font-size="25" fill="#1E63C6" font-weight="700" text-anchor="middle">200 Hz 当前状态</text>
+    <text x="140" y="873" font-size="24" fill="#52657a" font-weight="400" text-anchor="start">浅色虚线表示后续时刻；状态外推含视觉校正。25 ms 延迟仅作示意。</text>
+    <text x="807.5" y="590" font-size="24" fill="#1E63C6" font-weight="700" text-anchor="middle">状态外推到当前</text>
+    <path d="M 695 615 H 898" stroke="#1E63C6" stroke-width="4.5" fill="none" stroke-linecap="round" id="state-extrapolation-arrow" />
+    <path d="M 896 604 L 920 615 L 896 626 Z" fill="#1E63C6" />
+  </g>
+</svg>

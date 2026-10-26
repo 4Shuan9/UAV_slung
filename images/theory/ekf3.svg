@@ -33,6 +33,7 @@
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg543" />
+  <!-- Codex layout repair, 2026-10-26: arrows, guide clearance and label readability only. -->
   <defs
      id="defs13">
     <style
@@ -40,50 +41,11 @@
 .cn { font-family: &quot;Noto Sans CJK SC&quot;, &quot;Microsoft YaHei&quot;, &quot;PingFang SC&quot;, sans-serif; }
 .title { fill:#1f2f44; font-weight:700; }
 .body { fill:#223247; }
-.muted { fill:#6c7d90; }
+.muted { fill:#52657a; }
 .green { fill:#188E42; }
 .orange { fill:#F07217; }
 .blue { fill:#1E63C6; }
 </style>
-    <marker
-       id="arrowGreen"
-       markerHeight="12"
-       markerUnits="userSpaceOnUse"
-       markerWidth="12"
-       orient="auto"
-       refX="10"
-       refY="6">
-      <path
-         d="M0,0 L12,6 L0,12 Z"
-         fill="#188E42"
-         id="path4" />
-    </marker>
-    <marker
-       id="arrowOrange"
-       markerHeight="12"
-       markerUnits="userSpaceOnUse"
-       markerWidth="12"
-       orient="auto"
-       refX="10"
-       refY="6">
-      <path
-         d="M0,0 L12,6 L0,12 Z"
-         fill="#F07217"
-         id="path7" />
-    </marker>
-    <marker
-       id="arrowBlue"
-       markerHeight="12"
-       markerUnits="userSpaceOnUse"
-       markerWidth="12"
-       orient="auto"
-       refX="10"
-       refY="6">
-      <path
-         d="M0,0 L12,6 L0,12 Z"
-         fill="#1E63C6"
-         id="path10" />
-    </marker>
   </defs>
   <rect
      x="20"
@@ -95,45 +57,45 @@
      id="background-white" />
   <text
      class="cn title"
-     font-size="48"
-     x="60"
-     y="88"
+     font-size="46"
+     x="80"
+     y="92"
      id="text17">EKF：预测与校正</text>
   <text
      class="cn muted"
-     font-size="22"
-     x="60"
-     y="130"
+     font-size="26"
+     x="80"
+     y="140"
      id="text19">25 Hz 视觉测量 × 200 Hz 动力学预测 → 实时状态估计</text>
   <rect
      fill="#F8FBFE"
-     height="238"
-     rx="18"
+     height="260"
+     rx="16"
      stroke="#AAB7C7"
      stroke-width="1.7"
-     width="560"
-     x="1160"
-     y="158"
+     width="590"
+     x="1130"
+     y="190"
      id="rect21" />
   <text
      class="cn body"
-     font-size="24"
+     font-size="28"
      font-weight="700"
-     x="1192"
-     y="203"
+     x="1162"
+     y="236"
      id="text23">视觉到达时：测量更新</text>
   <rect
      fill="white"
-     height="82"
-     rx="8"
+     height="84"
+     rx="10"
      stroke="#5878A6"
      stroke-width="1.2"
-     width="496"
-     x="1192"
-     y="220"
+     width="526"
+     x="1162"
+     y="258"
      id="rect25" />
   <g
-     transform="translate(1217,236) scale(1.30)"
+     transform="translate(1185,276) scale(1.35)"
      id="g78">
     <metadata
        id="metadata27">
@@ -269,12 +231,12 @@
   </g>
   <text
      class="body"
-     font-size="22px"
-     x="1615"
-     y="273.5"
+     font-size="24px"
+     x="1625"
+     y="311"
      id="text80">(37)</text>
   <g
-     transform="translate(1208,327) scale(1.05)"
+     transform="translate(1180,371) scale(1.20)"
      id="g153">
     <metadata
        id="metadata82">
@@ -435,11 +397,11 @@
      class="cn body"
      font-size="30"
      font-weight="700"
-     x="60"
-     y="252"
+     x="80"
+     y="220"
      id="text155">25 Hz 视觉摆角</text>
   <g
-     transform="matrix(1.7236426,0,0,1.7236426,275.9853,214.05525)"
+     transform="translate(330,182) scale(1.65)"
      id="g183">
     <metadata
        id="metadata157">
@@ -511,19 +473,19 @@
   </g>
   <text
      class="cn muted"
-     font-size="20"
-     x="60"
-     y="290"
+     font-size="25"
+     x="80"
+     y="262"
      id="text185">仅在新视觉帧到达时校正先验估计。</text>
   <text
      class="cn body"
      font-size="30"
      font-weight="700"
-     x="60"
-     y="542"
+     x="80"
+     y="468"
      id="text187">200 Hz 动力学预测</text>
   <g
-     transform="matrix(1.3727883,0,0,1.3727883,327.18185,504.66983)"
+     transform="translate(390,430.67) scale(1.3727883)"
      id="g228">
     <metadata
        id="metadata189">
@@ -642,15 +604,15 @@
   </g>
   <text
      class="cn muted"
-     font-size="20"
-     x="60"
-     y="583"
+     font-size="25"
+     x="80"
+     y="512"
      id="text230">上一时刻 EKF 状态与高频悬挂点加速度 a，</text>
   <text
      class="cn muted"
-     font-size="20"
-     x="60"
-     y="612"
+     font-size="25"
+     x="80"
+     y="548"
      id="text232">按非线性模型滚动预测摆角、角速度与扰动。</text>
   <line
      stroke="#188E42"
@@ -658,113 +620,57 @@
      stroke-width="6"
      x1="150"
      x2="980"
-     y1="390"
-     y2="390"
+     y1="330"
+     y2="330"
      id="line234" />
   <circle
      cx="150"
-     cy="390"
+     cy="330"
      fill="#188E42"
      r="12"
      id="circle236" />
   <circle
      cx="980"
-     cy="390"
+     cy="330"
      fill="#188E42"
      r="12"
      id="circle238" />
   <text
      class="cn green"
-     font-size="30"
+     font-size="28"
      font-weight="700"
-     x="470"
-     y="350"
-     id="text240">视觉测量事件</text>
+     x="565"
+     y="298"
+     id="text240" text-anchor="middle">视觉测量事件</text>
   <text
      class="body"
      font-family="Times New Roman"
      font-size="30"
      x="140"
-     y="435"
+     y="374"
      id="text242">tₖ</text>
   <text
      class="body"
      font-family="Times New Roman"
      font-size="30"
      x="960"
-     y="435"
+     y="374"
      id="text244">tₖ₊₁</text>
-  <line
-     stroke="#B2C0D1"
-     stroke-dasharray="7 8"
-     stroke-width="1.6"
-     x1="253.75"
-     x2="253.75"
-     y1="420"
-     y2="785"
-     id="line246" />
-  <line
-     stroke="#B2C0D1"
-     stroke-dasharray="7 8"
-     stroke-width="1.6"
-     x1="357.5"
-     x2="357.5"
-     y1="420"
-     y2="785"
-     id="line248" />
-  <line
-     stroke="#B2C0D1"
-     stroke-dasharray="7 8"
-     stroke-width="1.6"
-     x1="461.25"
-     x2="461.25"
-     y1="420"
-     y2="785"
-     id="line250" />
-  <line
-     stroke="#B2C0D1"
-     stroke-dasharray="7 8"
-     stroke-width="1.6"
-     x1="565.0"
-     x2="565.0"
-     y1="420"
-     y2="785"
-     id="line252" />
-  <line
-     stroke="#B2C0D1"
-     stroke-dasharray="7 8"
-     stroke-width="1.6"
-     x1="668.75"
-     x2="668.75"
-     y1="420"
-     y2="785"
-     id="line254" />
-  <line
-     stroke="#B2C0D1"
-     stroke-dasharray="7 8"
-     stroke-width="1.6"
-     x1="772.5"
-     x2="772.5"
-     y1="420"
-     y2="785"
-     id="line256" />
-  <line
-     stroke="#B2C0D1"
-     stroke-dasharray="7 8"
-     stroke-width="1.6"
-     x1="876.25"
-     x2="876.25"
-     y1="420"
-     y2="785"
-     id="line258" />
+  <path d="M 253.75 330 V 434.23 M 253.75 558.2 V 650" fill="none" stroke="#B2C0D1" stroke-dasharray="7 8" stroke-width="1.6" id="line246" />
+  <path d="M 357.5 330 V 482.875 M 357.5 558.2 V 650" fill="none" stroke="#B2C0D1" stroke-dasharray="7 8" stroke-width="1.6" id="line248" />
+  <path d="M 461.25 330 V 422.67 M 461.25 558.2 V 650" fill="none" stroke="#B2C0D1" stroke-dasharray="7 8" stroke-width="1.6" id="line250" />
+  <path d="M 565 330 V 518.875 M 565 558.2 V 580.2 M 565 622.632 V 650" fill="none" stroke="#B2C0D1" stroke-dasharray="7 8" stroke-width="1.6" id="line252" />
+  <path d="M 668.75 330 V 650" fill="none" stroke="#B2C0D1" stroke-dasharray="7 8" stroke-width="1.6" id="line254" />
+  <path d="M 772.5 330 V 650" fill="none" stroke="#B2C0D1" stroke-dasharray="7 8" stroke-width="1.6" id="line256" />
+  <path d="M 876.25 330 V 650" fill="none" stroke="#B2C0D1" stroke-dasharray="7 8" stroke-width="1.6" id="line258" />
   <line
      stroke="#F07217"
      stroke-linecap="round"
      stroke-width="5.5"
      x1="150.0"
      x2="253.75"
-     y1="720"
-     y2="720"
+     y1="650"
+     y2="650"
      id="line260" />
   <line
      stroke="#F07217"
@@ -772,8 +678,8 @@
      stroke-width="5.5"
      x1="253.75"
      x2="357.5"
-     y1="720"
-     y2="720"
+     y1="650"
+     y2="650"
      id="line262" />
   <line
      stroke="#F07217"
@@ -781,8 +687,8 @@
      stroke-width="5.5"
      x1="357.5"
      x2="461.25"
-     y1="720"
-     y2="720"
+     y1="650"
+     y2="650"
      id="line264" />
   <line
      stroke="#F07217"
@@ -790,8 +696,8 @@
      stroke-width="5.5"
      x1="461.25"
      x2="565.0"
-     y1="720"
-     y2="720"
+     y1="650"
+     y2="650"
      id="line266" />
   <line
      stroke="#F07217"
@@ -799,8 +705,8 @@
      stroke-width="5.5"
      x1="565.0"
      x2="668.75"
-     y1="720"
-     y2="720"
+     y1="650"
+     y2="650"
      id="line268" />
   <line
      stroke="#F07217"
@@ -808,8 +714,8 @@
      stroke-width="5.5"
      x1="668.75"
      x2="772.5"
-     y1="720"
-     y2="720"
+     y1="650"
+     y2="650"
      id="line270" />
   <line
      stroke="#F07217"
@@ -817,8 +723,8 @@
      stroke-width="5.5"
      x1="772.5"
      x2="876.25"
-     y1="720"
-     y2="720"
+     y1="650"
+     y2="650"
      id="line272" />
   <line
      stroke="#F07217"
@@ -826,103 +732,101 @@
      stroke-width="5.5"
      x1="876.25"
      x2="980.0"
-     y1="720"
-     y2="720"
+     y1="650"
+     y2="650"
      id="line274" />
   <circle
      cx="150.0"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="10"
      id="circle276" />
   <circle
      cx="253.75"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="6.5"
      id="circle278" />
   <circle
      cx="357.5"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="6.5"
      id="circle280" />
   <circle
      cx="461.25"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="6.5"
      id="circle282" />
   <circle
      cx="565.0"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="6.5"
      id="circle284" />
   <circle
      cx="668.75"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="6.5"
      id="circle286" />
   <circle
      cx="772.5"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="6.5"
      id="circle288" />
   <circle
      cx="876.25"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="6.5"
      id="circle290" />
   <circle
      cx="980.0"
-     cy="720"
+     cy="650"
      fill="#F07217"
      r="10"
      id="circle292" />
   <text
      class="cn orange"
-     font-size="30"
+     font-size="28"
      font-weight="700"
-     x="470"
-     y="680"
-     id="text294">模型预测事件</text>
+     x="565"
+     y="612"
+     id="text294" text-anchor="middle">模型预测事件</text>
   <text
      class="body"
      font-family="Times New Roman"
      font-size="30"
      x="140"
-     y="760"
+     y="694"
      id="text296">tₖ</text>
   <text
      class="body"
      font-family="Times New Roman"
      font-size="30"
      x="960"
-     y="760"
+     y="694"
      id="text298">tₖ₊₁</text>
   <path
-     d="M 980 390 C 1060 390, 1042 530, 1148 595"
+     d="M 980 330 C 1053.50250 330.00000, 1063.69307 460.84463, 1128.46253 524.75657"
      fill="none"
-     marker-end="url(#arrowGreen)"
      stroke="#188E42"
-     stroke-linecap="round"
+     stroke-linecap="butt"
      stroke-width="6"
      id="path300" />
   <path
-     d="M 980 720 C 1060 720, 1045 645, 1148 613"
+     d="M 980 650 C 1051.58869 650.00000, 1063.11948 625.97684, 1119.92930 599.42785"
      fill="none"
-     marker-end="url(#arrowOrange)"
      stroke="#F07217"
-     stroke-linecap="round"
+     stroke-linecap="butt"
      stroke-width="6"
      id="path302" />
   <circle
      cx="1175"
-     cy="608"
+     cy="565"
      fill="#F1F6FE"
      r="35"
      stroke="#1E63C6"
@@ -934,28 +838,27 @@
      font-weight="700"
      text-anchor="middle"
      x="1175"
-     y="626"
+     y="583"
      id="text306">+</text>
   <line
-     marker-end="url(#arrowBlue)"
      stroke="#1E63C6"
-     stroke-linecap="round"
+     stroke-linecap="butt"
      stroke-width="7"
-     x1="1214"
-     x2="1692"
-     y1="608"
-     y2="608"
+     x1="1222"
+     x2="1666"
+     y1="565"
+     y2="565"
      id="line308" />
   <text
      class="cn body"
-     font-size="34"
+     font-size="32"
      font-weight="700"
      text-anchor="middle"
      x="1450"
-     y="555"
+     y="515"
      id="text310">EKF 状态输出（200 Hz）</text>
   <g
-     transform="translate(1326,640) scale(1.28)"
+     transform="translate(1320,601) scale(1.35)"
      id="g384">
     <metadata
        id="metadata312">
@@ -1122,23 +1025,23 @@
   </g>
   <rect
      fill="#fff9f5"
-     height="145.09557"
-     rx="7.9029126"
+     height="168"
+     rx="16"
      stroke="#eeb07b"
-     stroke-width="1.134"
-     width="648.03888"
-     x="228.21112"
-     y="785"
+     stroke-width="1.4"
+     width="830"
+     x="150"
+     y="742"
      id="rect386" />
   <text
      class="cn orange"
-     font-size="26px"
+     font-size="28px"
      font-weight="700"
-     x="256.67148"
-     y="831.46039"
+     x="178"
+     y="786"
      id="text390">非线性吊挂动力学</text>
   <g
-     transform="matrix(1.13,0,0,1.13,260.67148,859.46039)"
+     transform="translate(180,818) scale(1.25)"
      id="g483">
     <metadata
        id="metadata392">
@@ -1435,7 +1338,7 @@
     </g>
   </g>
   <g
-     transform="matrix(1.34,0,0,1.34,660.09031,861.23253)"
+     transform="translate(665,819) scale(1.4)"
      id="g541">
     <metadata
        id="metadata485">
@@ -1597,4 +1500,11 @@
       </g>
     </g>
   </g>
+  <!-- Codex layout repair, 2026-10-26: explicit unclipped blue arrowhead. -->
+  <path id="output-blue-arrowhead" d="M 1664 551 L 1692 565 L 1664 579 Z" fill="#1E63C6" stroke="none" />
+  <!-- Codex compatibility repair, 2026-10-26: ordinary filled paths; no SVG marker dependency. -->
+  <path id="input-green-arrowhead" d="M 1118.16583 536.31344 L 1147 540 L 1132.64875 514.72073 Z" fill="#188E42" stroke="none" />
+  <path id="input-orange-arrowhead" d="M 1122.49318 611.55189 L 1142 590 L 1113.05440 587.32568 Z" fill="#F07217" stroke="none" />
+  <!-- Codex layout repair, 2026-10-26: vertical guides avoid only actual label bounds. -->
+  <!-- Codex layout refinement, 2026-10-26: module alignment, scale and spacing; content preserved. -->
 </svg>

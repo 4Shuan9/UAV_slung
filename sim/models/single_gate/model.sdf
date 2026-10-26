@@ -1,0 +1,23 @@
+<sdf version="1.9">
+  <model name="single_gate">
+    <static>true</static> 
+
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://single_gate/meshes/single_gate.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://single_gate/meshes/single_gate.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>
