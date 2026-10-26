@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # Codex-generated file: interactive mission/reference layer around UNCHANGED baseline executables.
+# Codex-generated consolidation, 2026-10-26: position + angle tasks in one entry.
 # CLI: home-relative North/East/Up [m]. Public reference/PX4 topics retain absolute NED.
 import copy
+import csv
 import json
 import math
 import os
@@ -28,7 +30,7 @@ from std_msgs.msg import String, Float32, Bool
 from px4_msgs.msg import (VehicleOdometry, VehicleLocalPosition, VehicleStatus,
                          VehicleCommand, TrajectorySetpoint, OffboardControlMode)
 from slung_ctrl.msg import SwingADRCState
-from offboard_reference import Reference, SmoothReference, AngleStopReference, reference_kinematics, plan_bridge, smoother, norm, valid_point, minimum_height, admissible_height, at_home
+from offboard_reference import Reference, SmoothReference, AngleStopReference, reference_kinematics, plan_bridge, smoother, norm, valid_point, minimum_height, admissible_height, at_home, AngleReference, reference_offset, measured_tracking_command
 
 
 class Offboard(Node):
@@ -42,7 +44,7 @@ class Offboard(Node):
                       home_speed_tolerance=.15,home_stable_sec=2.,transition_speed=1.,
                       transition_acceleration=.5,trajectory_ramp_sec=2.,eight_loops=0,
                       cable_length=1.,payload_radius=.045,suspension_offset_bound=.24,
-                      minimum_payload_clearance=.10,command_fifo='')
+                      minimum_payload_clearance=.10,angle_reference_speed_limit=6.2,command_fifo='')
         self.cfg={k:self.declare_parameter(k,v).value for k,v in defaults.items()}
         self.estimator=self.cfg['default_estimator'];self.controller=self.cfg['default_controller']
         self.validate_selection(self.estimator,self.controller)
@@ -52,13 +54,26 @@ class Offboard(Node):
             if isinstance(v,(int,float)) and (not math.isfinite(v) or v<0):raise ValueError('Invalid '+k)
         for k in ('control_hz','prestream_sec','input_timeout','backend_timeout','status_timeout','handshake_timeout',
                   'home_position_tolerance','home_speed_tolerance','home_stable_sec','transition_speed',
-                  'transition_acceleration','cable_length','payload_radius'):
+                  'transition_acceleration','cable_length','payload_radius','angle_reference_speed_limit'):
             if self.cfg[k]<=0:raise ValueError(k+' must be positive')
         if self.cfg['control_hz']!=50.:raise ValueError('Baseline control_hz is fixed at 50 Hz')
         self.share=Path(get_package_share_directory('slung_ctrl'))
         self.profiles={}
         for name,node in [('control_eso','slung_control_adrc'),('control_ekf','slung_control_adrc'),('control_pd','slung_control_pd'),('eight','trajectory_eight'),('square','trajectory_square')]:
             self.profiles[name]=yaml.safe_load((self.share/'config'/f'{name}.yaml').read_text())[node]['ros__parameters']
+        # Codex-generated: one console owns all position and angle tasks.
+        self.angle_feedback=yaml.safe_load((self.share/'config'/'angle_tasks'/'feedback.yaml').read_text())
+        for key in ('position_p','position_d','sine_position_p','sine_position_d','angle_p','angle_d','experimental_max_acceleration'):
+            value=float(self.angle_feedback[key])
+            if not math.isfinite(value) or value<0:raise ValueError('Invalid angle feedback '+key)
+        if self.angle_feedback['TEMP_fixed_yaw'] is not True:raise ValueError('Angle tasks currently require fixed yaw')
+        self.angle_acceleration=float(self.angle_feedback['experimental_max_acceleration'])
+        if self.angle_acceleration<=0:raise ValueError('Angle acceleration must be positive')
+        self.pub_angle=self.create_publisher(Vector3Stamped,'/uav/reference/angle',10)
+        self.pub_angle_rate=self.create_publisher(Vector3Stamped,'/uav/reference/rate',10)
+        self.pub_virtual=self.create_publisher(Point,'/uav/reference/controller_position',10)
+        self.pub_angle_task=self.create_publisher(String,'/uav/reference/angle_task',10)
+        self.last_angle_output=-1.
         self.height=float(self.profiles[self.profile_name()]['takeoff_height'])
         if self.cfg['eight_loops']<0:raise ValueError('eight_loops must be >=0 (0 means continuous)')
         self.required_z=minimum_height(self.cfg['cable_length'],self.cfg['payload_radius'],self.cfg['suspension_offset_bound'],self.cfg['minimum_payload_clearance'])
@@ -151,12 +166,15 @@ class Offboard(Node):
                 f'hold / home          Stop here / clear work and return at {self.height:g} m',
                 'eight [loops]        Figure-eight (default: '+loop_default+')',
                 'square               Rhombus trajectory',
+                'sweep                +/-30 deg sine, 0.45 Hz; continuous',
+                'maneuver             20 deg hold for 1.5 s; then return',
                 'setpoint N E U       Move to a 3-D target',
                 'pause / resume       Smooth stop / continue saved work',
                 'control off          Disable anti-swing only after stopping',
                 'reset                Clear work, hold here, anti-swing ON',
                 'estimator NAME       eso | eso_delay | ekf2 | ekf3',
                 'controller NAME      adrc | pd (EKF2: PD only)',
+                'Angles: HOME start, fixed yaw; pause cancels, no resume.',
                 'status / params / help / quit',
                 '',
                 f'Switch at HOME only: {self.height:g} m, low speed, stable {self.cfg["home_stable_sec"]:g} s.',
@@ -173,6 +191,8 @@ class Offboard(Node):
             '',
             'TRAJECTORY   eight [loops]        Default: '+loop_default+'; 0 = continuous',
             '             square               Run the original rhombus trajectory',
+            '             sweep                +/-30 deg sine, 0.45 Hz; continuous',
+            '             maneuver             20 deg hold for 1.5 s; then return',
             '             setpoint N E U       Move to a 3-D coordinate [m]',
             '',
             'MISSION      pause / resume       Smooth stop / continue saved work',
@@ -185,7 +205,9 @@ class Offboard(Node):
             '',
             'Switch only at HOME: '+f'{self.height:g} m, low speed, stable for {self.cfg["home_stable_sec"]:g} s.',
             f'Setpoint minimum UP: {self.required_z:.2f} m (configured payload clearance).',
-            'Quick flow: takeoff -> eight 1 -> home -> land -> quit',
+            'Angles: HOME start, fixed yaw; pause cancels, no resume.',
+            f'Angle reference speed <= {self.cfg["angle_reference_speed_limit"]:g} m/s (simulation).',
+            'Quick flow: takeoff -> eight / sweep / maneuver -> home -> land',
             startup])
     def show_status(self):
         state=self.publish_status()
@@ -204,6 +226,7 @@ class Offboard(Node):
                'Anti-swing      : '+('ON' if self.antiswing_enabled else 'OFF - position-only mode'),
                'Trajectory      : '+('PAUSED' if self.trajectory_paused else (self.task.upper() if self.phase=='FLIGHT' else self.phase)),
                f'Controller file : {self.profile_name()}.yaml',
+               f'Acceleration cap: {self.acceleration_limit():g} m/s2 per horizontal axis',
                'Swing feedback  : '+('READY' if self.source_ready() else 'WAITING / STALE'),
                '', 'Position N/E/U  : '+pose, 'Target N/E/U    : '+goal,
                'Velocity N/E/U  : '+fmt(self.vel())+' m/s']
@@ -283,6 +306,11 @@ class Offboard(Node):
         self.backend_sp_time=self.now_s()
         self.control_ready=math.isfinite(msg.acceleration[0]) and math.isfinite(msg.acceleration[1])
         v=copy.deepcopy(msg)
+        # Backend headroom is not a global increase: normal tasks retain YAML caps.
+        limit=self.acceleration_limit()
+        for axis in range(2):
+            if math.isfinite(v.acceleration[axis]):v.acceleration[axis]=float(max(-limit,min(limit,v.acceleration[axis])))
+        backend_acceleration=tuple(float(x) for x in v.acceleration[:2])
         v.position=[float(x+self.home[i]) if math.isfinite(x) else float('nan') for i,x in enumerate(msg.position)]
         if not self.antiswing_enabled and all(math.isfinite(x) for x in msg.acceleration[:2]):
             # Explicit POSITION-ONLY mode. Keep estimator/backend state untouched;
@@ -294,7 +322,7 @@ class Offboard(Node):
                 v.acceleration[axis]=float(max(-limit,min(limit,command)))
         if self.last_private_reference is not None and self.control_ready:
             kp=float(self.profiles[self.profile_name()]['kp_pos'])
-            self.last_equivalent_reference=tuple(self.last_private_reference[i]+(float(v.acceleration[i])-float(msg.acceleration[i]))/kp for i in range(2))
+            self.last_equivalent_reference=tuple(self.last_private_reference[i]+(float(v.acceleration[i])-backend_acceleration[i])/kp for i in range(2))
         self.pub_sp.publish(v)
         if self.phase=='PRESTREAM' and self.reason=='takeoff':self.phase='TAKEOFF'
         if self.control_ready and self.armed() and self.vehicle.nav_state==VehicleStatus.NAVIGATION_STATE_OFFBOARD:
@@ -359,6 +387,7 @@ class Offboard(Node):
         exe='slung_control_'+self.controller
         cmd=[str(Path(get_package_prefix('slung_ctrl'))/'lib/slung_ctrl'/exe),'--ros-args','--params-file',str(self.share/'config'/(self.profile_name()+'.yaml')),
              '-p','use_sim_time:='+str(bool(self.get_parameter('use_sim_time').value)).lower()]
+        cmd+=['-p','max_comp_acc:='+str(max(float(self.profiles[self.profile_name()]['max_comp_acc']),self.angle_acceleration))]
         for a,b in [('/fmu/in/trajectory_setpoint',self.P+'trajectory_setpoint'),('/fmu/in/offboard_control_mode',self.P+'offboard_control_mode'),('/fmu/in/vehicle_command',self.P+'vehicle_command'),('/fmu/out/vehicle_odometry',self.P+'odometry'),('/fmu/out/vehicle_local_position',self.P+'local_position'),('/uav/reference/position',self.P+'reference_position'),('/uav/reference/yaw',self.P+'reference_yaw'),('/uav/control/active',self.P+'active')]:cmd+=['-r',a+':='+b]
         if self.controller=='adrc':cmd+=['-p','state_topic:=/uav/swing/'+self.estimator+'/state']
         else:
@@ -368,7 +397,7 @@ class Offboard(Node):
             for line in p.stdout:self.log_queue.put(line.strip())
         threading.Thread(target=drain,args=(self.backend,),daemon=True).start()
         self.phase='PRESTREAM';self.boot_time=self.now_s()
-        self.say('Loaded unchanged '+self.profile_name()+'.yaml; prestreaming before controller activation.')
+        self.say('Loaded '+self.profile_name()+'.yaml; normal acceleration cap '+str(self.profiles[self.profile_name()]['max_comp_acc'])+', angle-task cap '+str(self.angle_acceleration)+' m/s2; prestreaming.')
     def point_reference(self,kind,target):
         return Reference(kind,self.now_s(),self.pos(),goal=target,speed=self.cfg['transition_speed'],accel=self.cfg['transition_acceleration'])
     def can_switch(self):
@@ -383,6 +412,7 @@ class Offboard(Node):
                  position_neu=self.pos(),velocity_neu=self.vel(),reference_neu=tuple(float(x) for x in self.ref),switch_allowed=self.can_switch(),
                  source_ready=self.source_ready(),minimum_setpoint_z=self.required_z,profile=self.profile_name(),last_command=self.last_cmd,
                  antiswing_enabled=self.antiswing_enabled,trajectory_paused=self.trajectory_paused,
+                 acceleration_limit_m_s2=self.acceleration_limit(),angle_reference_speed_limit_m_s=self.cfg['angle_reference_speed_limit'],
                  control_off_allowed=self.can_disable_antiswing(),work_kind=self.work_motion().kind if self.work_motion() else None,
                  saved_progress_s=float(self.saved_motion.elapsed) if self.saved_motion else None,
                  progress_s=float(self.work_motion().elapsed) if self.work_motion() else None,
@@ -397,7 +427,8 @@ class Offboard(Node):
         for title,items in [('OPERATION - offboard.yaml',{k:v for k,v in self.cfg.items() if k!='command_fifo'}),
                             ('CONTROLLER - '+self.profile_name()+'.yaml',self.profiles[self.profile_name()]),
                             ('FIGURE-EIGHT - eight.yaml',self.profiles['eight']),
-                            ('RHOMBUS - square.yaml',self.profiles['square'])]:
+                            ('RHOMBUS - square.yaml',self.profiles['square']),
+                            ('ANGLE TASKS - feedback.yaml (active only in angular work)',self.angle_feedback)]:
             if lines:lines.append('')
             lines.append(title)
             lines.extend(f'  {k:<30} : {value(v)}' for k,v in items.items())
@@ -465,9 +496,11 @@ class Offboard(Node):
         if cmd in ('quit','exit'):
             if self.armed() and self.phase!='PAUSED':raise ValueError('Land or select PX4 Hold in QGC before quitting')
             self.shutdown_requested=True;return
-        if cmd not in ('hold','home','reset','setpoint','eight','square'):
+        if cmd not in ('hold','home','reset','setpoint','eight','square','sweep','maneuver'):
             raise ValueError('Unknown command; use setpoint N E U for a 3D target, or type help')
         self.require_flight()
+        if cmd in ('sweep','maneuver'):
+            self.start_angle_task(cmd);return
         if cmd in ('hold','reset'):
             self.stop_work(save=False,after='hold');self.say('Work cleared. Smooth stop and position hold; anti-swing ON.');return
         if cmd=='home':
@@ -492,14 +525,45 @@ class Offboard(Node):
     def clear_paused_trajectory(self):
         self.saved_motion=self.saved_next_motion=self.saved_ref=None
         self.trajectory_paused=False
+    def acceleration_limit(self):
+        angular=getattr(self.motion,'angle_motion',False) or getattr(self.motion,'angle_stop',False)
+        return self.angle_acceleration if angular else float(self.profiles[self.profile_name()]['max_comp_acc'])
+    def start_angle_task(self,cmd):
+        if not self.can_switch():raise ValueError('Angle tasks start only at stable HOME; use home and wait')
+        if not self.source_ready():raise ValueError('Selected feedback is missing or stale')
+        filename='angle_sine.csv' if cmd=='sweep' else 'angle_hold.csv'
+        try:motion=AngleReference(self.share/'config'/'angle_tasks'/filename,self.now_s(),(0.,0.,self.height),cmd)
+        except (OSError,StopIteration,csv.Error) as exc:raise ValueError('Cannot load offline angle plan: '+str(exc)) from exc
+        if not all(k in motion.meta for k in ('l','height_m','duration_s')):raise ValueError('Incomplete angle plan metadata')
+        profile=self.profiles[self.profile_name()]
+        if abs(float(motion.meta['l'])-float(profile.get('l',self.cfg['cable_length'])))>1e-9:raise ValueError('Angle plan cable length mismatch')
+        if abs(self.height-float(motion.meta['height_m']))>1e-9:raise ValueError('Angle plan requires recorded 8 m height')
+        if motion.max_reference_speed>self.cfg['angle_reference_speed_limit']+1e-6:
+            raise ValueError(f"Plan requires {motion.max_reference_speed:.2f} m/s, above configured angle reference limit {self.cfg['angle_reference_speed_limit']:.2f}; replan rather than clip")
+        self.resume_motion=None;self.clear_paused_trajectory();self.install_motion(motion);self.task=cmd
+        self.say(f'Started {cmd}; reference peak {motion.max_reference_speed:.2f} m/s, acceleration cap {self.angle_acceleration:g} m/s2. Fixed yaw; pause cancels, no angular resume.')
     def controller_reference(self,msg):
-        return copy.deepcopy(msg)
+        out=copy.deepcopy(msg);motion=self.motion
+        if getattr(motion,'angle_motion',False) and self.antiswing_enabled:
+            out.x=measured_tracking_command(self,motion) if self.source_ready() else out.x+reference_offset(self.controller,self.profiles[self.profile_name()],motion.state)
+        return out
     def publish_reference(self,msg):
         out=self.controller_reference(msg)
         u=max(0.,min(1.,(self.now_s()-self.offset_t0)/self.offset_duration));fade=1-smoother(u)[0]
         out.x+=fade*self.reference_offset[0];out.y+=fade*self.reference_offset[1]
         self.last_private_reference=(out.x,out.y)
         self.pub_ref.publish(out)
+        self.publish_angle_reference(msg)
+    def publish_angle_reference(self,msg):
+        motion=self.motion;theta=omega=0.;label='hold';p=v=a=0.
+        if getattr(motion,'angle_motion',False):p,v,a,theta,omega,_=motion.state;label=motion.kind
+        private=self.last_private_reference
+        self.pub_virtual.publish(Point(x=float(private[0]+self.home[0]),y=float(private[1]+self.home[1]),z=float(msg.z+self.home[2])))
+        for pub,value in ((self.pub_angle,theta*180/math.pi),(self.pub_angle_rate,omega*180/math.pi)):
+            ref=Vector3Stamped();ref.header.stamp=self.get_clock().now().to_msg();ref.header.frame_id='world';ref.vector.y=value;pub.publish(ref)
+        if self.now_s()-self.last_angle_output>=.1:
+            self.last_angle_output=self.now_s()
+            self.pub_angle_task.publish(String(data=json.dumps(dict(stamp_sec=self.now_s(),task=label,elapsed=motion.elapsed if motion else 0.,theta_north_deg=theta*180/math.pi,north_offset_m=p,north_velocity_m_s=v,north_acceleration_m_s2=a,TEMP_fixed_yaw=getattr(motion,'angle_motion',False)))))
     def install_motion(self,motion):
         old=self.last_equivalent_reference
         self.antiswing_enabled=True;self.motion=motion;self.stationary_since=None
@@ -517,7 +581,11 @@ class Offboard(Node):
         return reference_kinematics(self.motion,self.now_s())
     def build_bridge(self,kind,start,end_factory,*,source=None,after=None,next_motion=None,cruise=False,fixed_yaw=False):
         speed=self.cfg['transition_speed'] if cruise else max(self.cfg['transition_speed'],norm(self.vel()),float(source.meta.get('max_speed_m_s',0.)) if source is not None else 0.)
-        return plan_bridge(kind,self.now_s(),start,end_factory,speed=speed,accel=self.cfg['transition_acceleration'] if cruise else float(self.profiles[self.profile_name()]['max_comp_acc']),ramp=self.cfg['trajectory_ramp_sec'],fixed_yaw=fixed_yaw or source is not None,source=source,after=after,next_motion=next_motion)
+        angular=source is not None or getattr(self.motion,'angle_motion',False) or getattr(self.motion,'angle_stop',False)
+        limit=self.angle_acceleration if angular else float(self.profiles[self.profile_name()]['max_comp_acc'])
+        motion=plan_bridge(kind,self.now_s(),start,end_factory,speed=speed,accel=self.cfg['transition_acceleration'] if cruise else limit,ramp=self.cfg['trajectory_ramp_sec'],fixed_yaw=fixed_yaw or source is not None,source=source,after=after,next_motion=next_motion)
+        if angular and not cruise and not getattr(motion,'angle_motion',False):motion.angle_stop=True
+        return motion
     def stop_work(self,save,after):
         self.require_flight()
         if save and self.trajectory_paused:
@@ -564,6 +632,8 @@ class Offboard(Node):
         self.clear_paused_trajectory()
         self.say('Smoothly rejoining saved progress; anti-swing ON. Transition time does not consume remaining work.')
     def finish_motion(self,motion):
+        if isinstance(motion,AngleReference):
+            self.stop_work(save=False,after='home');self.say('Angle work complete. Smooth stop and return to takeoff point.');return
         if isinstance(motion,SmoothReference):
             if isinstance(motion,AngleStopReference) and motion.next_motion is None:
                 # Model-based angle release is followed by a measured-motion
@@ -587,12 +657,15 @@ class Offboard(Node):
         self.motion=None;self.task='hold';self.stationary_since=None
         self.say('Reference finished. Holding its endpoint.')
     def pause(self,request_hold):
+        interrupted=getattr(self.motion,'angle_motion',False) or getattr(self.resume_motion,'angle_motion',False)
         self.saved_motion=self.motion;self.saved_next_motion=self.resume_motion;self.saved_ref=self.ref;self.motion=None;self.resume_motion=None;self.trajectory_paused=False
         if self.task=='takeoff':self.saved_ref=(0.,0.,self.height)
         self.ref=self.pos();self.home_since=None;self.stop_backend()
         self.phase='PAUSING' if request_hold else 'PAUSED';self.last_mode_request=-1.
         if request_hold:self.command_px4(VehicleCommand.VEHICLE_CMD_DO_SET_MODE,1.,4.,3.)
-        self.say('Task paused. PX4 Hold/manual takeover; resume re-enters from current pose.')
+        if interrupted:
+            self.clear_paused_trajectory();self.saved_ref=self.ref;self.task='hold'
+        self.say('Task paused. PX4 Hold/manual takeover; resume re-enters from current pose.'+(' Angular task canceled.' if interrupted else ''))
     def tick(self):
         t=self.now_s()
         if self.last_clock is not None and t<self.last_clock-.001:

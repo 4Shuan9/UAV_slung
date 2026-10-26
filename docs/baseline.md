@@ -68,3 +68,45 @@ PX4二进制：`0d8bb9c7ebb9cb9396d4bc0125a52b06d49d4a4ff98243daeaa01dd75307f101
 </details>
 
 后续实验入口另行标记，不覆盖本基准的算法与参数；本轮工程外DELETE_ME原始复验数据已按要求清理，本文保留汇总结果。
+
+<!-- Codex-generated addition: condensed scene configuration and existing validation record, 2026-10-26; original baseline content preserved. -->
+## 场景配置与验收（2026-10-26）
+
+以下合并该日已有的场景配置与验收记录；本次仅整理文档，未重新运行仿真。该轮场景调整未改变观测器、控制器参数。
+
+### 场景配置
+
+| 项目 | 配置 |
+|---|---|
+| 场景入口 | [UAV_slung_world.sdf](../sim/worlds/UAV_slung_world.sdf) 与 [gui.config](../sim/worlds/gui.config) |
+| 起飞台 | 中心 `(0,0,0)`，台面世界高度 `1.072 m`，绕 Z 轴 `−90°`；初始机头朝世界 `+X`（East），面向大门 |
+| 大门 | 中心 `(15,0)`，距台心 15 m；净宽×净高 `9×4 m`，门扇固定向外开启 `160°` |
+| 足球场 | 中心 `(54,0)`；白线范围 `X=20..88 m、Y=±52.5 m`，即 `68×105 m` |
+| 围栏／辅助网格 | 围栏 `X=15..93 m、Y=±57.5 m`；原点 GUI 网格 `20×20 m`、每格 1 m |
+| 光照 | 中性柔光、哑光地面；方向光强度 `0.70`，路灯强度 `0.18` |
+| 碰撞 | 球网仅作可视参考；围栏、门和场边设施采用简化碰撞体 |
+
+模型资源位于本工程 `sim/models/helipad` 和 `sim/models/football_court`，运行不依赖 `UAV_lumberjack`。飞机、绳索和载荷的出生高度整体提高 `1.072 m`，相对连接关系不变。控制终端使用相对起飞点的 **North／East／Up**；`takeoff` 的 8 m 为相对高度，`UP=2 m` 时机体原点约为世界 `Z=3.1 m`。
+
+### 已有验收结果
+
+世界 SDF、资源路径、实际渲染与 GUI 加载检查通过；以现有 **ESO_delay＋ADRC** 完成一次穿门往返，正常通过预飞检查，未强制解锁或关闭预飞检查。测试指令如下，每步等待位置稳定：
+
+```text
+takeoff
+setpoint 0 0 2
+setpoint 0 18 2
+setpoint 0 0 2
+home
+land
+```
+
+| 检查点 | Gazebo 世界坐标 X／Y／Z [m] |
+|---|---|
+| 起飞悬停 | `0.044 / 0.017 / 9.099` |
+| 穿门进入场内 | `17.688 / −0.008 / 3.077` |
+| 降落并上锁 | `0.062 / 0.036 / 1.074` |
+
+从就绪到降落上锁约 **138.8 s**，记录相机图像 **3724 帧**；最终机体原点 `Z=1.0745 m`，落点距台心约 **7.2 cm**，验收检查点的 PX4 `failsafe` 均为 `false`。结论仅覆盖本次场景的一次往返，不能替代上文对其他机动与接地工况的说明。
+
+原始验收记录、截图、候选源码包和校验文件保存在工程外：`/home/ashuang/文档/ChatGPT/UAV_slung/reports/scene_freeze_candidate_20261026`。该快照不代表整个仓库的 Git 冻结。

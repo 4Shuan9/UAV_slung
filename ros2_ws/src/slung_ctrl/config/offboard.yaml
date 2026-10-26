@@ -18,6 +18,7 @@ slung_offboard:
     home_stable_sec: 2.0
     transition_speed: 1.0             # smooth setpoint/home/rejoin references, m/s
     transition_acceleration: 0.5      # reference acceleration bound, m/s^2
+    angle_reference_speed_limit: 6.2 # m/s; offline reference admission, not a real-aircraft speed guarantee
     trajectory_ramp_sec: 2.0          # smooth entry to eight; steady omega unchanged
     eight_loops: 0                   # 0: continuous; positive integer: finite loops
     cable_length: 1.0

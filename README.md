@@ -2,8 +2,6 @@
 
 A Gazebo simulation environment for UAV slung-payload operations, with vision-based swing-angle estimation and anti-swing control.
 
-Based on [rain_ws](https://github.com/RainbowSeeker/rain_ws.git) and [PX4-ROS2-Gazebo-Drone-Simulation-Template](https://github.com/SathanBERNARD/PX4-ROS2-Gazebo-Drone-Simulation-Template.git), adapted for PX4 v1.16.2.
-
 <img width="800" alt="UAV slung-load simulation" src="images/QSLS.gif" />
 
 ## Key Features
