@@ -42,7 +42,7 @@
   </library_effects>
   <library_images>
     <image id="concrete_2k_jpg" name="concrete_2k_jpg">
-      <init_from>../materials/textures/concrete_tiles_4k.jpg</init_from>
+      <init_from>../materials/textures/concrete_tiles_2k.jpg</init_from>
     </image>
   </library_images>
   <library_materials>

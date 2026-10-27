@@ -21,7 +21,7 @@
 ## 场景贴图
 
 - 草坪：[Grass001](https://ambientcg.com/view?id=Grass001)、[Grass004](https://ambientcg.com/view?id=Grass004)、[Grass008](https://ambientcg.com/view?id=Grass008)，ambientCG，CC0。三张 1K 颜色图经调色、旋转和平滑周期混合，生成 2K 明暗两种贴图；重复尺度约 2.8 m，草坪条纹宽约 7 m。运行文件位于 `football_field/materials/textures/`。
-- 外部地面：[Gravel Embedded Concrete](https://polyhaven.com/a/gravel_embedded_concrete)，Charlotte Baglioni / Poly Haven，CC0。以原 2K 颜色图为基础，拼接生成 4K 贴图并模拟 4 m×4 m 接缝；仅改变颜色和边缘明暗，不增加沟槽或碰撞。运行文件为 `stadium_ground/materials/textures/concrete_tiles_4k.jpg`。
+- 外部地面：[Gravel Embedded Concrete](https://polyhaven.com/a/gravel_embedded_concrete)，Charlotte Baglioni / Poly Haven，CC0。以原水泥颜色图为基础，生成 2K 贴图并模拟 4 m×4 m 接缝；仅改变颜色和边缘明暗，不增加沟槽或碰撞。运行文件为 `stadium_ground/materials/textures/concrete_tiles_2k.jpg`。
 
 - 看台：随上述三排看台 GLB 一并提取；钢、铝和木材贴图分别为 `football_field/materials/textures/bleacher_steel.png`、`bleacher_aluminum.png`、`bleacher_wood.png`。本轮仅按材质重命名并迁移目录，像素内容未变。
 - 备用门框：`single_gate/materials/textures/a2rl_gate.png`、`double_gate/materials/textures/a2rl_gate.png`，随原门框模型保留；本轮修正 DAE 的相对引用路径，未更改贴图内容。
