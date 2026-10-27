@@ -52,10 +52,6 @@ add_executable(swing_vision src/swing_vision.cpp)
 ament_target_dependencies(swing_vision rclcpp geometry_msgs px4_msgs)
 target_link_libraries(swing_vision Eigen3::Eigen)
 
-add_executable(swing_vision_predictor src/swing_vision_predictor.cpp)
-ament_target_dependencies(swing_vision_predictor rclcpp geometry_msgs message_filters px4_msgs)
-target_link_libraries(swing_vision_predictor Eigen3::Eigen)
-
 add_executable(swing_eso src/swing_eso.cpp)
 ament_target_dependencies(swing_eso rclcpp geometry_msgs px4_msgs)
 
@@ -84,7 +80,6 @@ install(TARGETS
   slung_control_adrc
   swing_truth
   swing_vision
-  swing_vision_predictor
   swing_eso
   swing_eso_delay
   swing_ekf2

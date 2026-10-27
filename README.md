@@ -105,7 +105,8 @@ ros2 launch slung_ctrl estimation.launch.py estimator:=all
 | `/uav/swing/<method>/state` | `slung_ctrl/SwingADRCState` | Angle, rate and disturbance from one update, sharing one timestamp; ESO, ESO_delay and EKF3 only |
 | `/uav/reference/position` | `geometry_msgs/Point` | Position reference in PX4 NED coordinates, in meters |
 | `/uav/reference/yaw` | `std_msgs/Float32` | Yaw reference in radians, using PX4's NED convention |
-| `/uav/reference/waypoint` | `geometry_msgs/Point` | External waypoint input when `type:=waypoint`, in NED meters |
+| `/uav/offboard/command` | `std_msgs/String` | Command input, using the same syntax as the interactive terminal |
+| `/uav/offboard/status` | `std_msgs/String` | JSON status: flight phase, task, selected observer/controller and readiness |
 | `/fmu/out/vehicle_attitude` | `px4_msgs/VehicleAttitude` | PX4 estimated attitude for capture-time visual conversion |
 | `/fmu/out/vehicle_local_position` | `px4_msgs/VehicleLocalPosition` | Estimated acceleration: `ax` = North, `ay` = East, in m/s² |
 | `/fmu/out/vehicle_odometry` | `px4_msgs/VehicleOdometry` | Position and velocity feedback for the controller |

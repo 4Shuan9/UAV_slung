@@ -15,8 +15,6 @@ import subprocess
 import sys
 import threading
 import textwrap
-import time
-from collections import deque
 from pathlib import Path
 import yaml
 import rclpy
@@ -81,8 +79,8 @@ class Offboard(Node):
         self.phase='IDLE';self.task='hold';self.ref=(0.,0.,self.height);self.yaw=0.
         self.home=None;self.odom=None;self.local=None;self.vehicle=None
         self.odom_time=self.local_time=self.status_time=-1.;self.last_clock=None;self.resets=None
-        self.motion=None;self.resume_motion=None;self.saved_motion=None;self.saved_ref=None
-        self.saved_next_motion=None;self.trajectory_paused=False;self.antiswing_enabled=True
+        self.motion=None;self.saved_motion=None;self.saved_ref=None
+        self.trajectory_paused=False;self.antiswing_enabled=True
         self.stationary_since=None;self.takeoff_point=(0.,0.,self.height)
         self.last_private_reference=None;self.last_equivalent_reference=None;self.reference_offset=(0.,0.);self.offset_t0=0.;self.offset_duration=1.
         self.home_since=None;self.backend=None;self.retiring=None;self.boot_time=0.;self.reason=''
@@ -166,7 +164,7 @@ class Offboard(Node):
                 f'hold / home          Stop here / clear work and return at {self.height:g} m',
                 'eight [loops]        Figure-eight (default: '+loop_default+')',
                 'square               Rhombus trajectory',
-                'sweep                +/-30 deg sine, 0.45 Hz; continuous',
+                'sine                 +/-30 deg sine, 0.45 Hz; continuous',
                 'maneuver             20 deg hold for 1.5 s; then return',
                 'setpoint N E U       Move to a 3-D target',
                 'pause / resume       Smooth stop / continue saved work',
@@ -191,7 +189,7 @@ class Offboard(Node):
             '',
             'TRAJECTORY   eight [loops]        Default: '+loop_default+'; 0 = continuous',
             '             square               Run the original rhombus trajectory',
-            '             sweep                +/-30 deg sine, 0.45 Hz; continuous',
+            '             sine                 +/-30 deg sine, 0.45 Hz; continuous',
             '             maneuver             20 deg hold for 1.5 s; then return',
             '             setpoint N E U       Move to a 3-D coordinate [m]',
             '',
@@ -207,7 +205,7 @@ class Offboard(Node):
             f'Setpoint minimum UP: {self.required_z:.2f} m (configured payload clearance).',
             'Angles: HOME start, fixed yaw; pause cancels, no resume.',
             f'Angle reference speed <= {self.cfg["angle_reference_speed_limit"]:g} m/s (simulation).',
-            'Quick flow: takeoff -> eight / sweep / maneuver -> home -> land',
+            'Quick flow: takeoff -> eight / sine / maneuver -> home -> land',
             startup])
     def show_status(self):
         state=self.publish_status()
@@ -283,8 +281,8 @@ class Offboard(Node):
     def finish_disarmed(self):
         landed=self.phase=='LANDING'
         self.stop_backend();self.phase='IDLE';self.task='hold'
-        self.motion=self.resume_motion=self.saved_motion=self.saved_ref=None
-        self.saved_next_motion=None;self.trajectory_paused=False
+        self.motion=self.saved_motion=self.saved_ref=None
+        self.trajectory_paused=False
         self.home_since=None;self.offboard_seen=False;self.control_ready=False
         self.ref=(0.,0.,self.height)
         self.say('PX4 confirms disarmed. '+('Landing complete.' if landed else 'Flight task cleared; terminal is IDLE.'))
@@ -457,7 +455,7 @@ class Offboard(Node):
             if not self.source_ready(e,c):raise ValueError('Selected feedback is missing or stale; run estimation estimator:=all')
             if (e,c)==(self.estimator,self.controller):self.say('Already selected.');return
             self.estimator=e;self.controller=c;self.height=float(self.profiles[self.profile_name()]['takeoff_height'])
-            self.motion=None;self.resume_motion=None;self.clear_paused_trajectory();self.saved_ref=(0.,0.,self.height);self.ref=self.saved_ref
+            self.motion=None;self.clear_paused_trajectory();self.saved_ref=(0.,0.,self.height);self.ref=self.saved_ref
             if self.phase=='PAUSED':
                 self.say('Selection updated at stable home. PX4 Hold remains active; use resume to re-enter Offboard.')
             else:self.begin_backend('switch')
@@ -472,10 +470,10 @@ class Offboard(Node):
             if len(self.get_publishers_info_by_topic('/fmu/in/trajectory_setpoint'))>1:
                 raise ValueError('Another PX4 setpoint publisher exists; stop the other controller/terminal')
             self.home=[float(x) for x in self.odom.position];self.yaw=float(self.local.heading)
-            self.ref=(0.,0.,0.);self.motion=None;self.clear_paused_trajectory();self.resume_motion=None;self.task='takeoff'
+            self.ref=(0.,0.,0.);self.motion=None;self.clear_paused_trajectory();self.task='takeoff'
             self.antiswing_enabled=True;self.begin_backend('takeoff');return
         if cmd=='reset' and self.phase=='IDLE':
-            self.clear_paused_trajectory();self.motion=None;self.resume_motion=None;self.antiswing_enabled=True;self.task='hold'
+            self.clear_paused_trajectory();self.motion=None;self.antiswing_enabled=True;self.task='hold'
             self.say('Work records cleared; anti-swing will be enabled when flying.');return
         if cmd=='pause':
             self.pause_trajectory();return
@@ -488,18 +486,18 @@ class Offboard(Node):
             if not self.source_ready():raise ValueError('Selected estimator not ready')
             if len(self.get_publishers_info_by_topic('/fmu/in/trajectory_setpoint'))>1:
                 raise ValueError('Another PX4 setpoint publisher exists; stop it before resume')
-            self.antiswing_enabled=True;self.resume_motion=None;self.ref=self.pos();self.motion=None;self.begin_backend('resume');return
+            self.antiswing_enabled=True;self.ref=self.pos();self.motion=None;self.begin_backend('resume');return
         if cmd=='land':
             if not self.ready() or not self.armed():raise ValueError('Vehicle is not armed or feedback is unavailable')
-            self.stop_backend();self.motion=None;self.resume_motion=None;self.clear_paused_trajectory();self.phase='LANDING';self.last_mode_request=-1.
+            self.stop_backend();self.motion=None;self.clear_paused_trajectory();self.phase='LANDING';self.last_mode_request=-1.
             self.command_px4(VehicleCommand.VEHICLE_CMD_NAV_LAND);self.say('Landing requested; waiting for PX4 landed/disarmed confirmation.');return
         if cmd in ('quit','exit'):
             if self.armed() and self.phase!='PAUSED':raise ValueError('Land or select PX4 Hold in QGC before quitting')
             self.shutdown_requested=True;return
-        if cmd not in ('hold','home','reset','setpoint','eight','square','sweep','maneuver'):
+        if cmd not in ('hold','home','reset','setpoint','eight','square','sine','maneuver'):
             raise ValueError('Unknown command; use setpoint N E U for a 3D target, or type help')
         self.require_flight()
-        if cmd in ('sweep','maneuver'):
+        if cmd in ('sine','maneuver'):
             self.start_angle_task(cmd);return
         if cmd in ('hold','reset'):
             self.stop_work(save=False,after='hold');self.say('Work cleared. Smooth stop and position hold; anti-swing ON.');return
@@ -510,7 +508,7 @@ class Offboard(Node):
             p=tuple(float(x) for x in args)
             if not valid_point(p) or not admissible_height(p[2],self.required_z):raise ValueError(f'Unsafe/invalid setpoint: minimum UP z is {self.required_z:.2f} m (rope + sphere + suspension bound + clearance)')
             if self.pos()[2]<self.required_z:raise ValueError('Current clearance is below the conservative task bound; use home first')
-            self.clear_paused_trajectory();self.resume_motion=None;self.install_motion(self.point_reference('setpoint',p));self.task='setpoint';self.say('Moving to NEU '+str(p));return
+            self.clear_paused_trajectory();self.install_motion(self.point_reference('setpoint',p));self.task='setpoint';self.say('Moving to NEU '+str(p));return
         if cmd in ('eight','square'):
             if self.motion is not None:raise ValueError('Use hold before starting another cyclic task')
             if self.pos()[2]<self.required_z:raise ValueError('Insufficient payload clearance; use home first')
@@ -518,12 +516,12 @@ class Offboard(Node):
             if len(args)>1 or loops<0:raise ValueError('Usage: eight [nonnegative integer loops]; 0 = continuous')
             kw=dict(scale=float(self.profiles['eight']['eight_scale']),omega=float(self.profiles['eight']['omega']),loops=loops,
                     side=float(self.profiles['square']['square_side_length']),speed=float(self.profiles['square']['cruise_speed']),ramp=self.cfg['trajectory_ramp_sec'])
-            self.clear_paused_trajectory();self.install_motion(Reference(cmd,self.now_s(),self.pos(),**kw));self.resume_motion=None;self.task=cmd
+            self.clear_paused_trajectory();self.install_motion(Reference(cmd,self.now_s(),self.pos(),**kw));self.task=cmd
             mode=(' (continuous)' if loops==0 else f' ({loops} loops)') if cmd=='eight' else ''
             self.say('Started '+cmd+mode+'; geometry/speed read from original trajectory YAML.');return
         raise ValueError('Unknown command; type help')
     def clear_paused_trajectory(self):
-        self.saved_motion=self.saved_next_motion=self.saved_ref=None
+        self.saved_motion=self.saved_ref=None
         self.trajectory_paused=False
     def acceleration_limit(self):
         angular=getattr(self.motion,'angle_motion',False) or getattr(self.motion,'angle_stop',False)
@@ -531,7 +529,7 @@ class Offboard(Node):
     def start_angle_task(self,cmd):
         if not self.can_switch():raise ValueError('Angle tasks start only at stable HOME; use home and wait')
         if not self.source_ready():raise ValueError('Selected feedback is missing or stale')
-        filename='angle_sine.csv' if cmd=='sweep' else 'angle_hold.csv'
+        filename='angle_sine.csv' if cmd=='sine' else 'angle_hold.csv'
         try:motion=AngleReference(self.share/'config'/'angle_tasks'/filename,self.now_s(),(0.,0.,self.height),cmd)
         except (OSError,StopIteration,csv.Error) as exc:raise ValueError('Cannot load offline angle plan: '+str(exc)) from exc
         if not all(k in motion.meta for k in ('l','height_m','duration_s')):raise ValueError('Incomplete angle plan metadata')
@@ -540,7 +538,7 @@ class Offboard(Node):
         if abs(self.height-float(motion.meta['height_m']))>1e-9:raise ValueError('Angle plan requires recorded 8 m height')
         if motion.max_reference_speed>self.cfg['angle_reference_speed_limit']+1e-6:
             raise ValueError(f"Plan requires {motion.max_reference_speed:.2f} m/s, above configured angle reference limit {self.cfg['angle_reference_speed_limit']:.2f}; replan rather than clip")
-        self.resume_motion=None;self.clear_paused_trajectory();self.install_motion(motion);self.task=cmd
+        self.clear_paused_trajectory();self.install_motion(motion);self.task=cmd
         self.say(f'Started {cmd}; reference peak {motion.max_reference_speed:.2f} m/s, acceleration cap {self.angle_acceleration:g} m/s2. Fixed yaw; pause cancels, no angular resume.')
     def controller_reference(self,msg):
         out=copy.deepcopy(msg);motion=self.motion
@@ -607,9 +605,9 @@ class Offboard(Node):
         if save and current is not None:
             if isinstance(current,SmoothReference) and current.next_motion is not None:self.saved_motion=current.next_motion
             else:self.saved_motion=current
-            self.saved_next_motion=None;self.saved_ref=tuple(self.ref);self.trajectory_paused=True
+            self.saved_ref=tuple(self.ref);self.trajectory_paused=True
         else:self.clear_paused_trajectory()
-        self.resume_motion=None;self.install_motion(motion);self.task='pausing' if save else ('resetting' if after=='hold' else 'returning')
+        self.install_motion(motion);self.task='pausing' if save else ('resetting' if after=='hold' else 'returning')
     def pause_trajectory(self):
         if self.task=='stopping':
             self.say('Angle task already canceled and stopping; anti-swing remains ON.');return
@@ -617,7 +615,7 @@ class Offboard(Node):
             if isinstance(self.motion,AngleStopReference):
                 self.say('Angle task already canceled and stopping; anti-swing remains ON.');return
             self.stop_work(save=False,after='hold');self.task='stopping'
-            self.say('Angle task canceled. Smooth stop with anti-swing ON; home then sweep/maneuver starts from the beginning. No angular resume record.')
+            self.say('Angle task canceled. Smooth stop with anti-swing ON; home then sine/maneuver starts from the beginning. No angular resume record.')
             return
         self.stop_work(save=True,after='pause')
         self.say('Smooth stop started; progress saved and anti-swing ON. Wait until stopped before resume/control off.')
@@ -625,7 +623,7 @@ class Offboard(Node):
         self.require_flight()
         target=self.saved_motion
         if target is None:raise ValueError('No saved work: reset/home or angular stop cleared the record')
-        if getattr(target,'angle_motion',False):raise ValueError('Angle tasks restart from the beginning; use home, then sweep/maneuver')
+        if getattr(target,'angle_motion',False):raise ValueError('Angle tasks restart from the beginning; use home, then sine/maneuver')
         start=self.current_reference_state();end=reference_kinematics(target,target.t0+target.elapsed)
         bridge=self.build_bridge('resuming',start,lambda T:end,next_motion=target)
         self.install_motion(bridge);self.task='resuming';self.trajectory_paused=False
@@ -646,7 +644,7 @@ class Offboard(Node):
                 return
             if motion.next_motion is not None:
                 self.motion=motion.next_motion;self.motion.resume(self.now_s());self.task=self.motion.kind
-                self.reference_offset=(0.,0.);self.resume_motion=None
+                self.reference_offset=(0.,0.)
                 self.say('Saved work continues at the paused progress.');return
             self.motion=None
             if motion.after=='home':
@@ -657,8 +655,8 @@ class Offboard(Node):
         self.motion=None;self.task='hold';self.stationary_since=None
         self.say('Reference finished. Holding its endpoint.')
     def pause(self,request_hold):
-        interrupted=getattr(self.motion,'angle_motion',False) or getattr(self.resume_motion,'angle_motion',False)
-        self.saved_motion=self.motion;self.saved_next_motion=self.resume_motion;self.saved_ref=self.ref;self.motion=None;self.resume_motion=None;self.trajectory_paused=False
+        interrupted=getattr(self.motion,'angle_motion',False)
+        self.saved_motion=self.motion;self.saved_ref=self.ref;self.motion=None;self.trajectory_paused=False
         if self.task=='takeoff':self.saved_ref=(0.,0.,self.height)
         self.ref=self.pos();self.home_since=None;self.stop_backend()
         self.phase='PAUSING' if request_hold else 'PAUSED';self.last_mode_request=-1.
@@ -669,7 +667,7 @@ class Offboard(Node):
     def tick(self):
         t=self.now_s()
         if self.last_clock is not None and t<self.last_clock-.001:
-            self.stop_backend();self.phase='PAUSED' if self.armed() else 'IDLE';self.home=None;self.motion=None;self.resume_motion=None;self.clear_paused_trajectory()
+            self.stop_backend();self.phase='PAUSED' if self.armed() else 'IDLE';self.home=None;self.motion=None;self.clear_paused_trajectory()
             self.say('Simulation clock reset: restart the terminal and observers before a new flight.')
         self.last_clock=t
         for _ in range(30):

@@ -11,7 +11,6 @@ from launch_ros.actions import Node
 def create_nodes(context):
     selected = LaunchConfiguration('estimator').perform(context)
     sim = LaunchConfiguration('use_sim_time').perform(context).lower() == 'true'
-    baselines = LaunchConfiguration('baselines').perform(context).lower() == 'true'
     vision = LaunchConfiguration('vision_topic').perform(context)
     mode = LaunchConfiguration('input_time_mode').perform(context)
     share = get_package_share_directory('slung_ctrl')
@@ -28,13 +27,8 @@ def create_nodes(context):
         Node(package='slung_ctrl', executable='swing_vision', parameters=[clock], output='screen'),
     ]
     methods = ['eso', 'eso_delay', 'ekf2', 'ekf3'] if selected == 'all' else ([] if selected == 'none' else [selected])
-    if baselines:
-        methods += [m for m in ['eso', 'ekf2', 'vision_predictor'] if m not in methods]
-    methods = list(dict.fromkeys(methods))
     for method in methods:
-        params = [clock]
-        if method != 'vision_predictor':
-            params.insert(0, os.path.join(share, 'config', method + '.yaml'))
+        params = [os.path.join(share, 'config', method + '.yaml'), clock]
         if method in ['eso_delay', 'ekf3']:
             params.append({'input_time_mode': mode})
         nodes.append(Node(package='slung_ctrl', executable='swing_' + method, parameters=params,
@@ -45,9 +39,8 @@ def create_nodes(context):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('estimator', default_value='eso_delay',
-                              choices=['eso_delay', 'ekf3', 'eso', 'ekf2', 'vision_predictor', 'all', 'none'],
+                              choices=['eso_delay', 'ekf3', 'eso', 'ekf2', 'all', 'none'],
                               description='all starts eso, eso_delay, ekf2 and ekf3 once each'),
-        DeclareLaunchArgument('baselines', default_value='false', choices=['true', 'false']),
         DeclareLaunchArgument('use_sim_time', default_value='true', choices=['true', 'false']),
         DeclareLaunchArgument('vision_topic', default_value='/uav/swing/vision/angle'),
         DeclareLaunchArgument('input_time_mode', default_value='synchronized', choices=['synchronized', 'offset']),

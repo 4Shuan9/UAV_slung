@@ -1,6 +1,14 @@
+# Codex-modified with owner authorization, 2026-10-27: EKF3-matched two-state baseline.
+# No disturbance state, timestamp alignment, history replay or delay compensation.
 swing_ekf2:
   ros__parameters:
     g: 9.81
     l: 1.0
-    damping_c: 0.2
-    dt: 0.005
+    q_omega: 0.01
+    vision_std_deg: 0.5
+    vision_time_std: 0.002
+    initial_rate_std: 0.5
+    max_step: 0.005
+    publish_hz: 200.0
+    nis_threshold: 9.0
+    vision_topic: /uav/swing/vision/angle

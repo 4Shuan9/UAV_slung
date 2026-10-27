@@ -38,15 +38,17 @@ def plot(data_path, output):
     metadata, series = load_plot_data(data_path)
     with plt.rc_context(matplotlib.rcParamsDefault):
         fig, axes = plt.subplots(2, 2, figsize=(12, 7), constrained_layout=True)
-        for i, task in enumerate(('angle_hold', 'angle_sweep')):
+        for i, task in enumerate(('angle_hold', 'angle_sine')):
+            # Read archived plot data that used the former task key.
+            data_task = 'angle_sweep' if task == 'angle_sine' and (task, 'truth_angle') not in series else task
             left, right = axes[i]
-            left.plot(*series[task, 'truth_angle'], label='Actual truth', lw=1.1)
-            left.plot(*series[task, 'reference_angle'], '--', label='Offline angle reference', lw=1.1)
+            left.plot(*series[data_task, 'truth_angle'], label='Actual truth', lw=1.1)
+            left.plot(*series[data_task, 'reference_angle'], '--', label='Offline angle reference', lw=1.1)
             left.set_title(metadata.get('titles', {}).get(task, task))
             left.set_ylabel('North angle [deg]')
             left.legend()
-            right.plot(*series[task, 'actual_position'], label='PX4 local North')
-            right.plot(*series[task, 'reference_position'], '--', label=metadata.get('position_reference_label', 'Physical planned North'))
+            right.plot(*series[data_task, 'actual_position'], label='PX4 local North')
+            right.plot(*series[data_task, 'reference_position'], '--', label=metadata.get('position_reference_label', 'Physical planned North'))
             right.set_ylabel('North position [m]')
             right.legend()
             if i == 0:
