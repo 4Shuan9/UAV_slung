@@ -128,8 +128,8 @@ private:
         const double t = now().seconds();
         if (!clock_ready(t)) return;
         const double capture = rclcpp::Time(msg->header.stamp, get_clock()->get_clock_type()).seconds();
-        const double east = msg->vector.x * M_PI / 180.0;
-        const double north = msg->vector.y * M_PI / 180.0;
+        const double east = msg->vector.x;
+        const double north = msg->vector.y;
         if (!std::isfinite(east) || !std::isfinite(north) || capture <= 0 || capture > t ||
             t - capture > max_delay_) {
             RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Visual frame rejected: time/domain invalid");
@@ -161,18 +161,17 @@ private:
             }
             slung_ctrl::msg::SwingADRCState state;
             state.header.stamp = stamp; state.header.frame_id = "world";
-            constexpr double rad_to_deg = 180.0 / M_PI;
-            state.theta_east_deg = s.axis[0].x(0) * rad_to_deg;
-            state.theta_north_deg = s.axis[1].x(0) * rad_to_deg;
-            state.rate_east_deg_s = s.axis[0].x(1) * rad_to_deg;
-            state.rate_north_deg_s = s.axis[1].x(1) * rad_to_deg;
+            state.theta_east_rad = s.axis[0].x(0);
+            state.theta_north_rad = s.axis[1].x(0);
+            state.rate_east_rad_s = s.axis[0].x(1);
+            state.rate_north_rad_s = s.axis[1].x(1);
             state.disturbance_east_rad_s2 = s.axis[0].x(2);
             state.disturbance_north_rad_s2 = s.axis[1].x(2);
             pub_state_->publish(state);
             geometry_msgs::msg::Vector3Stamped angle, rate, dist;
             angle.header = rate.header = dist.header = state.header;
-            angle.vector.x = state.theta_east_deg; angle.vector.y = state.theta_north_deg;
-            rate.vector.x = state.rate_east_deg_s; rate.vector.y = state.rate_north_deg_s;
+            angle.vector.x = state.theta_east_rad; angle.vector.y = state.theta_north_rad;
+            rate.vector.x = state.rate_east_rad_s; rate.vector.y = state.rate_north_rad_s;
             dist.vector.x = state.disturbance_east_rad_s2; dist.vector.y = state.disturbance_north_rad_s2;
             pub_angle_->publish(angle); pub_rate_->publish(rate); pub_dist_->publish(dist);
             std_msgs::msg::Float64MultiArray covariance;

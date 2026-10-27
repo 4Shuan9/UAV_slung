@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- Codex-generated circular ground, radius 85 m; open center avoids overlapping the football surface. -->
+<sdf version="1.9"><model name="stadium_ground"><static>true</static><link name="link">
+  <collision name="ground_collision"><pose>0 0 -0.05 0 0 0</pose><geometry><cylinder><radius>85</radius><length>0.1</length></cylinder></geometry></collision>
+  <visual name="ground_visual"><geometry><mesh><uri>model://stadium_ground/meshes/ground_ring.dae</uri></mesh></geometry></visual>
+  <!-- Codex-generated low-profile outer border, 0.75 m wide and 0.1 m high. -->
+  <visual name="outer_border_visual"><geometry><mesh><uri>model://stadium_ground/meshes/outer_border.dae</uri></mesh></geometry><material><ambient>0.12 0.065 0.035 1</ambient><diffuse>0.12 0.065 0.035 1</diffuse><specular>0 0 0 1</specular></material></visual>
+  <collision name="outer_border_collision"><geometry><mesh><uri>model://stadium_ground/meshes/outer_border.dae</uri></mesh></geometry></collision>
+</link></model></sdf>

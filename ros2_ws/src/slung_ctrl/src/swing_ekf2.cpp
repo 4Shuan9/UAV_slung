@@ -146,8 +146,8 @@ private:
     }
     void vision_callback(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {
         const double t = now().seconds();
-        const std::array<double, 2> measurement{{msg->vector.x * M_PI / 180.0,
-                                               msg->vector.y * M_PI / 180.0}};
+        const std::array<double, 2> measurement{{msg->vector.x,
+                                               msg->vector.y}};
         if (!clock_ready(t) || !have_input_ || !std::isfinite(measurement[0]) ||
             !std::isfinite(measurement[1])) return;
         try {
@@ -179,11 +179,10 @@ private:
             geometry_msgs::msg::Vector3Stamped angle, rate;
             angle.header.stamp = rate.header.stamp = stamp;
             angle.header.frame_id = rate.header.frame_id = "world";
-            constexpr double rad_to_deg = 180.0 / M_PI;
-            angle.vector.x = axis_[0].x(0) * rad_to_deg;
-            angle.vector.y = axis_[1].x(0) * rad_to_deg;
-            rate.vector.x = axis_[0].x(1) * rad_to_deg;
-            rate.vector.y = axis_[1].x(1) * rad_to_deg;
+            angle.vector.x = axis_[0].x(0);
+            angle.vector.y = axis_[1].x(0);
+            rate.vector.x = axis_[0].x(1);
+            rate.vector.y = axis_[1].x(1);
             pub_angle_->publish(angle);
             pub_rate_->publish(rate);
             last_published_ = t;

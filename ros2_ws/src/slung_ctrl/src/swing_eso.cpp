@@ -103,8 +103,8 @@ private:
 
     void vision_callback(const geometry_msgs::msg::Vector3Stamped::ConstSharedPtr msg) {
         std::lock_guard<std::mutex> lock(data_mutex_);
-        y_x_ = msg->vector.x * M_PI / 180.0;
-        y_y_ = msg->vector.y * M_PI / 180.0;
+        y_x_ = msg->vector.x;
+        y_y_ = msg->vector.y;
         has_vision_ = true;
     }
 
@@ -147,15 +147,15 @@ private:
         geometry_msgs::msg::Vector3Stamped msg_angle;
         msg_angle.header.stamp = stamp;
         msg_angle.header.frame_id = "world";
-        msg_angle.vector.x = state_x_.x1 * 180.0 / M_PI;
-        msg_angle.vector.y = state_y_.x1 * 180.0 / M_PI;
+        msg_angle.vector.x = state_x_.x1;
+        msg_angle.vector.y = state_y_.x1;
         pub_eso_angle_->publish(msg_angle);
 
         geometry_msgs::msg::Vector3Stamped msg_rate;
         msg_rate.header.stamp = stamp;
         msg_rate.header.frame_id = "world";
-        msg_rate.vector.x = state_x_.x2 * 180.0 / M_PI;
-        msg_rate.vector.y = state_y_.x2 * 180.0 / M_PI;
+        msg_rate.vector.x = state_x_.x2;
+        msg_rate.vector.y = state_y_.x2;
         pub_eso_rate_->publish(msg_rate);
 
         geometry_msgs::msg::Vector3Stamped msg_dist;
@@ -168,10 +168,10 @@ private:
         // Package this update only; no input-time alignment or delay compensation.
         slung_ctrl::msg::SwingADRCState msg_state;
         msg_state.header = msg_angle.header;
-        msg_state.theta_east_deg = msg_angle.vector.x;
-        msg_state.theta_north_deg = msg_angle.vector.y;
-        msg_state.rate_east_deg_s = msg_rate.vector.x;
-        msg_state.rate_north_deg_s = msg_rate.vector.y;
+        msg_state.theta_east_rad = msg_angle.vector.x;
+        msg_state.theta_north_rad = msg_angle.vector.y;
+        msg_state.rate_east_rad_s = msg_rate.vector.x;
+        msg_state.rate_north_rad_s = msg_rate.vector.y;
         msg_state.disturbance_east_rad_s2 = msg_dist.vector.x;
         msg_state.disturbance_north_rad_s2 = msg_dist.vector.y;
         pub_eso_state_->publish(msg_state);

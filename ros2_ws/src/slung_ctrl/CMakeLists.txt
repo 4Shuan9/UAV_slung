@@ -59,6 +59,11 @@ add_executable(swing_eso_delay src/swing_eso_delay.cpp)
 ament_target_dependencies(swing_eso_delay rclcpp geometry_msgs px4_msgs std_msgs)
 target_link_libraries(swing_eso_delay Eigen3::Eigen)
 
+# Codex-generated: basic predictor-based ESO using the frozen LESO model/gains.
+add_executable(swing_peso src/swing_peso.cpp)
+ament_target_dependencies(swing_peso rclcpp geometry_msgs px4_msgs std_msgs)
+target_link_libraries(swing_peso Eigen3::Eigen)
+
 add_executable(swing_ekf2 src/swing_ekf2.cpp)
 ament_target_dependencies(swing_ekf2 rclcpp geometry_msgs px4_msgs)
 target_link_libraries(swing_ekf2 Eigen3::Eigen)
@@ -71,6 +76,7 @@ target_link_libraries(swing_ekf3 Eigen3::Eigen)
 rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
 target_link_libraries(swing_eso "${cpp_typesupport_target}")
 target_link_libraries(swing_eso_delay "${cpp_typesupport_target}")
+target_link_libraries(swing_peso "${cpp_typesupport_target}")
 target_link_libraries(slung_control_adrc "${cpp_typesupport_target}")
 target_link_libraries(swing_ekf3 "${cpp_typesupport_target}")
 
@@ -82,6 +88,7 @@ install(TARGETS
   swing_vision
   swing_eso
   swing_eso_delay
+  swing_peso
   swing_ekf2
   swing_ekf3
   DESTINATION lib/${PROJECT_NAME}

@@ -317,9 +317,9 @@ def measured_tracking_command(owner,motion):
     profile=owner.profiles[owner.profile_name()];p,v,feedforward,theta_ref,omega_ref,_=motion.state
     data=owner.sources[owner.estimator]
     if owner.controller=='adrc':
-        theta=math.radians(data['state'].theta_north_deg);omega=math.radians(data['state'].rate_north_deg_s)
+        theta=data['state'].theta_north_rad;omega=data['state'].rate_north_rad_s
     else:
-        theta=math.radians(data['angle'].vector.y);omega=math.radians(data['rate'].vector.y)
+        theta=data['angle'].vector.y;omega=data['rate'].vector.y
     k=owner.angle_feedback;x=owner.pos()[0];xd=owner.vel()[0]
     kp=k['sine_position_p'] if motion.repeat_period else k['position_p']
     kd=k['sine_position_d'] if motion.repeat_period else k['position_d']

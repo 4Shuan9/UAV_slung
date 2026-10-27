@@ -102,7 +102,7 @@
   </library_effects>
   <library_images>
     <image id="A2RL_Gate_design-1_png" name="A2RL_Gate_design-1_png">
-      <init_from>../models/single_gate/materials/textures/a2rl_gate.png</init_from>
+      <init_from>../materials/textures/a2rl_gate.png</init_from>
     </image>
   </library_images>
   <library_materials>

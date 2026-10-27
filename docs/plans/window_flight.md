@@ -2,7 +2,7 @@
 
 > 对象：当前 `UAV_slung` 平台。本文只形成设计方案，不修改代码、固定参数和原有论文稿；公式通过数值一致性检查，不代表已经完成穿窗仿真或飞行验证。
 
-> 状态更新（2026-10-23）：本文为尚未实现的穿窗设计，保留原推导。视觉已改用采集时刻对应的 PX4 估计姿态，已修正球体透视和磁力计接口；当前运行配置以 [实验基准](../baseline.md)、[观测器说明](../observer_baselines.md) 和 [接口说明](../../README.md#main-interfaces) 为准。
+> 状态更新（2026-10-23）：本文为尚未实现的穿窗设计，保留原推导。视觉已改用采集时刻对应的 PX4 估计姿态，已修正球体透视和磁力计接口；当前运行配置以 [实验基准](../config/baseline.md)、[观测器说明](../config/observer_baselines.md) 和 [接口说明](../../README.md#main-interfaces) 为准。
 
 ## 一、研究目标与第一阶段范围
 
@@ -603,7 +603,7 @@ $$
 
 | 内容 | 文件 |
 |---|---|
-| 已固定参数与接口 | [实验基准](../baseline.md)、[主要接口](../../README.md#main-interfaces) |
+| 已固定参数与接口 | [实验基准](../config/baseline.md)、[主要接口](../../README.md#main-interfaces) |
 | 视觉与悬挂点几何 | [swing_geometry.hpp](../../ros2_ws/src/slung_ctrl/include/slung_ctrl/swing_geometry.hpp)、[swing_vision.cpp](../../ros2_ws/src/slung_ctrl/src/swing_vision.cpp)、[payload_detector.py](../../ros2_ws/src/slung_ctrl/scripts/payload_detector.py) |
 | EKF3 模型与时序 | [ekf3.hpp](../../ros2_ws/src/slung_ctrl/include/slung_ctrl/ekf3.hpp)、[swing_ekf3.cpp](../../ros2_ws/src/slung_ctrl/src/swing_ekf3.cpp)、[ekf3.yaml](../../ros2_ws/src/slung_ctrl/config/ekf3.yaml) |
 | 延迟 ESO | [eso_delay.hpp](../../ros2_ws/src/slung_ctrl/include/slung_ctrl/eso_delay.hpp)、[swing_eso_delay.cpp](../../ros2_ws/src/slung_ctrl/src/swing_eso_delay.cpp) |

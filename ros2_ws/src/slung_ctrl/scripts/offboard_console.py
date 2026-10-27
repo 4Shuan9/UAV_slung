@@ -32,15 +32,16 @@ from offboard_reference import Reference, SmoothReference, AngleStopReference, r
 
 
 class Offboard(Node):
-    METHODS=('eso','eso_delay','ekf2','ekf3')
+    METHODS=('eso','eso_delay','peso','ekf2','ekf3')
     P='/uav/offboard/backend/'
     def __init__(self):
         super().__init__('slung_offboard')
-        defaults=dict(default_estimator='eso_delay',default_controller='adrc',startup_mode='idle',
+        defaults=dict(default_estimator='peso',default_controller='adrc',startup_mode='idle',
                       after_takeoff_task='hold',control_hz=50.,prestream_sec=1.2,input_timeout=.5,
                       backend_timeout=.3,status_timeout=1.5,handshake_timeout=10.,home_position_tolerance=.25,
                       home_speed_tolerance=.15,home_stable_sec=2.,transition_speed=1.,
-                      transition_acceleration=.5,trajectory_ramp_sec=2.,eight_loops=0,
+                      transition_acceleration=.5,setpoint_speed=3.,setpoint_acceleration=.8,
+                      trajectory_ramp_sec=2.,eight_loops=0,
                       cable_length=1.,payload_radius=.045,suspension_offset_bound=.24,
                       minimum_payload_clearance=.10,angle_reference_speed_limit=6.2,command_fifo='')
         self.cfg={k:self.declare_parameter(k,v).value for k,v in defaults.items()}
@@ -52,7 +53,7 @@ class Offboard(Node):
             if isinstance(v,(int,float)) and (not math.isfinite(v) or v<0):raise ValueError('Invalid '+k)
         for k in ('control_hz','prestream_sec','input_timeout','backend_timeout','status_timeout','handshake_timeout',
                   'home_position_tolerance','home_speed_tolerance','home_stable_sec','transition_speed',
-                  'transition_acceleration','cable_length','payload_radius','angle_reference_speed_limit'):
+                  'transition_acceleration','setpoint_speed','setpoint_acceleration','cable_length','payload_radius','angle_reference_speed_limit'):
             if self.cfg[k]<=0:raise ValueError(k+' must be positive')
         if self.cfg['control_hz']!=50.:raise ValueError('Baseline control_hz is fixed at 50 Hz')
         self.share=Path(get_package_share_directory('slung_ctrl'))
@@ -170,7 +171,7 @@ class Offboard(Node):
                 'pause / resume       Smooth stop / continue saved work',
                 'control off          Disable anti-swing only after stopping',
                 'reset                Clear work, hold here, anti-swing ON',
-                'estimator NAME       eso | eso_delay | ekf2 | ekf3',
+                'estimator NAME       eso | eso_delay | peso | ekf2 | ekf3',
                 'controller NAME      adrc | pd (EKF2: PD only)',
                 'Angles: HOME start, fixed yaw; pause cancels, no resume.',
                 'status / params / help / quit',
@@ -196,7 +197,7 @@ class Offboard(Node):
             'MISSION      pause / resume       Smooth stop / continue saved work',
             '             control off          Disable anti-swing only when stopped',
             '             reset                Clear work; hold here with anti-swing',
-            'SELECTION    estimator NAME       eso | eso_delay | ekf2 | ekf3',
+            'SELECTION    estimator NAME       eso | eso_delay | peso | ekf2 | ekf3',
             '             controller NAME      adrc | pd (EKF2 requires PD)',
             'INSPECT      status | params | help',
             'EXIT         quit                 Exit after landing or PX4 Hold',
@@ -232,8 +233,8 @@ class Offboard(Node):
         if self.local is not None:lines.append(f'Heading         : {math.degrees(self.local.heading):+.1f} deg (North=0, East=90)')
         data=self.sources[self.estimator]
         angle=data['angle'];rate=data['rate'];estimate=data['state']
-        if angle is not None:lines.append('Swing East/North: '+f'{angle.vector.x:+.3f} / {angle.vector.y:+.3f} deg')
-        if rate is not None:lines.append('Rate East/North : '+f'{rate.vector.x:+.3f} / {rate.vector.y:+.3f} deg/s')
+        if angle is not None:lines.append('Swing East/North: '+f'{math.degrees(angle.vector.x):+.3f} / {math.degrees(angle.vector.y):+.3f} deg')
+        if rate is not None:lines.append('Rate East/North : '+f'{math.degrees(rate.vector.x):+.3f} / {math.degrees(rate.vector.y):+.3f} deg/s')
         if estimate is not None:lines.append('Disturbance E/N : '+f'{estimate.disturbance_east_rad_s2:+.4f} / {estimate.disturbance_north_rad_s2:+.4f} rad/s^2')
         lines.extend(['', 'Selection gate  : '+('ALLOWED - stable at home' if state['switch_allowed'] else 'LOCKED - return home and wait for stable hover'),
                       f'Home condition  : position <= {self.cfg["home_position_tolerance"]:g} m; speed <= {self.cfg["home_speed_tolerance"]:g} m/s',
@@ -253,7 +254,7 @@ class Offboard(Node):
             if v is None:return False
             ts=v.header.stamp.sec+v.header.stamp.nanosec*1e-9
             if not -.02<=t-ts<=.10:return False
-            values=([v.theta_east_deg,v.theta_north_deg,v.rate_east_deg_s,v.rate_north_deg_s,v.disturbance_east_rad_s2,v.disturbance_north_rad_s2] if f=='state' else [v.vector.x,v.vector.y])
+            values=([v.theta_east_rad,v.theta_north_rad,v.rate_east_rad_s,v.rate_north_rad_s,v.disturbance_east_rad_s2,v.disturbance_north_rad_s2] if f=='state' else [v.vector.x,v.vector.y])
             if not all(math.isfinite(x) for x in values):return False
         return True
     def on_odom(self,msg):
@@ -389,7 +390,7 @@ class Offboard(Node):
         for a,b in [('/fmu/in/trajectory_setpoint',self.P+'trajectory_setpoint'),('/fmu/in/offboard_control_mode',self.P+'offboard_control_mode'),('/fmu/in/vehicle_command',self.P+'vehicle_command'),('/fmu/out/vehicle_odometry',self.P+'odometry'),('/fmu/out/vehicle_local_position',self.P+'local_position'),('/uav/reference/position',self.P+'reference_position'),('/uav/reference/yaw',self.P+'reference_yaw'),('/uav/control/active',self.P+'active')]:cmd+=['-r',a+':='+b]
         if self.controller=='adrc':cmd+=['-p','state_topic:=/uav/swing/'+self.estimator+'/state']
         else:
-            for f in ('angle','rate'):cmd+=['-r',f'/uav/swing/eso_delay/{f}:=/uav/swing/{self.estimator}/{f}']
+            for f in ('angle','rate'):cmd+=['-r',f'/uav/swing/peso/{f}:=/uav/swing/{self.estimator}/{f}']
         self.backend=subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,start_new_session=True)
         def drain(p):
             for line in p.stdout:self.log_queue.put(line.strip())
@@ -397,7 +398,8 @@ class Offboard(Node):
         self.phase='PRESTREAM';self.boot_time=self.now_s()
         self.say('Loaded '+self.profile_name()+'.yaml; normal acceleration cap '+str(self.profiles[self.profile_name()]['max_comp_acc'])+', angle-task cap '+str(self.angle_acceleration)+' m/s2; prestreaming.')
     def point_reference(self,kind,target):
-        return Reference(kind,self.now_s(),self.pos(),goal=target,speed=self.cfg['transition_speed'],accel=self.cfg['transition_acceleration'])
+        prefix='setpoint' if kind=='setpoint' else 'transition'
+        return Reference(kind,self.now_s(),self.pos(),goal=target,speed=self.cfg[prefix+'_speed'],accel=self.cfg[prefix+'_acceleration'])
     def can_switch(self):
         return self.phase in ('FLIGHT','PAUSED') and self.home is not None and self.motion is None and self.home_since is not None and self.now_s()-self.home_since>=self.cfg['home_stable_sec'] and self.ready() and self.armed() and at_home(self.pos(),self.vel(),self.height,self.cfg['home_position_tolerance'],self.cfg['home_speed_tolerance']) and self.vehicle.nav_state==(VehicleStatus.NAVIGATION_STATE_OFFBOARD if self.phase=='FLIGHT' else VehicleStatus.NAVIGATION_STATE_AUTO_LOITER)
     def work_motion(self):
@@ -508,7 +510,7 @@ class Offboard(Node):
             p=tuple(float(x) for x in args)
             if not valid_point(p) or not admissible_height(p[2],self.required_z):raise ValueError(f'Unsafe/invalid setpoint: minimum UP z is {self.required_z:.2f} m (rope + sphere + suspension bound + clearance)')
             if self.pos()[2]<self.required_z:raise ValueError('Current clearance is below the conservative task bound; use home first')
-            self.clear_paused_trajectory();self.install_motion(self.point_reference('setpoint',p));self.task='setpoint';self.say('Moving to NEU '+str(p));return
+            self.clear_paused_trajectory();self.install_motion(self.point_reference('setpoint',p));self.task='setpoint';self.say(f'Moving to NEU {p}; reference {self.motion.duration:.1f} s, peak <= {self.cfg["setpoint_speed"]:g} m/s.');return
         if cmd in ('eight','square'):
             if self.motion is not None:raise ValueError('Use hold before starting another cyclic task')
             if self.pos()[2]<self.required_z:raise ValueError('Insufficient payload clearance; use home first')
@@ -557,11 +559,11 @@ class Offboard(Node):
         if getattr(motion,'angle_motion',False):p,v,a,theta,omega,_=motion.state;label=motion.kind
         private=self.last_private_reference
         self.pub_virtual.publish(Point(x=float(private[0]+self.home[0]),y=float(private[1]+self.home[1]),z=float(msg.z+self.home[2])))
-        for pub,value in ((self.pub_angle,theta*180/math.pi),(self.pub_angle_rate,omega*180/math.pi)):
+        for pub,value in ((self.pub_angle,theta),(self.pub_angle_rate,omega)):
             ref=Vector3Stamped();ref.header.stamp=self.get_clock().now().to_msg();ref.header.frame_id='world';ref.vector.y=value;pub.publish(ref)
         if self.now_s()-self.last_angle_output>=.1:
             self.last_angle_output=self.now_s()
-            self.pub_angle_task.publish(String(data=json.dumps(dict(stamp_sec=self.now_s(),task=label,elapsed=motion.elapsed if motion else 0.,theta_north_deg=theta*180/math.pi,north_offset_m=p,north_velocity_m_s=v,north_acceleration_m_s2=a,TEMP_fixed_yaw=getattr(motion,'angle_motion',False)))))
+            self.pub_angle_task.publish(String(data=json.dumps(dict(stamp_sec=self.now_s(),task=label,elapsed=motion.elapsed if motion else 0.,theta_north_rad=theta,north_offset_m=p,north_velocity_m_s=v,north_acceleration_m_s2=a,TEMP_fixed_yaw=getattr(motion,'angle_motion',False)))))
     def install_motion(self,motion):
         old=self.last_equivalent_reference
         self.antiswing_enabled=True;self.motion=motion;self.stationary_since=None

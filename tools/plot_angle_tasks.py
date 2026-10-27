@@ -12,6 +12,7 @@ import argparse
 import csv
 import gzip
 import json
+import math
 from pathlib import Path
 
 
@@ -21,12 +22,18 @@ def load_plot_data(path):
         if not stream.readline().startswith('# Codex-generated'):
             raise ValueError('Missing plot-data provenance header')
         metadata = json.loads(stream.readline().removeprefix('# '))
+        angle_unit = metadata.get('angle_unit', 'deg')  # archived data defaults to degrees
+        if angle_unit not in ('deg', 'rad'):
+            raise ValueError('angle_unit must be deg or rad')
         series = {}
         for row in csv.DictReader(stream):
             key = (row['task'], row['series'])
             x, y = series.setdefault(key, ([], []))
             x.append(float(row['time_s']))
-            y.append(float(row['value']))
+            value = float(row['value'])
+            if angle_unit == 'rad' and row['series'] in ('truth_angle', 'reference_angle'):
+                value = math.degrees(value)
+            y.append(value)
     return metadata, series
 
 

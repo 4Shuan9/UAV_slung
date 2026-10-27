@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- Codex-generated football adaptation; original field and extracted court seat/light geometry retained. -->
 <sdf version="1.9">
-  <model name="football_court">
+  <model name="football_field">
     <static>true</static>
     <link name="field">
       <collision name="surrounding_apron_collision">
@@ -3683,406 +3683,6 @@
         </material>
         <pose>51.5019 -33.9564 0.015 0 0 -1.61442956</pose>
       </visual>
-      <collision name="west_goal_front_post_south_collision">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <pose>-52.5 -3.66 1.22 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_front_post_south_visual">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-52.5 -3.66 1.22 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_back_post_south_collision">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <pose>-54.5 -3.66 1.22 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_back_post_south_visual">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-54.5 -3.66 1.22 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_top_side_south_collision">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <pose>-53.5 -3.66 2.44 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_top_side_south_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-53.5 -3.66 2.44 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_bottom_side_south_collision">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <pose>-53.5 -3.66 0.05 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_bottom_side_south_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-53.5 -3.66 0.05 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_front_post_north_collision">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <pose>-52.5 3.66 1.22 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_front_post_north_visual">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-52.5 3.66 1.22 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_back_post_north_collision">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <pose>-54.5 3.66 1.22 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_back_post_north_visual">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-54.5 3.66 1.22 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_top_side_north_collision">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <pose>-53.5 3.66 2.44 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_top_side_north_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-53.5 3.66 2.44 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_bottom_side_north_collision">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <pose>-53.5 3.66 0.05 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_bottom_side_north_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-53.5 3.66 0.05 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_front_crossbar_collision">
-        <geometry>
-          <box>
-            <size>0.1 7.32 0.1</size>
-          </box>
-        </geometry>
-        <pose>-52.5 0 2.44 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_front_crossbar_visual">
-        <geometry>
-          <box>
-            <size>0.1 7.32 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-52.5 0 2.44 0 0 0</pose>
-      </visual>
-      <collision name="west_goal_back_crossbar_collision">
-        <geometry>
-          <box>
-            <size>0.1 7.32 0.1</size>
-          </box>
-        </geometry>
-        <pose>-54.5 0 2.44 0 0 0</pose>
-      </collision>
-      <visual name="west_goal_back_crossbar_visual">
-        <geometry>
-          <box>
-            <size>0.1 7.32 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>-54.5 0 2.44 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_front_post_south_collision">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <pose>52.5 -3.66 1.22 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_front_post_south_visual">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>52.5 -3.66 1.22 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_back_post_south_collision">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <pose>54.5 -3.66 1.22 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_back_post_south_visual">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>54.5 -3.66 1.22 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_top_side_south_collision">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <pose>53.5 -3.66 2.44 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_top_side_south_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>53.5 -3.66 2.44 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_bottom_side_south_collision">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <pose>53.5 -3.66 0.05 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_bottom_side_south_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>53.5 -3.66 0.05 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_front_post_north_collision">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <pose>52.5 3.66 1.22 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_front_post_north_visual">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>52.5 3.66 1.22 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_back_post_north_collision">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <pose>54.5 3.66 1.22 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_back_post_north_visual">
-        <geometry>
-          <box>
-            <size>0.1 0.1 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>54.5 3.66 1.22 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_top_side_north_collision">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <pose>53.5 3.66 2.44 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_top_side_north_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>53.5 3.66 2.44 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_bottom_side_north_collision">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <pose>53.5 3.66 0.05 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_bottom_side_north_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.1 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>53.5 3.66 0.05 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_front_crossbar_collision">
-        <geometry>
-          <box>
-            <size>0.1 7.32 0.1</size>
-          </box>
-        </geometry>
-        <pose>52.5 0 2.44 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_front_crossbar_visual">
-        <geometry>
-          <box>
-            <size>0.1 7.32 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>52.5 0 2.44 0 0 0</pose>
-      </visual>
-      <collision name="east_goal_back_crossbar_collision">
-        <geometry>
-          <box>
-            <size>0.1 7.32 0.1</size>
-          </box>
-        </geometry>
-        <pose>54.5 0 2.44 0 0 0</pose>
-      </collision>
-      <visual name="east_goal_back_crossbar_visual">
-        <geometry>
-          <box>
-            <size>0.1 7.32 0.1</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>1 1 1 1</ambient>
-          <diffuse>1 1 1 1</diffuse>
-        </material>
-        <pose>54.5 0 2.44 0 0 0</pose>
-      </visual>
       <collision name="corner_flag_nw_collision">
         <geometry>
           <cylinder>
@@ -4170,1514 +3770,6 @@
           <diffuse>1 0.8 0 1</diffuse>
         </material>
         <pose>52.5 -34.0 0.75 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_0_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 -2.928 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 -2.196 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 -1.464 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 -0.732 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 0.000 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_6_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 0.732 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_7_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 1.464 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_8_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 2.196 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_9_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 2.928 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_v_10_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_h_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 0 0.407 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_h_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 0 0.813 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_h_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 0 1.220 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_h_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 0 1.627 0 0 0</pose>
-      </visual>
-      <visual name="westnet_back_h_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.5 0 2.033 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_x_0_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-52.500 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_x_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-52.833 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_x_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.167 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_x_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_x_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.833 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_x_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.167 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_x_6_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.500 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_0_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -3.660 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_1_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -2.928 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_2_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -2.196 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_3_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -1.464 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_4_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -0.732 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_5_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 0.000 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_6_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 0.732 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_7_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 1.464 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_8_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 2.196 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_9_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 2.928 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_top_y_10_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 3.660 2.44 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_x_0_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-52.500 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_x_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-52.833 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_x_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.167 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_x_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_x_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.833 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_x_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.167 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_x_6_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.500 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_z_1_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -3.660 0.407 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_z_2_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -3.660 0.813 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_z_3_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -3.660 1.220 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_z_4_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -3.660 1.627 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_s_z_5_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 -3.660 2.033 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_x_0_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-52.500 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_x_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-52.833 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_x_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.167 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_x_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_x_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.833 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_x_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.167 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_x_6_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-54.500 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_z_1_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 3.660 0.407 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_z_2_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 3.660 0.813 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_z_3_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 3.660 1.220 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_z_4_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 3.660 1.627 0 0 0</pose>
-      </visual>
-      <visual name="westnet_side_n_z_5_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>-53.500 3.660 2.033 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_0_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 -2.928 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 -2.196 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 -1.464 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 -0.732 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 0.000 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_6_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 0.732 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_7_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 1.464 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_8_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 2.196 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_9_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 2.928 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_v_10_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_h_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 0 0.407 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_h_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 0 0.813 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_h_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 0 1.220 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_h_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 0 1.627 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_back_h_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.5 0 2.033 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_x_0_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>52.500 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_x_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>52.833 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_x_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.167 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_x_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_x_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.833 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_x_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.167 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_x_6_visual">
-        <geometry>
-          <box>
-            <size>0.02 7.32 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.500 0 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_0_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -3.660 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_1_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -2.928 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_2_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -2.196 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_3_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -1.464 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_4_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -0.732 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_5_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 0.000 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_6_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 0.732 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_7_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 1.464 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_8_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 2.196 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_9_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 2.928 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_top_y_10_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 3.660 2.44 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_x_0_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>52.500 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_x_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>52.833 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_x_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.167 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_x_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_x_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.833 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_x_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.167 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_x_6_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.500 -3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_z_1_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -3.660 0.407 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_z_2_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -3.660 0.813 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_z_3_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -3.660 1.220 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_z_4_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -3.660 1.627 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_s_z_5_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 -3.660 2.033 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_x_0_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>52.500 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_x_1_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>52.833 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_x_2_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.167 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_x_3_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_x_4_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.833 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_x_5_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.167 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_x_6_visual">
-        <geometry>
-          <box>
-            <size>0.02 0.02 2.44</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>54.500 3.660 1.22 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_z_1_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 3.660 0.407 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_z_2_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 3.660 0.813 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_z_3_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 3.660 1.220 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_z_4_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 3.660 1.627 0 0 0</pose>
-      </visual>
-      <visual name="eastnet_side_n_z_5_visual">
-        <geometry>
-          <box>
-            <size>2.0 0.02 0.02</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.92 0.92 0.94 1</ambient>
-          <diffuse>0.92 0.92 0.94 1</diffuse>
-        </material>
-        <transparency>0.28</transparency>
-        <pose>53.500 3.660 2.033 0 0 0</pose>
       </visual>
       <visual name="fence_north_rail_0_visual">
         <pose>0.00000000 39.00000000 0.08000000 0.00000000 0.00000000 0.00000000</pose>
@@ -7547,7 +5639,7 @@
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/fence_wire.dae</uri>
+            <uri>model://football_field/meshes/fence_wire.dae</uri>
           </mesh>
         </geometry>
         <cast_shadows>false</cast_shadows>
@@ -7644,7 +5736,7 @@
         <pose>-4.46 -39.1 0 0 0 -2.792526803190927</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/gate_wire.dae</uri>
+            <uri>model://football_field/meshes/gate_wire.dae</uri>
           </mesh>
         </geometry>
         <cast_shadows>false</cast_shadows>
@@ -7704,7 +5796,7 @@
         <pose>-52.5 34.0 0 0 0 3.141592653589793</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/corner_flag_quarters.dae</uri>
+            <uri>model://football_field/meshes/corner_flag_quarters.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -7712,7 +5804,7 @@
         <pose>52.5 34.0 0 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/corner_flag_quarters.dae</uri>
+            <uri>model://football_field/meshes/corner_flag_quarters.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -7720,7 +5812,7 @@
         <pose>-52.5 -34.0 0 0 0 3.141592653589793</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/corner_flag_quarters.dae</uri>
+            <uri>model://football_field/meshes/corner_flag_quarters.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -7728,224 +5820,101 @@
         <pose>52.5 -34.0 0 0 0 0</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/corner_flag_quarters.dae</uri>
+            <uri>model://football_field/meshes/corner_flag_quarters.dae</uri>
           </mesh>
         </geometry>
       </visual>
-      <visual name="north_basket_seat_-36">
-        <pose>-36 36.2 0.39 0 0 -1.5707963267948966</pose>
+      <visual name="west_stadium_goal_visual">
+        <pose>-52.5 0 0.02 0 0 3.14159265359</pose>
+        <geometry><mesh><uri>model://football_field/meshes/stadium_goal.dae</uri></mesh></geometry>
+      </visual>
+      <visual name="east_stadium_goal_visual">
+        <pose>52.5 0 0.02 0 0 0</pose>
+        <geometry><mesh><uri>model://football_field/meshes/stadium_goal.dae</uri></mesh></geometry>
+      </visual>
+      <visual name="west_goal_net_visual"><pose>-52.5 0 0.02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/goal_net.dae</uri></mesh></geometry></visual>
+      <collision name="west_front_post_-3.6_collision"><pose>-52.53 -3.6 1.22 0 0 0</pose><geometry><box><size>0.13 0.13 2.4</size></box></geometry></collision>
+      <collision name="west_top_side_-3.6_collision"><pose>-53.04 -3.6 2.42 0 0 0</pose><geometry><box><size>1.08 0.12 0.12</size></box></geometry></collision>
+      <collision name="west_slant_-3.6_collision"><pose>-54.055 -3.6 1.22 0 0.376909270324821 0</pose><geometry><box><size>0.12 0.12 2.5811818998280613</size></box></geometry></collision>
+      <collision name="west_front_post_3.6_collision"><pose>-52.53 3.6 1.22 0 0 0</pose><geometry><box><size>0.13 0.13 2.4</size></box></geometry></collision>
+      <collision name="west_top_side_3.6_collision"><pose>-53.04 3.6 2.42 0 0 0</pose><geometry><box><size>1.08 0.12 0.12</size></box></geometry></collision>
+      <collision name="west_slant_3.6_collision"><pose>-54.055 3.6 1.22 0 0.376909270324821 0</pose><geometry><box><size>0.12 0.12 2.5811818998280613</size></box></geometry></collision>
+      <collision name="west_front_crossbar_collision"><pose>-52.53 0 2.42 0 0 0</pose><geometry><box><size>0.13 7.32 0.13</size></box></geometry></collision>
+      <collision name="west_rear_bottom_collision"><pose>-54.53 0 0.06 0 0 0</pose><geometry><box><size>0.13 7.32 0.13</size></box></geometry></collision>
+      <visual name="east_goal_net_visual"><pose>52.5 0 0.02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/goal_net.dae</uri></mesh></geometry></visual>
+      <collision name="east_front_post_-3.6_collision"><pose>52.53 -3.6 1.22 0 0 0</pose><geometry><box><size>0.13 0.13 2.4</size></box></geometry></collision>
+      <collision name="east_top_side_-3.6_collision"><pose>53.04 -3.6 2.42 0 0 0</pose><geometry><box><size>1.08 0.12 0.12</size></box></geometry></collision>
+      <collision name="east_slant_-3.6_collision"><pose>54.055 -3.6 1.22 0 -0.376909270324821 0</pose><geometry><box><size>0.12 0.12 2.5811818998280613</size></box></geometry></collision>
+      <collision name="east_front_post_3.6_collision"><pose>52.53 3.6 1.22 0 0 0</pose><geometry><box><size>0.13 0.13 2.4</size></box></geometry></collision>
+      <collision name="east_top_side_3.6_collision"><pose>53.04 3.6 2.42 0 0 0</pose><geometry><box><size>1.08 0.12 0.12</size></box></geometry></collision>
+      <collision name="east_slant_3.6_collision"><pose>54.055 3.6 1.22 0 -0.376909270324821 0</pose><geometry><box><size>0.12 0.12 2.5811818998280613</size></box></geometry></collision>
+      <collision name="east_front_crossbar_collision"><pose>52.53 0 2.42 0 0 0</pose><geometry><box><size>0.13 7.32 0.13</size></box></geometry></collision>
+      <collision name="east_rear_bottom_collision"><pose>54.53 0 0.06 0 0 0</pose><geometry><box><size>0.13 7.32 0.13</size></box></geometry></collision>
+      <visual name="north_stand_m27_1_part_0"><pose>-32.5 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_m27_1_part_1"><pose>-28.900000000000002 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_m27_1_part_2"><pose>-25.3 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_m27_1_part_3"><pose>-21.700000000000003 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <collision name="north_stand_m27_1_collision"><pose>-27.1 36.55 .95 0 0 0</pose><geometry><box><size>14.4 2.05 1.86</size></box></geometry></collision>
+      <visual name="north_stand_m12_3_part_0"><pose>-17.700000000000003 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_m12_3_part_1"><pose>-14.100000000000001 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_m12_3_part_2"><pose>-10.5 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_m12_3_part_3"><pose>-6.9 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <collision name="north_stand_m12_3_collision"><pose>-12.3 36.55 .95 0 0 0</pose><geometry><box><size>14.4 2.05 1.86</size></box></geometry></collision>
+      <visual name="north_stand_12_3_part_0"><pose>6.9 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_12_3_part_1"><pose>10.5 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_12_3_part_2"><pose>14.100000000000001 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_12_3_part_3"><pose>17.700000000000003 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <collision name="north_stand_12_3_collision"><pose>12.3 36.55 .95 0 0 0</pose><geometry><box><size>14.4 2.05 1.86</size></box></geometry></collision>
+      <visual name="north_stand_27_1_part_0"><pose>21.700000000000003 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_27_1_part_1"><pose>25.3 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_27_1_part_2"><pose>28.900000000000002 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="north_stand_27_1_part_3"><pose>32.5 36.7 .02 0 0 0</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <collision name="north_stand_27_1_collision"><pose>27.1 36.55 .95 0 0 0</pose><geometry><box><size>14.4 2.05 1.86</size></box></geometry></collision>
+      <visual name="south_stand_m27_1_part_0"><pose>-32.5 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_m27_1_part_1"><pose>-28.900000000000002 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_m27_1_part_2"><pose>-25.3 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_m27_1_part_3"><pose>-21.700000000000003 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <collision name="south_stand_m27_1_collision"><pose>-27.1 -36.55 .95 0 0 3.141592653589793</pose><geometry><box><size>14.4 2.05 1.86</size></box></geometry></collision>
+      <visual name="south_stand_m12_3_part_0"><pose>-17.700000000000003 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_m12_3_part_1"><pose>-14.100000000000001 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_m12_3_part_2"><pose>-10.5 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_m12_3_part_3"><pose>-6.9 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <collision name="south_stand_m12_3_collision"><pose>-12.3 -36.55 .95 0 0 3.141592653589793</pose><geometry><box><size>14.4 2.05 1.86</size></box></geometry></collision>
+      <visual name="south_stand_12_3_part_0"><pose>6.9 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_12_3_part_1"><pose>10.5 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_12_3_part_2"><pose>14.100000000000001 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_12_3_part_3"><pose>17.700000000000003 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <collision name="south_stand_12_3_collision"><pose>12.3 -36.55 .95 0 0 3.141592653589793</pose><geometry><box><size>14.4 2.05 1.86</size></box></geometry></collision>
+      <visual name="south_stand_27_1_part_0"><pose>21.700000000000003 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_27_1_part_1"><pose>25.3 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_27_1_part_2"><pose>28.900000000000002 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <visual name="south_stand_27_1_part_3"><pose>32.5 -36.7 .02 0 0 3.141592653589793</pose><geometry><mesh><uri>model://football_field/meshes/spectator_bleachers.dae</uri></mesh></geometry></visual>
+      <collision name="south_stand_27_1_collision"><pose>27.1 -36.55 .95 0 0 3.141592653589793</pose><geometry><box><size>14.4 2.05 1.86</size></box></geometry></collision>
+      <visual name="north_player_bench_m45"><pose>-45 36.2 .39 0 0 -1.5707963267948966</pose><geometry><mesh><uri>model://football_field/meshes/player_bench.dae</uri><scale>1 1 1</scale></mesh></geometry></visual>
+      <collision name="north_player_bench_m45_collision"><pose>-45 36.2 .42 0 0 -1.5707963267948966</pose><geometry><box><size>0.82 3.44 0.84</size></box></geometry></collision>
+      <visual name="north_player_bench_m40"><pose>-40 36.2 .39 0 0 -1.5707963267948966</pose><geometry><mesh><uri>model://football_field/meshes/player_bench.dae</uri><scale>1 1 1</scale></mesh></geometry></visual>
+      <collision name="north_player_bench_m40_collision"><pose>-40 36.2 .42 0 0 -1.5707963267948966</pose><geometry><box><size>0.82 3.44 0.84</size></box></geometry></collision>
+      <visual name="north_player_bench_40"><pose>40 36.2 .39 0 0 -1.5707963267948966</pose><geometry><mesh><uri>model://football_field/meshes/player_bench.dae</uri><scale>1 1 1</scale></mesh></geometry></visual>
+      <collision name="north_player_bench_40_collision"><pose>40 36.2 .42 0 0 -1.5707963267948966</pose><geometry><box><size>0.82 3.44 0.84</size></box></geometry></collision>
+      <visual name="north_player_bench_45"><pose>45 36.2 .39 0 0 -1.5707963267948966</pose><geometry><mesh><uri>model://football_field/meshes/player_bench.dae</uri><scale>1 1 1</scale></mesh></geometry></visual>
+      <collision name="north_player_bench_45_collision"><pose>45 36.2 .42 0 0 -1.5707963267948966</pose><geometry><box><size>0.82 3.44 0.84</size></box></geometry></collision>
+      <visual name="south_player_bench_m45"><pose>-45 -36.2 .39 0 0 1.5707963267948966</pose><geometry><mesh><uri>model://football_field/meshes/player_bench.dae</uri><scale>1 1 1</scale></mesh></geometry></visual>
+      <collision name="south_player_bench_m45_collision"><pose>-45 -36.2 .42 0 0 1.5707963267948966</pose><geometry><box><size>0.82 3.44 0.84</size></box></geometry></collision>
+      <visual name="south_player_bench_m40"><pose>-40 -36.2 .39 0 0 1.5707963267948966</pose><geometry><mesh><uri>model://football_field/meshes/player_bench.dae</uri><scale>1 1 1</scale></mesh></geometry></visual>
+      <collision name="south_player_bench_m40_collision"><pose>-40 -36.2 .42 0 0 1.5707963267948966</pose><geometry><box><size>0.82 3.44 0.84</size></box></geometry></collision>
+      <visual name="south_player_bench_40"><pose>40 -36.2 .39 0 0 1.5707963267948966</pose><geometry><mesh><uri>model://football_field/meshes/player_bench.dae</uri><scale>1 1 1</scale></mesh></geometry></visual>
+      <collision name="south_player_bench_40_collision"><pose>40 -36.2 .42 0 0 1.5707963267948966</pose><geometry><box><size>0.82 3.44 0.84</size></box></geometry></collision>
+      <visual name="south_player_bench_45"><pose>45 -36.2 .39 0 0 1.5707963267948966</pose><geometry><mesh><uri>model://football_field/meshes/player_bench.dae</uri><scale>1 1 1</scale></mesh></geometry></visual>
+      <collision name="south_player_bench_45_collision"><pose>45 -36.2 .42 0 0 1.5707963267948966</pose><geometry><box><size>0.82 3.44 0.84</size></box></geometry></collision>
+      <visual name="court_light_1">
+        <pose>-56 -37.5 0.02 0 0 2.946254704004822</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
+            <uri>model://football_field/meshes/stadium_light.dae</uri>
           </mesh>
         </geometry>
       </visual>
-      <collision name="north_basket_seat_-36_collision">
-        <pose>-36 36.2 0.42 0 0 -1.5707963267948966</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="south_basket_seat_-36">
-        <pose>-36 -36.2 0.39 0 0 1.5707963267948966</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="south_basket_seat_-36_collision">
-        <pose>-36 -36.2 0.42 0 0 1.5707963267948966</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="north_basket_seat_-12">
-        <pose>-12 36.2 0.39 0 0 -1.5707963267948966</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="north_basket_seat_-12_collision">
-        <pose>-12 36.2 0.42 0 0 -1.5707963267948966</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="south_basket_seat_-12">
-        <pose>-12 -36.2 0.39 0 0 1.5707963267948966</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="south_basket_seat_-12_collision">
-        <pose>-12 -36.2 0.42 0 0 1.5707963267948966</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="north_basket_seat_12">
-        <pose>12 36.2 0.39 0 0 -1.5707963267948966</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="north_basket_seat_12_collision">
-        <pose>12 36.2 0.42 0 0 -1.5707963267948966</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="south_basket_seat_12">
-        <pose>12 -36.2 0.39 0 0 1.5707963267948966</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="south_basket_seat_12_collision">
-        <pose>12 -36.2 0.42 0 0 1.5707963267948966</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="north_basket_seat_36">
-        <pose>36 36.2 0.39 0 0 -1.5707963267948966</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="north_basket_seat_36_collision">
-        <pose>36 36.2 0.42 0 0 -1.5707963267948966</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="south_basket_seat_36">
-        <pose>36 -36.2 0.39 0 0 1.5707963267948966</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="south_basket_seat_36_collision">
-        <pose>36 -36.2 0.42 0 0 1.5707963267948966</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="east_basket_seat_-22">
-        <pose>54.8 -22 0.39 0 0 0</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="east_basket_seat_-22_collision">
-        <pose>54.8 -22 0.42 0 0 0</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="east_basket_seat_22">
-        <pose>54.8 22 0.39 0 0 0</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="east_basket_seat_22_collision">
-        <pose>54.8 22 0.42 0 0 0</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="west_basket_seat_-22">
-        <pose>-54.8 -22 0.39 0 0 3.141592653589793</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="west_basket_seat_-22_collision">
-        <pose>-54.8 -22 0.42 0 0 3.141592653589793</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="west_basket_seat_22">
-        <pose>-54.8 22 0.39 0 0 3.141592653589793</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_seat.dae</uri>
-            <scale>1 1 1</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="west_basket_seat_22_collision">
-        <pose>-54.8 22 0.42 0 0 3.141592653589793</pose>
-        <geometry>
-          <box>
-            <size>0.82 3.44 0.84</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="basket_light_1">
-        <pose>-56 -37.5 0.02 0 0 0.5900602138124775</pose>
-        <geometry>
-          <mesh>
-            <uri>model://football_court/meshes/basket_light.dae</uri>
-            <scale>2.2 2.2 2.2</scale>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="basket_light_1_collision">
+      <collision name="court_light_1_collision">
         <pose>-56 -37.5 5.92 0 0 0.5900602138124775</pose>
         <geometry>
           <box>
@@ -7954,34 +5923,34 @@
         </geometry>
       </collision>
       <light name="floodlight_1" type="spot">
-        <pose>-53.92273205756123 -36.10897235997404 11.6 0 0 0</pose>
+        <visualize>false</visualize>
+        <pose>-54.50436708 -36.49846010 10.40000000 0.00000000 0.00000000 0.00000000</pose>
         <cast_shadows>false</cast_shadows>
         <diffuse>.65 .65 .60 1</diffuse>
         <specular>.02 .02 .02 1</specular>
-        <direction>53.92273205756123 36.10897235997404 -11.6</direction>
+        <direction>54.50436708 36.49846010 -10.40000000</direction>
         <attenuation>
           <range>110</range>
           <constant>0.7</constant>
           <linear>0.01</linear>
-          <quadratic>0.0018</quadratic>
+          <quadratic>0.0004</quadratic>
         </attenuation>
         <spot>
           <inner_angle>0.33</inner_angle>
           <outer_angle>0.72</outer_angle>
           <falloff>0.85</falloff>
         </spot>
-        <intensity>.18</intensity>
+        <intensity>4.6</intensity>
       </light>
-      <visual name="basket_light_2">
-        <pose>56 -37.5 0.02 0 0 2.551532439777316</pose>
+      <visual name="court_light_2">
+        <pose>56 -37.5 0.02 0 0 4.907726929969661</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/basket_light.dae</uri>
-            <scale>2.2 2.2 2.2</scale>
+            <uri>model://football_field/meshes/stadium_light.dae</uri>
           </mesh>
         </geometry>
       </visual>
-      <collision name="basket_light_2_collision">
+      <collision name="court_light_2_collision">
         <pose>56 -37.5 5.92 0 0 2.551532439777316</pose>
         <geometry>
           <box>
@@ -7990,34 +5959,34 @@
         </geometry>
       </collision>
       <light name="floodlight_2" type="spot">
-        <pose>53.92273205756123 -36.10897235997404 11.6 0 0 0</pose>
+        <visualize>false</visualize>
+        <pose>54.50436708 -36.49846010 10.40000000 0.00000000 0.00000000 0.00000000</pose>
         <cast_shadows>false</cast_shadows>
         <diffuse>.65 .65 .60 1</diffuse>
         <specular>.02 .02 .02 1</specular>
-        <direction>-53.92273205756123 36.10897235997404 -11.6</direction>
+        <direction>-54.50436708 36.49846010 -10.40000000</direction>
         <attenuation>
           <range>110</range>
           <constant>0.7</constant>
           <linear>0.01</linear>
-          <quadratic>0.0018</quadratic>
+          <quadratic>0.0004</quadratic>
         </attenuation>
         <spot>
           <inner_angle>0.33</inner_angle>
           <outer_angle>0.72</outer_angle>
           <falloff>0.85</falloff>
         </spot>
-        <intensity>.18</intensity>
+        <intensity>4.6</intensity>
       </light>
-      <visual name="basket_light_3">
-        <pose>-56 37.5 0.02 0 0 -0.5900602138124775</pose>
+      <visual name="court_light_3">
+        <pose>-56 37.5 0.02 0 0 1.7661342763798673</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/basket_light.dae</uri>
-            <scale>2.2 2.2 2.2</scale>
+            <uri>model://football_field/meshes/stadium_light.dae</uri>
           </mesh>
         </geometry>
       </visual>
-      <collision name="basket_light_3_collision">
+      <collision name="court_light_3_collision">
         <pose>-56 37.5 5.92 0 0 -0.5900602138124775</pose>
         <geometry>
           <box>
@@ -8026,34 +5995,34 @@
         </geometry>
       </collision>
       <light name="floodlight_3" type="spot">
-        <pose>-53.92273205756123 36.10897235997404 11.6 0 0 0</pose>
+        <visualize>false</visualize>
+        <pose>-54.50436708 36.49846010 10.40000000 0.00000000 0.00000000 0.00000000</pose>
         <cast_shadows>false</cast_shadows>
         <diffuse>.65 .65 .60 1</diffuse>
         <specular>.02 .02 .02 1</specular>
-        <direction>53.92273205756123 -36.10897235997404 -11.6</direction>
+        <direction>54.50436708 -36.49846010 -10.40000000</direction>
         <attenuation>
           <range>110</range>
           <constant>0.7</constant>
           <linear>0.01</linear>
-          <quadratic>0.0018</quadratic>
+          <quadratic>0.0004</quadratic>
         </attenuation>
         <spot>
           <inner_angle>0.33</inner_angle>
           <outer_angle>0.72</outer_angle>
           <falloff>0.85</falloff>
         </spot>
-        <intensity>.18</intensity>
+        <intensity>4.6</intensity>
       </light>
-      <visual name="basket_light_4">
-        <pose>56 37.5 0.02 0 0 -2.551532439777316</pose>
+      <visual name="court_light_4">
+        <pose>56 37.5 0.02 0 0 -0.19533794958497097</pose>
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/basket_light.dae</uri>
-            <scale>2.2 2.2 2.2</scale>
+            <uri>model://football_field/meshes/stadium_light.dae</uri>
           </mesh>
         </geometry>
       </visual>
-      <collision name="basket_light_4_collision">
+      <collision name="court_light_4_collision">
         <pose>56 37.5 5.92 0 0 -2.551532439777316</pose>
         <geometry>
           <box>
@@ -8062,28 +6031,29 @@
         </geometry>
       </collision>
       <light name="floodlight_4" type="spot">
-        <pose>53.92273205756123 36.10897235997404 11.6 0 0 0</pose>
+        <visualize>false</visualize>
+        <pose>54.50436708 36.49846010 10.40000000 0.00000000 0.00000000 0.00000000</pose>
         <cast_shadows>false</cast_shadows>
         <diffuse>.65 .65 .60 1</diffuse>
         <specular>.02 .02 .02 1</specular>
-        <direction>-53.92273205756123 -36.10897235997404 -11.6</direction>
+        <direction>-54.50436708 -36.49846010 -10.40000000</direction>
         <attenuation>
           <range>110</range>
           <constant>0.7</constant>
           <linear>0.01</linear>
-          <quadratic>0.0018</quadratic>
+          <quadratic>0.0004</quadratic>
         </attenuation>
         <spot>
           <inner_angle>0.33</inner_angle>
           <outer_angle>0.72</outer_angle>
           <falloff>0.85</falloff>
         </spot>
-        <intensity>.18</intensity>
+        <intensity>4.6</intensity>
       </light>
       <visual name="turf_grass_visual">
         <geometry>
           <mesh>
-            <uri>model://football_court/meshes/turf_grass.dae</uri>
+            <uri>model://football_field/meshes/turf_grass.dae</uri>
           </mesh>
         </geometry>
         <cast_shadows>false</cast_shadows>

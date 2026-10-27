@@ -72,24 +72,24 @@ private:
 
         double xw = r_world.x(), yw = r_world.y(), zw = r_world.z();
         // Gazebo World / ENU: X -> East, Y -> North
-        double theta_east_deg = std::atan2(xw, -zw) * 180.0 / M_PI;
-        double theta_north_deg = std::atan2(yw, -zw) * 180.0 / M_PI;
+        double theta_east_rad = std::atan2(xw, -zw);
+        double theta_north_rad = std::atan2(yw, -zw);
         double cos_alpha_w = std::clamp(-zw / rope_length, -1.0, 1.0);
-        double alpha_w_deg = std::acos(cos_alpha_w) * 180.0 / M_PI;
-        double beta_w_deg = 0.0;
+        double alpha_w_rad = std::acos(cos_alpha_w);
+        double beta_w_rad = 0.0;
         if (std::sqrt(xw * xw + yw * yw) > 1e-4) { 
-            beta_w_deg = std::atan2(yw, xw) * 180.0 / M_PI;
+            beta_w_rad = std::atan2(yw, xw);
         }
 
         Eigen::Vector3d r_body = q.inverse() * r_world;
         double xb = r_body.x(), yb = r_body.y(), zb = r_body.z();
-        double theta_xb_deg = std::atan2(xb, -zb) * 180.0 / M_PI;
-        double theta_yb_deg = std::atan2(yb, -zb) * 180.0 / M_PI;
+        double theta_xb_rad = std::atan2(xb, -zb);
+        double theta_yb_rad = std::atan2(yb, -zb);
         double cos_alpha_b = std::clamp(-zb / rope_length, -1.0, 1.0);
-        double alpha_b_deg = std::acos(cos_alpha_b) * 180.0 / M_PI;
-        double beta_b_deg = 0.0;
+        double alpha_b_rad = std::acos(cos_alpha_b);
+        double beta_b_rad = 0.0;
         if (std::sqrt(xb * xb + yb * yb) > 1e-4) { 
-            beta_b_deg = std::atan2(yb, xb) * 180.0 / M_PI;
+            beta_b_rad = std::atan2(yb, xb);
         }
 
         // === [ Data Publishing ] ===
@@ -98,32 +98,32 @@ private:
         geometry_msgs::msg::Vector3Stamped msg_w_cart;
         msg_w_cart.header.stamp = stamp;
         msg_w_cart.header.frame_id = "world"; 
-        msg_w_cart.vector.x = theta_east_deg;   // Gazebo World X / East
-        msg_w_cart.vector.y = theta_north_deg;  // Gazebo World Y / North
+        msg_w_cart.vector.x = theta_east_rad;   // Gazebo World X / East
+        msg_w_cart.vector.y = theta_north_rad;  // Gazebo World Y / North
         msg_w_cart.vector.z = rope_length;
         pub_world_cartesian_->publish(msg_w_cart);
 
         geometry_msgs::msg::Vector3Stamped msg_w_polar;
         msg_w_polar.header.stamp = stamp;
         msg_w_polar.header.frame_id = "world";
-        msg_w_polar.vector.x = alpha_w_deg;
-        msg_w_polar.vector.y = beta_w_deg;
+        msg_w_polar.vector.x = alpha_w_rad;
+        msg_w_polar.vector.y = beta_w_rad;
         msg_w_polar.vector.z = rope_length;
         pub_world_polar_->publish(msg_w_polar);
 
         geometry_msgs::msg::Vector3Stamped msg_b_cart;
         msg_b_cart.header.stamp = stamp;
         msg_b_cart.header.frame_id = "uav_base_link"; 
-        msg_b_cart.vector.x = theta_xb_deg;
-        msg_b_cart.vector.y = theta_yb_deg;
+        msg_b_cart.vector.x = theta_xb_rad;
+        msg_b_cart.vector.y = theta_yb_rad;
         msg_b_cart.vector.z = rope_length;
         pub_body_cartesian_->publish(msg_b_cart);
 
         geometry_msgs::msg::Vector3Stamped msg_b_polar;
         msg_b_polar.header.stamp = stamp;
         msg_b_polar.header.frame_id = "uav_base_link";
-        msg_b_polar.vector.x = alpha_b_deg;
-        msg_b_polar.vector.y = beta_b_deg;
+        msg_b_polar.vector.x = alpha_b_rad;
+        msg_b_polar.vector.y = beta_b_rad;
         msg_b_polar.vector.z = rope_length;
         pub_body_polar_->publish(msg_b_polar);
 
@@ -133,8 +133,8 @@ private:
         //     "\n"
         //     "  [真值-世界系] East: %+7.2f° | North: %+7.2f° | α: %+7.2f° | 绳长: %.3fm\n"
         //     "  [真值-机体系] X: %+7.2f° | Y: %+7.2f° | α: %+7.2f°",
-        //     theta_east_deg, theta_north_deg, alpha_w_deg, rope_length,
-        //     theta_xb_deg, theta_yb_deg, alpha_b_deg
+        //     theta_east_rad, theta_north_rad, alpha_w_rad, rope_length,
+        //     theta_xb_rad, theta_yb_rad, alpha_b_rad
         // );
     }
 

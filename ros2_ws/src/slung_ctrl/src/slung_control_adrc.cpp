@@ -58,7 +58,7 @@ public:
         this->declare_parameter("max_comp_acc", 3.0); // total horizontal acceleration limit [m/s^2]
 
         // Phase-1 EKF interface. Legacy launch keeps its original source/law.
-        this->declare_parameter("state_topic", "/uav/swing/eso_delay/state");
+        this->declare_parameter("state_topic", "/uav/swing/peso/state");
         this->declare_parameter("nonlinear_antiswing", false);
         this->declare_parameter("max_state_age", 0.10);
         const double max_state_age = this->get_parameter("max_state_age").as_double();
@@ -188,13 +188,11 @@ private:
     int offboard_counter = 0;
     std::mutex data_mutex;
 
-    // Synchronized ESO Fusion state. Units intentionally match the previous
-    // three-topic interface during this stage: theta [deg], rate [deg/s],
-    // disturbance [rad/s^2].
-    double theta_east_deg = 0.0;
-    double theta_north_deg = 0.0;
-    double rate_east_deg_s = 0.0;
-    double rate_north_deg_s = 0.0;
+    // Synchronized swing state: theta [rad], rate [rad/s], disturbance [rad/s^2].
+    double theta_east_rad_ = 0.0;
+    double theta_north_rad_ = 0.0;
+    double rate_east_rad_s_ = 0.0;
+    double rate_north_rad_s_ = 0.0;
     double disturbance_east = 0.0;
     double disturbance_north = 0.0;
     double disturbance_east_prelimited = 0.0;
@@ -249,8 +247,8 @@ private:
 
         const double stamp_time = rclcpp::Time(msg->header.stamp, this->get_clock()->get_clock_type()).seconds();
         const double age = this->get_clock()->now().seconds() - stamp_time;
-        for (double value : {msg->theta_east_deg, msg->theta_north_deg,
-                            msg->rate_east_deg_s, msg->rate_north_deg_s,
+        for (double value : {msg->theta_east_rad, msg->theta_north_rad,
+                            msg->rate_east_rad_s, msg->rate_north_rad_s,
                             msg->disturbance_east_rad_s2, msg->disturbance_north_rad_s2}) {
             if (!std::isfinite(value)) return;
         }
@@ -258,10 +256,10 @@ private:
         last_valid_state_time = stamp_time;
 
         // Atomic snapshot: theta/rate/f belong to the same estimator update.
-        theta_east_deg = msg->theta_east_deg;
-        theta_north_deg = msg->theta_north_deg;
-        rate_east_deg_s = msg->rate_east_deg_s;
-        rate_north_deg_s = msg->rate_north_deg_s;
+        theta_east_rad_ = msg->theta_east_rad;
+        theta_north_rad_ = msg->theta_north_rad;
+        rate_east_rad_s_ = msg->rate_east_rad_s;
+        rate_north_rad_s_ = msg->rate_north_rad_s;
         disturbance_east = msg->disturbance_east_rad_s2;
         disturbance_north = msg->disturbance_north_rad_s2;
 
@@ -469,11 +467,11 @@ private:
                 has_synced_state_local = adrc_state_received && age >= 0 &&
                     age <= this->get_parameter("max_state_age").as_double();
 
-                theta_east_rad = theta_east_deg * M_PI / 180.0;
-                theta_north_rad = theta_north_deg * M_PI / 180.0;
+                theta_east_rad = theta_east_rad_;
+                theta_north_rad = theta_north_rad_;
 
-                rate_east_rad_s = rate_east_deg_s * M_PI / 180.0;
-                rate_north_rad_s = rate_north_deg_s * M_PI / 180.0;
+                rate_east_rad_s = rate_east_rad_s_;
+                rate_north_rad_s = rate_north_rad_s_;
 
                 disturbance_east_local = disturbance_east;
                 disturbance_north_local = disturbance_north;

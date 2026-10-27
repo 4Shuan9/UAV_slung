@@ -124,7 +124,7 @@ private:
             RCLCPP_WARN_THROTTLE(get_logger(),*get_clock(),2000,"ESO visual frame rejected: malformed capture timestamp");return;
         }
         const double capture=rclcpp::Time(msg->header.stamp,get_clock()->get_clock_type()).seconds();
-        const double east=msg->vector.x*M_PI/180,north=msg->vector.y*M_PI/180;
+        const double east=msg->vector.x,north=msg->vector.y;
         if (!std::isfinite(east) || !std::isfinite(north) || capture<=0 || capture>t ||
             t-capture>max_delay_) {
             RCLCPP_WARN_THROTTLE(get_logger(),*get_clock(),2000,"ESO visual frame rejected: time/domain invalid");return;
@@ -173,14 +173,14 @@ private:
             const auto prediction=filter_->estimate_at(t);
             slung_ctrl::msg::SwingADRCState state;
             state.header.stamp=stamp;state.header.frame_id="world";
-            state.theta_east_deg=prediction.axis[0](0)*180/M_PI;state.theta_north_deg=prediction.axis[1](0)*180/M_PI;
-            state.rate_east_deg_s=prediction.axis[0](1)*180/M_PI;state.rate_north_deg_s=prediction.axis[1](1)*180/M_PI;
+            state.theta_east_rad=prediction.axis[0](0);state.theta_north_rad=prediction.axis[1](0);
+            state.rate_east_rad_s=prediction.axis[0](1);state.rate_north_rad_s=prediction.axis[1](1);
             state.disturbance_east_rad_s2=prediction.axis[0](2);state.disturbance_north_rad_s2=prediction.axis[1](2);
             adrc_state_publisher_->publish(state);
             geometry_msgs::msg::Vector3Stamped angle,rate,dist;
             angle.header=rate.header=dist.header=state.header;
-            angle.vector.x=state.theta_east_deg;angle.vector.y=state.theta_north_deg;
-            rate.vector.x=state.rate_east_deg_s;rate.vector.y=state.rate_north_deg_s;
+            angle.vector.x=state.theta_east_rad;angle.vector.y=state.theta_north_rad;
+            rate.vector.x=state.rate_east_rad_s;rate.vector.y=state.rate_north_rad_s;
             dist.vector.x=state.disturbance_east_rad_s2;dist.vector.y=state.disturbance_north_rad_s2;
             angle_publisher_->publish(angle);rate_publisher_->publish(rate);dist_publisher_->publish(dist);
             last_published_=t;

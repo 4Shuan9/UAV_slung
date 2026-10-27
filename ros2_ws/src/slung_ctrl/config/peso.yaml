@@ -1,0 +1,19 @@
+# Codex-generated: basic PESO uses exactly the eso_delay baseline parameters.
+swing_peso:
+  ros__parameters:
+    g: 9.81
+    l: 1.0
+    omega_o: 8.0
+    dt: 0.005
+    vision_topic: /uav/swing/vision/angle
+    input_time_mode: synchronized
+    input_delay: 0.0
+    publish_hz: 200.0
+    history_sec: 2.0
+    max_inputs: 2048
+    max_input_gap: 0.05
+    max_visual_gap: 0.5
+    max_visual_delay: 0.5
+    max_vision_age: 0.25
+    max_input_age: 0.05
+    input_future_tolerance: 0.02

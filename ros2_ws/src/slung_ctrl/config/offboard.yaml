@@ -1,7 +1,7 @@
 # Codex-generated file: operation/task defaults; controller profiles stay in their original YAMLs.
 slung_offboard:
   ros__parameters:
-    default_estimator: eso_delay
+    default_estimator: peso
     default_controller: adrc
     startup_mode: idle               # idle or takeoff; idle never arms automatically
     after_takeoff_task: hold          # hold, eight or square
@@ -16,7 +16,9 @@ slung_offboard:
     home_position_tolerance: 0.25     # metres; explicit switching condition, not a swing-angle limit
     home_speed_tolerance: 0.15        # m/s, 3-D
     home_stable_sec: 2.0
-    transition_speed: 1.0             # smooth setpoint/home/rejoin references, m/s
+    setpoint_speed: 3.0              # point-to-point reference peak, m/s
+    setpoint_acceleration: 0.8       # point-to-point reference bound, m/s^2
+    transition_speed: 1.0             # home/rejoin and other transition references, m/s
     transition_acceleration: 0.5      # reference acceleration bound, m/s^2
     angle_reference_speed_limit: 6.2 # m/s; offline reference admission, not a real-aircraft speed guarantee
     trajectory_ramp_sec: 2.0          # smooth entry to eight; steady omega unchanged

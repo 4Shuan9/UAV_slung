@@ -28,93 +28,16 @@
     <atmosphere type="adiabatic" />
     <scene>
       <grid>false</grid>
-      <ambient>.45 .46 .47 1</ambient>
+      <ambient>.40 .41 .42 1</ambient>
       <background>.62 .65 .68 1</background>
       <shadows>true</shadows>
     </scene>
-    <model name="ground_plane">
-      <static>true</static>
-      <link name="link">
-        <collision name="collision">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>500 500</size>
-            </plane>
-          </geometry>
-        </collision>
-        <pose>0 0 0 0 -0 0</pose>
-        <inertial>
-          <pose>0 0 0 0 -0 0</pose>
-          <mass>1</mass>
-          <inertia>
-            <ixx>1</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>1</iyy>
-            <iyz>0</iyz>
-            <izz>1</izz>
-          </inertia>
-        </inertial>
-        <visual name="ground_west_visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>265 500</size>
-            </plane>
-          </geometry>
-          <material>
-            <ambient>.55 .55 .55 1</ambient>
-            <diffuse>.55 .55 .55 1</diffuse>
-            <specular>0 0 0 1</specular>
-          </material>
-          <pose>-117.5 0.0 0 0 0 0</pose>
-        </visual>
-        <visual name="ground_east_visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>157 500</size>
-            </plane>
-          </geometry>
-          <material>
-            <ambient>.55 .55 .55 1</ambient>
-            <diffuse>.55 .55 .55 1</diffuse>
-            <specular>0 0 0 1</specular>
-          </material>
-          <pose>171.5 0.0 0 0 0 0</pose>
-        </visual>
-        <visual name="ground_south_visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>78 192.5</size>
-            </plane>
-          </geometry>
-          <material>
-            <ambient>.55 .55 .55 1</ambient>
-            <diffuse>.55 .55 .55 1</diffuse>
-            <specular>0 0 0 1</specular>
-          </material>
-          <pose>54.0 -153.75 0 0 0 0</pose>
-        </visual>
-        <visual name="ground_north_visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>78 192.5</size>
-            </plane>
-          </geometry>
-          <material>
-            <ambient>.55 .55 .55 1</ambient>
-            <diffuse>.55 .55 .55 1</diffuse>
-            <specular>0 0 0 1</specular>
-          </material>
-          <pose>54.0 153.75 0 0 0 0</pose>
-        </visual>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-    </model>
+    <!-- Codex-generated: finite circular ground, centered on the football field. -->
+    <include>
+      <name>ground_plane</name>
+      <uri>model://stadium_ground</uri>
+      <pose>54 0 0 0 0 0</pose>
+    </include>
     <light name="sunUTC" type="directional">
       <pose>0 0 500 0 -0 0</pose>
       <cast_shadows>true</cast_shadows>
@@ -137,8 +60,8 @@
       <elevation>0</elevation>
     </spherical_coordinates>
     <include>
-      <name>football_court</name>
-      <uri>model://football_court</uri>
+      <name>football_field</name>
+      <uri>model://football_field</uri>
       <pose>54 0 .03 0 0 -1.5707963267948966</pose>
     </include>
     <include>

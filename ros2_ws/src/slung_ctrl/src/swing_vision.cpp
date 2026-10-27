@@ -134,23 +134,23 @@ private:
         double yw = V_world.y();
         double zw = V_world.z();
 
-        double theta_xb_deg = std::atan2(xb, -zb) * 180.0 / M_PI;
-        double theta_yb_deg = std::atan2(yb, -zb) * 180.0 / M_PI;
+        double theta_xb_rad = std::atan2(xb, -zb);
+        double theta_yb_rad = std::atan2(yb, -zb);
         double r_b = std::sqrt(xb * xb + yb * yb);
-        double alpha_b_deg = std::atan2(r_b, -zb) * 180.0 / M_PI;
-        double beta_b_deg = 0.0;
+        double alpha_b_rad = std::atan2(r_b, -zb);
+        double beta_b_rad = 0.0;
         if (r_b > 1e-4) { 
-            beta_b_deg = std::atan2(yb, xb) * 180.0 / M_PI;
+            beta_b_rad = std::atan2(yb, xb);
         }
 
         // Estimated world / ENU: X -> East, Y -> North
-        double theta_east_deg = std::atan2(xw, -zw) * 180.0 / M_PI;
-        double theta_north_deg = std::atan2(yw, -zw) * 180.0 / M_PI;
+        double theta_east_rad = std::atan2(xw, -zw);
+        double theta_north_rad = std::atan2(yw, -zw);
         double r_w = std::sqrt(xw * xw + yw * yw);
-        double alpha_w_deg = std::atan2(r_w, -zw) * 180.0 / M_PI;
-        double beta_w_deg = 0.0;
+        double alpha_w_rad = std::atan2(r_w, -zw);
+        double beta_w_rad = 0.0;
         if (r_w > 1e-4) { 
-            beta_w_deg = std::atan2(yw, xw) * 180.0 / M_PI;
+            beta_w_rad = std::atan2(yw, xw);
         }
 
         // === [ Data Publishing ] ===
@@ -159,32 +159,32 @@ private:
         geometry_msgs::msg::Vector3Stamped msg_b_cart;
         msg_b_cart.header.stamp = stamp;
         msg_b_cart.header.frame_id = "uav_base_link"; 
-        msg_b_cart.vector.x = theta_xb_deg;
-        msg_b_cart.vector.y = theta_yb_deg;
+        msg_b_cart.vector.x = theta_xb_rad;
+        msg_b_cart.vector.y = theta_yb_rad;
         msg_b_cart.vector.z = nominal_rope_length_;
         pub_body_cartesian_->publish(msg_b_cart);
 
         geometry_msgs::msg::Vector3Stamped msg_b_polar;
         msg_b_polar.header.stamp = stamp;
         msg_b_polar.header.frame_id = "uav_base_link";
-        msg_b_polar.vector.x = alpha_b_deg;
-        msg_b_polar.vector.y = beta_b_deg;
+        msg_b_polar.vector.x = alpha_b_rad;
+        msg_b_polar.vector.y = beta_b_rad;
         msg_b_polar.vector.z = nominal_rope_length_;
         pub_body_polar_->publish(msg_b_polar);
 
         geometry_msgs::msg::Vector3Stamped msg_w_cart;
         msg_w_cart.header.stamp = stamp;
         msg_w_cart.header.frame_id = "world"; 
-        msg_w_cart.vector.x = theta_east_deg;   // ENU East
-        msg_w_cart.vector.y = theta_north_deg;  // ENU North
+        msg_w_cart.vector.x = theta_east_rad;   // ENU East
+        msg_w_cart.vector.y = theta_north_rad;  // ENU North
         msg_w_cart.vector.z = nominal_rope_length_;
         pub_world_cartesian_->publish(msg_w_cart);
 
         geometry_msgs::msg::Vector3Stamped msg_w_polar;
         msg_w_polar.header.stamp = stamp;
         msg_w_polar.header.frame_id = "world";
-        msg_w_polar.vector.x = alpha_w_deg;
-        msg_w_polar.vector.y = beta_w_deg;
+        msg_w_polar.vector.x = alpha_w_rad;
+        msg_w_polar.vector.y = beta_w_rad;
         msg_w_polar.vector.z = nominal_rope_length_;
         pub_world_polar_->publish(msg_w_polar);
 

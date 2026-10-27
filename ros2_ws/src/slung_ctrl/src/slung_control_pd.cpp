@@ -45,11 +45,11 @@ public:
         pub_cmd = this->create_publisher<px4_msgs::msg::VehicleCommand>("/fmu/in/vehicle_command", 10);
 
         sub_eso_angle = this->create_subscription<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/swing/eso_delay/angle", 10,
+            "/uav/swing/peso/angle", 10,
             std::bind(&SlungAntiswing::angle_cb, this, std::placeholders::_1));
         
         sub_eso_rate = this->create_subscription<geometry_msgs::msg::Vector3Stamped>(
-            "/uav/swing/eso_delay/rate", 10,
+            "/uav/swing/peso/rate", 10,
             std::bind(&SlungAntiswing::rate_cb, this, std::placeholders::_1));
 
         sub_odom = this->create_subscription<px4_msgs::msg::VehicleOdometry>(
@@ -231,10 +231,10 @@ private:
             double theta_east_rad, theta_north_rad, rate_east_rad, rate_north_rad;
             {
                 std::lock_guard<std::mutex> lock(data_mutex);
-                theta_east_rad = theta_east * M_PI / 180.0;
-                theta_north_rad = theta_north * M_PI / 180.0;
-                rate_east_rad = d_theta_east * M_PI / 180.0;
-                rate_north_rad = d_theta_north * M_PI / 180.0;
+                theta_east_rad = theta_east;
+                theta_north_rad = theta_north;
+                rate_east_rad = d_theta_east;
+                rate_north_rad = d_theta_north;
             }
 
             // North channel: PX4 acceleration[0] <-> theta_north
