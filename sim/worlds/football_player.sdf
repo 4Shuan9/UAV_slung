@@ -1,0 +1,435 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.9">
+  <world name="football_player">
+    <actor name="sideline_1">
+      <skin>
+        <filename>model://football_player/meshes/players_navy7/navy7.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="move">
+        <filename>model://football_player/meshes/players_navy7/navy7.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>false</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <delay_start>0</delay_start>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="move" tension="1.0">
+          <waypoint>
+            <time>0.0000</time>
+            <pose>23.400000 -27.000000 0.25 -1.570796 0 3.141596</pose>
+          </waypoint>
+          <waypoint>
+            <time>2.4884</time>
+            <pose>23.331500 -24.512600 0.25 -1.570796 0 3.198886</pose>
+          </waypoint>
+          <waypoint>
+            <time>4.6062</time>
+            <pose>23.136400 -22.403800 0.25 -1.570796 0 3.279176</pose>
+          </waypoint>
+          <waypoint>
+            <time>6.0451</time>
+            <pose>22.844400 -20.994800 0.25 -1.570796 0 3.464186</pose>
+          </waypoint>
+          <waypoint>
+            <time>6.6479</time>
+            <pose>22.500000 -20.500000 0.25 -1.570796 0 4.712386</pose>
+          </waypoint>
+          <waypoint>
+            <time>7.2508</time>
+            <pose>22.155600 -20.994800 0.25 -1.570796 0 5.960586</pose>
+          </waypoint>
+          <waypoint>
+            <time>8.6898</time>
+            <pose>21.863600 -22.403800 0.25 -1.570796 0 6.145596</pose>
+          </waypoint>
+          <waypoint>
+            <time>10.8075</time>
+            <pose>21.668500 -24.512600 0.25 -1.570796 0 6.225896</pose>
+          </waypoint>
+          <waypoint>
+            <time>13.2960</time>
+            <pose>21.600000 -27.000000 0.25 -1.570796 0 6.283186</pose>
+          </waypoint>
+          <waypoint>
+            <time>15.7844</time>
+            <pose>21.668500 -29.487400 0.25 -1.570796 0 6.340476</pose>
+          </waypoint>
+          <waypoint>
+            <time>17.9021</time>
+            <pose>21.863600 -31.596200 0.25 -1.570796 0 6.420776</pose>
+          </waypoint>
+          <waypoint>
+            <time>19.3410</time>
+            <pose>22.155600 -33.005200 0.25 -1.570796 0 6.605786</pose>
+          </waypoint>
+          <waypoint>
+            <time>19.9439</time>
+            <pose>22.500000 -33.500000 0.25 -1.570796 0 7.853986</pose>
+          </waypoint>
+          <waypoint>
+            <time>20.5468</time>
+            <pose>22.844400 -33.005200 0.25 -1.570796 0 9.102176</pose>
+          </waypoint>
+          <waypoint>
+            <time>21.9857</time>
+            <pose>23.136400 -31.596200 0.25 -1.570796 0 9.287186</pose>
+          </waypoint>
+          <waypoint>
+            <time>24.1034</time>
+            <pose>23.331500 -29.487400 0.25 -1.570796 0 9.367486</pose>
+          </waypoint>
+          <waypoint>
+            <time>26.5918</time>
+            <pose>23.400000 -27.000000 0.25 -1.570796 0 9.424776</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+    <actor name="sideline_2">
+      <skin>
+        <filename>model://football_player/meshes/players_white11/white11.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="move">
+        <filename>model://football_player/meshes/players_white11/white11.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>false</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <delay_start>0</delay_start>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="move" tension="1.0">
+          <waypoint>
+            <time>0.0000</time>
+            <pose>21.600000 27.000000 0.25 -1.570796 0 -0.000004</pose>
+          </waypoint>
+          <waypoint>
+            <time>2.4884</time>
+            <pose>21.668500 24.512600 0.25 -1.570796 0 0.057286</pose>
+          </waypoint>
+          <waypoint>
+            <time>4.6062</time>
+            <pose>21.863600 22.403800 0.25 -1.570796 0 0.137586</pose>
+          </waypoint>
+          <waypoint>
+            <time>6.0450</time>
+            <pose>22.155600 20.994800 0.25 -1.570796 0 0.322596</pose>
+          </waypoint>
+          <waypoint>
+            <time>6.6479</time>
+            <pose>22.500000 20.500000 0.25 -1.570796 0 1.570796</pose>
+          </waypoint>
+          <waypoint>
+            <time>7.2507</time>
+            <pose>22.844400 20.994800 0.25 -1.570796 0 2.818996</pose>
+          </waypoint>
+          <waypoint>
+            <time>8.6898</time>
+            <pose>23.136400 22.403800 0.25 -1.570796 0 3.004006</pose>
+          </waypoint>
+          <waypoint>
+            <time>10.8075</time>
+            <pose>23.331500 24.512600 0.25 -1.570796 0 3.084306</pose>
+          </waypoint>
+          <waypoint>
+            <time>13.2959</time>
+            <pose>23.400000 27.000000 0.25 -1.570796 0 3.141596</pose>
+          </waypoint>
+          <waypoint>
+            <time>15.7843</time>
+            <pose>23.331500 29.487400 0.25 -1.570796 0 3.198886</pose>
+          </waypoint>
+          <waypoint>
+            <time>17.9021</time>
+            <pose>23.136400 31.596200 0.25 -1.570796 0 3.279176</pose>
+          </waypoint>
+          <waypoint>
+            <time>19.3409</time>
+            <pose>22.844400 33.005200 0.25 -1.570796 0 3.464186</pose>
+          </waypoint>
+          <waypoint>
+            <time>19.9438</time>
+            <pose>22.500000 33.500000 0.25 -1.570796 0 4.712386</pose>
+          </waypoint>
+          <waypoint>
+            <time>20.5466</time>
+            <pose>22.155600 33.005200 0.25 -1.570796 0 5.960586</pose>
+          </waypoint>
+          <waypoint>
+            <time>21.9857</time>
+            <pose>21.863600 31.596200 0.25 -1.570796 0 6.145596</pose>
+          </waypoint>
+          <waypoint>
+            <time>24.1034</time>
+            <pose>21.668500 29.487400 0.25 -1.570796 0 6.225896</pose>
+          </waypoint>
+          <waypoint>
+            <time>26.5918</time>
+            <pose>21.600000 27.000000 0.25 -1.570796 0 6.283186</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+    <actor name="runner_1">
+      <skin>
+        <filename>model://football_player/meshes/players_navy10/navy10.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="move">
+        <filename>model://football_player/meshes/players_navy10/navy10.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>false</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <delay_start>0</delay_start>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="move" tension="1.0">
+          <waypoint>
+            <time>0.0000</time>
+            <pose>46.000000 -20.000000 0.25 -1.570796 0 3.141596</pose>
+          </waypoint>
+          <waypoint>
+            <time>0.7722</time>
+            <pose>45.543300 -18.851900 0.25 -1.570796 0 3.833426</pose>
+          </waypoint>
+          <waypoint>
+            <time>1.7875</time>
+            <pose>44.242600 -17.878700 0.25 -1.570796 0 4.248746</pose>
+          </waypoint>
+          <waypoint>
+            <time>3.0702</time>
+            <pose>42.296100 -17.228400 0.25 -1.570796 0 4.508166</pose>
+          </waypoint>
+          <waypoint>
+            <time>4.5123</time>
+            <pose>40.000000 -17.000000 0.25 -1.570796 0 4.712386</pose>
+          </waypoint>
+          <waypoint>
+            <time>5.9545</time>
+            <pose>37.703900 -17.228400 0.25 -1.570796 0 4.916606</pose>
+          </waypoint>
+          <waypoint>
+            <time>7.2372</time>
+            <pose>35.757400 -17.878700 0.25 -1.570796 0 5.176036</pose>
+          </waypoint>
+          <waypoint>
+            <time>8.2524</time>
+            <pose>34.456700 -18.851900 0.25 -1.570796 0 5.591346</pose>
+          </waypoint>
+          <waypoint>
+            <time>9.0246</time>
+            <pose>34.000000 -20.000000 0.25 -1.570796 0 6.283186</pose>
+          </waypoint>
+          <waypoint>
+            <time>9.7970</time>
+            <pose>34.456700 -21.148100 0.25 -1.570796 0 6.975016</pose>
+          </waypoint>
+          <waypoint>
+            <time>10.8122</time>
+            <pose>35.757400 -22.121300 0.25 -1.570796 0 7.390336</pose>
+          </waypoint>
+          <waypoint>
+            <time>12.0949</time>
+            <pose>37.703900 -22.771600 0.25 -1.570796 0 7.649766</pose>
+          </waypoint>
+          <waypoint>
+            <time>13.5370</time>
+            <pose>40.000000 -23.000000 0.25 -1.570796 0 7.853986</pose>
+          </waypoint>
+          <waypoint>
+            <time>14.9792</time>
+            <pose>42.296100 -22.771600 0.25 -1.570796 0 8.058196</pose>
+          </waypoint>
+          <waypoint>
+            <time>16.2618</time>
+            <pose>44.242600 -22.121300 0.25 -1.570796 0 8.317626</pose>
+          </waypoint>
+          <waypoint>
+            <time>17.2771</time>
+            <pose>45.543300 -21.148100 0.25 -1.570796 0 8.732946</pose>
+          </waypoint>
+          <waypoint>
+            <time>18.0494</time>
+            <pose>46.000000 -20.000000 0.25 -1.570796 0 9.424776</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+    <actor name="runner_2">
+      <skin>
+        <filename>model://football_player/meshes/players_white8/white8.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="move">
+        <filename>model://football_player/meshes/players_white8/white8.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>false</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <delay_start>0</delay_start>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="move" tension="1.0">
+          <waypoint>
+            <time>0.0000</time>
+            <pose>65.000000 -16.000000 0.25 -1.570796 0 4.712386</pose>
+          </waypoint>
+          <waypoint>
+            <time>0.9614</time>
+            <pose>62.703900 -16.228400 0.25 -1.570796 0 4.916606</pose>
+          </waypoint>
+          <waypoint>
+            <time>1.8166</time>
+            <pose>60.757400 -16.878700 0.25 -1.570796 0 5.176036</pose>
+          </waypoint>
+          <waypoint>
+            <time>2.4933</time>
+            <pose>59.456700 -17.851900 0.25 -1.570796 0 5.591346</pose>
+          </waypoint>
+          <waypoint>
+            <time>3.0083</time>
+            <pose>59.000000 -19.000000 0.25 -1.570796 0 6.283186</pose>
+          </waypoint>
+          <waypoint>
+            <time>3.5231</time>
+            <pose>59.456700 -20.148100 0.25 -1.570796 0 6.975016</pose>
+          </waypoint>
+          <waypoint>
+            <time>4.1999</time>
+            <pose>60.757400 -21.121300 0.25 -1.570796 0 7.390336</pose>
+          </waypoint>
+          <waypoint>
+            <time>5.0550</time>
+            <pose>62.703900 -21.771600 0.25 -1.570796 0 7.649766</pose>
+          </waypoint>
+          <waypoint>
+            <time>6.0165</time>
+            <pose>65.000000 -22.000000 0.25 -1.570796 0 7.853986</pose>
+          </waypoint>
+          <waypoint>
+            <time>6.9779</time>
+            <pose>67.296100 -21.771600 0.25 -1.570796 0 8.058196</pose>
+          </waypoint>
+          <waypoint>
+            <time>7.8330</time>
+            <pose>69.242600 -21.121300 0.25 -1.570796 0 8.317626</pose>
+          </waypoint>
+          <waypoint>
+            <time>8.5099</time>
+            <pose>70.543300 -20.148100 0.25 -1.570796 0 8.732946</pose>
+          </waypoint>
+          <waypoint>
+            <time>9.0247</time>
+            <pose>71.000000 -19.000000 0.25 -1.570796 0 9.424776</pose>
+          </waypoint>
+          <waypoint>
+            <time>9.5395</time>
+            <pose>70.543300 -17.851900 0.25 -1.570796 0 10.116616</pose>
+          </waypoint>
+          <waypoint>
+            <time>10.2164</time>
+            <pose>69.242600 -16.878700 0.25 -1.570796 0 10.531926</pose>
+          </waypoint>
+          <waypoint>
+            <time>11.0715</time>
+            <pose>67.296100 -16.228400 0.25 -1.570796 0 10.791356</pose>
+          </waypoint>
+          <waypoint>
+            <time>12.0329</time>
+            <pose>65.000000 -16.000000 0.25 -1.570796 0 10.995576</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+    <actor name="runner_3">
+      <skin>
+        <filename>model://football_player/meshes/players_white9/white9.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="move">
+        <filename>model://football_player/meshes/players_white9/white9.dae</filename>
+        <scale>1.0</scale>
+        <interpolate_x>false</interpolate_x>
+      </animation>
+      <script>
+        <loop>true</loop>
+        <delay_start>0</delay_start>
+        <auto_start>true</auto_start>
+        <trajectory id="0" type="move" tension="1.0">
+          <waypoint>
+            <time>0.0000</time>
+            <pose>42.0 19.0 0.25 -1.570796 0.0 3.141596</pose>
+          </waypoint>
+          <waypoint>
+            <time>0.7722</time>
+            <pose>41.5433 20.1481 0.25 -1.570796 0.0 3.833426</pose>
+          </waypoint>
+          <waypoint>
+            <time>1.7875</time>
+            <pose>40.2426 21.1213 0.25 -1.570796 0.0 4.248746</pose>
+          </waypoint>
+          <waypoint>
+            <time>3.0702</time>
+            <pose>38.2961 21.7716 0.25 -1.570796 0.0 4.508166</pose>
+          </waypoint>
+          <waypoint>
+            <time>4.5123</time>
+            <pose>36.0 22.0 0.25 -1.570796 0.0 4.712386</pose>
+          </waypoint>
+          <waypoint>
+            <time>5.9545</time>
+            <pose>33.7039 21.7716 0.25 -1.570796 0.0 4.916606</pose>
+          </waypoint>
+          <waypoint>
+            <time>7.2372</time>
+            <pose>31.757399999999997 21.1213 0.25 -1.570796 0.0 5.176036</pose>
+          </waypoint>
+          <waypoint>
+            <time>8.2524</time>
+            <pose>30.456699999999998 20.1481 0.25 -1.570796 0.0 5.591346</pose>
+          </waypoint>
+          <waypoint>
+            <time>9.0246</time>
+            <pose>30.0 19.0 0.25 -1.570796 0.0 6.283186</pose>
+          </waypoint>
+          <waypoint>
+            <time>9.7970</time>
+            <pose>30.456699999999998 17.8519 0.25 -1.570796 0.0 6.975016</pose>
+          </waypoint>
+          <waypoint>
+            <time>10.8122</time>
+            <pose>31.757399999999997 16.8787 0.25 -1.570796 0.0 7.390336</pose>
+          </waypoint>
+          <waypoint>
+            <time>12.0949</time>
+            <pose>33.7039 16.2284 0.25 -1.570796 0.0 7.649766</pose>
+          </waypoint>
+          <waypoint>
+            <time>13.5370</time>
+            <pose>36.0 16.0 0.25 -1.570796 0.0 7.853986</pose>
+          </waypoint>
+          <waypoint>
+            <time>14.9792</time>
+            <pose>38.2961 16.2284 0.25 -1.570796 0.0 8.058196</pose>
+          </waypoint>
+          <waypoint>
+            <time>16.2618</time>
+            <pose>40.2426 16.8787 0.25 -1.570796 0.0 8.317626</pose>
+          </waypoint>
+          <waypoint>
+            <time>17.2771</time>
+            <pose>41.5433 17.8519 0.25 -1.570796 0.0 8.732946</pose>
+          </waypoint>
+          <waypoint>
+            <time>18.0494</time>
+            <pose>42.0 19.0 0.25 -1.570796 0.0 9.424776</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+  </world>
+</sdf>

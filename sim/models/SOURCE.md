@@ -11,6 +11,7 @@
 | 球门框、场灯 | [Low Poly Running Race Track](https://sketchfab.com/3d-models/low-poly-running-race-track-game-ready-asset-23ec0c80500e4269976b6e434fab2f67)，Jackson.Charles，CC BY；从用户提供的 GLB 提取并转换 | `football_field/meshes/stadium_goal.dae`、`stadium_light.dae` |
 | 三排看台 | [Bleachers three row](https://www.innerscene.com/tools/library/3d-parts/bleachers-three-row-sports-equipment-7221c461)，Innerscene，CC0；从用户提供的 GLB 转换 | `football_field/meshes/spectator_bleachers.dae`；贴图集中在该模型 `materials/textures/`，按钢、铝、木材命名 |
 | 起飞台 | [UAV_lumberjack](https://github.com/4Shuan9/UAV_lumberjack)，从 `~/UAV_lumberjack/sim/models/helipad` 复制；位于世界原点，顶面碰撞高度 1.072 m | `helipad/` |
+| 动态人物 | [Goalkeeper Stylized - Rig and Animation](https://sketchfab.com/3d-models/goalkeeper-stylized-rig-and-animation-7de86f9c36f84152a777f27a73646ada)，P-Vi.Art，CC BY 4.0；动作来自 Quaternius Universal Animation Library，CC0；模型、贴图与动作已调整 | `football_player/meshes/`；路线见 `sim/worlds/football_player.sdf` |
 | 球员座椅 | 从本工程此前的篮球场模型中提取 | `football_field/meshes/player_bench.dae` |
 | 单门、双门 | 工程既有资源，`model.config` 登记作者为 skn256；原始下载页与许可尚未核实 | `single_gate/`、`double_gate/` |
 | 单目相机 | 工程既有模型，`model.config` 登记作者为 Markus Achtelik；采用本工程的相机配置 | `mono_cam/` |
