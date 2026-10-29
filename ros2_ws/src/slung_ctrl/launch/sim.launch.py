@@ -8,7 +8,6 @@ models are still available through GZ_SIM_RESOURCE_PATH.
 
 import os
 import math
-import random
 from pathlib import Path
 import shutil
 import subprocess
@@ -33,43 +32,146 @@ from launch.substitutions import LaunchConfiguration, EnvironmentVariable
 from launch_ros.actions import Node
 
 
-# Codex-generated: smooth, repeatable walking and jogging loops.
-def _randomize_people(actors, seed):
-    del seed  # The routes are intentionally repeatable.
+# Codex-generated: bounded, purposeful football-field activities.
+def _configure_people(actors):
+
+    def capsule(x1, x2, y, r, n=24):
+        # A straight shuttle with semicircular turns, avoiding abrupt reversals.
+        p = [(x1, y-r), (x2, y-r)]
+        p.extend((x2 + r*math.cos(-math.pi/2 + math.pi*i/n),
+                  y + r*math.sin(-math.pi/2 + math.pi*i/n)) for i in range(1, n+1))
+        p.append((x1, y+r))
+        p.extend((x1 + r*math.cos(math.pi/2 + math.pi*i/n),
+                  y + r*math.sin(math.pi/2 + math.pi*i/n)) for i in range(1, n+1))
+        return p
+
+    def rounded_rect(xmin, xmax, ymin, ymax, radius, n=16):
+        points = []
+        for cx, cy, start in [(xmax-radius, ymin+radius, -math.pi/2),
+                              (xmax-radius, ymax-radius, 0),
+                              (xmin+radius, ymax-radius, math.pi/2),
+                              (xmin+radius, ymin+radius, math.pi)]:
+            points.extend((cx + radius*math.cos(start + i*math.pi/(2*n)),
+                           cy + radius*math.sin(start + i*math.pi/(2*n)))
+                          for i in range(n+1))
+        return points + [points[0]]
+
     routes = {
-        'sideline_1': (22.5, -27.0, 2.0, 6.0, 0.9, 0.0),
-        'sideline_2': (22.5, 27.0, 2.0, 6.0, 0.9, math.pi),
-        'runner_1': (40.0, -20.0, 7.0, 4.0, 1.4, 0.0),
-        'runner_2': (65.0, -19.0, 7.0, 4.0, 1.4, 2.0),
-        'runner_3': (36.0, 19.0, 7.0, 4.0, 1.4, 4.0),
+        # World coordinates: the field is rotated 90 degrees and centred at (54, 0).
+        'sideline_1': (rounded_rect(19.0, 89.0, -55.5, 55.5, 2.0), 1.75),
+        'sideline_2': ([(20.10 + y, x) for x, y in capsule(-20.0, 20.0, 0.0, 1.0)], 1.75),
     }
     for actor in actors:
         name = actor.get('name')
         trajectory = actor.find('script/trajectory')
-        if name not in routes or trajectory is None:
+        if trajectory is None:
+            raise RuntimeError(f'Missing trajectory for {name}')
+        def add_animation(key, filename):
+            anim = ET.Element('animation', name=key)
+            actor.insert(list(actor).index(actor.find('script')), anim)
+            ET.SubElement(anim, 'filename').text = 'model://football_player/meshes/' + filename
+            ET.SubElement(anim, 'scale').text = '1.0'
+            ET.SubElement(anim, 'interpolate_x').text = 'false'
+
+        script = actor.find('script')
+        if name in ('sideline_1', 'sideline_2'):
+            # Shared in-place walking animation, with speed matched to its stride.
+            actor.find("animation[@name='move']/filename").text = (
+                'model://football_player/meshes/players_navy10/walk.dae')
+        if name in ('runner_1', 'runner_2', 'runner_3'):
+            for old_animation in actor.findall('animation'):
+                actor.remove(old_animation)
+            for tr in script.findall('trajectory'):
+                script.remove(tr)
+            add_animation('squat', 'players_navy10/squat.dae')
+            add_animation('stretch', 'players_navy10/stretch.dae')
+            if name == 'runner_3':
+                add_animation('goal_b', 'players_white9/goal_idle_b.dae')
+                parts = [('goal_b', 4.633333), ('squat', 3.733333),
+                         ('goal_b', 4.633333), ('stretch', 8.866667)]
+                for idx, (kind, duration) in enumerate(parts):
+                    tr = ET.SubElement(script, 'trajectory', id=str(idx), type=kind)
+                    for t in (0.0, duration):
+                        w = ET.SubElement(tr, 'waypoint')
+                        ET.SubElement(w, 'time').text = str(t)
+                        ET.SubElement(w, 'pose').text = '54.0 50.5 0.17 -1.570796 0 0'
+            else:
+                add_animation('run', 'players_navy10/run.dae' if name == 'runner_1' else 'players_navy10/run_slow.dae')
+                run_speed, cycle = ((4.86, 0.7) if name == 'runner_1' else (4.05, 0.84))
+                # Different lanes, direction, length and warm-up order.
+                route = capsule(26.0, 82.0, 18.0 if name == 'runner_1' else -18.0,
+                                3.0 if name == 'runner_1' else 4.0)
+                points = route if name == 'runner_1' else list(reversed(route))
+                split = len(points)//2
+                halves = [points[:split+1], points[split:]]
+                for j, path in enumerate(halves):
+                    # Densify straight segments, then ramp speed near the stops.
+                    dense = [path[0]]
+                    for first, second in zip(path, path[1:]):
+                        count = max(1, math.ceil(math.dist(first, second) / 0.75))
+                        dense.extend((first[0] + (second[0] - first[0])*k/count,
+                                      first[1] + (second[1] - first[1])*k/count)
+                                     for k in range(1, count+1))
+                    path = dense
+                    distances = [0.0]
+                    for first, second in zip(path, path[1:]):
+                        distances.append(distances[-1] + math.dist(first, second))
+                    length = distances[-1]
+                    speeds = [min(run_speed, math.sqrt(2 * 2.5 * min(d, length-d)))
+                              for d in distances]
+                    tr = ET.SubElement(script, 'trajectory', id=str(2*j), type='run', tension='1.0')
+                    elapsed, prev_yaw = 0.0, None
+                    for i, point in enumerate(path):
+                        if i:
+                            elapsed += 2 * math.dist(path[i-1], point) / (speeds[i-1] + speeds[i])
+                        before = path[max(i-1,0)]
+                        after = path[min(i+1,len(path)-1)]
+                        yaw = math.atan2(after[1]-before[1], after[0]-before[0]) + math.pi/2
+                        if prev_yaw is not None:
+                            yaw = prev_yaw + (yaw-prev_yaw+math.pi)%math.tau-math.pi
+                        prev_yaw = yaw
+                        w = ET.SubElement(tr, 'waypoint')
+                        ET.SubElement(w, 'time').text = f'{elapsed:.5f}'
+                        ET.SubElement(w, 'pose').text = f'{point[0]:.5f} {point[1]:.5f} 0.17 -1.570796 0 {yaw:.6f}'
+                    # End the run at a full animation cycle, ready for blending.
+                    scale = math.ceil(elapsed / cycle) * cycle / elapsed
+                    for w in tr.findall('waypoint'):
+                        w.find('time').text = f"{float(w.findtext('time')) * scale:.5f}"
+                    kind, duration = ((('squat', 3.733333), ('stretch', 8.866667))[j]
+                                      if name == 'runner_1' else
+                                      (('stretch', 8.866667), ('squat', 3.733333))[j])
+                    pose = f'{path[-1][0]:.5f} {path[-1][1]:.5f} 0.17 -1.570796 0 {prev_yaw:.6f}'
+                    hold = ET.SubElement(script, 'trajectory', type=kind)
+                    for t in (0.0, duration):
+                        w = ET.SubElement(hold, 'waypoint')
+                        ET.SubElement(w, 'time').text = str(t)
+                        ET.SubElement(w, 'pose').text = pose
+            for idx, tr in enumerate(script.findall('trajectory')):
+                tr.set('id', str(idx))
+            continue
+        if name not in routes:
             raise RuntimeError(f'Unexpected people actor: {name}')
+        points, speed = routes[name]
         old = trajectory.findall('waypoint')
         if not old:
             raise RuntimeError(f'Missing waypoint for {name}')
         base = list(map(float, old[0].findtext('pose').split()))
-        cx, cy, rx, ry, speed, phase = routes[name]
-        points = [(cx + rx * math.cos(phase + i * math.tau / 64),
-                   cy + ry * math.sin(phase + i * math.tau / 64)) for i in range(65)]
         for waypoint in old:
             trajectory.remove(waypoint)
         elapsed, previous_yaw = 0.0, None
         for i, point in enumerate(points):
             if i:
-                elapsed += math.dist(points[i - 1], point) / speed
-            angle = phase + i * math.tau / 64
-            yaw = math.atan2(ry * math.cos(angle), -rx * math.sin(angle)) + math.pi / 2
+                elapsed += math.dist(points[i-1], point) / speed
+            before = points[i-1] if i else points[-2]
+            after = points[i+1] if i < len(points)-1 else points[1]
+            yaw = math.atan2(after[1]-before[1], after[0]-before[0]) + math.pi/2
             if previous_yaw is not None:
-                yaw = previous_yaw + (yaw - previous_yaw + math.pi) % math.tau - math.pi
+                yaw = previous_yaw + (yaw-previous_yaw+math.pi) % math.tau-math.pi
             previous_yaw = yaw
-            waypoint = ET.SubElement(trajectory, 'waypoint')
-            ET.SubElement(waypoint, 'time').text = f'{elapsed:.4f}'
-            ET.SubElement(waypoint, 'pose').text = (
-                f'{point[0]:.5f} {point[1]:.5f} {base[2]:.6f} '
+            w = ET.SubElement(trajectory, 'waypoint')
+            ET.SubElement(w, 'time').text = f'{elapsed:.5f}'
+            ET.SubElement(w, 'pose').text = (
+                f'{point[0]:.5f} {point[1]:.5f} {base[2] - 0.11:.6f} '
                 f'{base[3]:.6f} {base[4]:.6f} {yaw:.6f}')
 
 
@@ -129,7 +231,6 @@ def _build_runtime_actions(context, *args, **kwargs):
     source_world_file = world_file
     people_enabled = _as_bool(LaunchConfiguration("people").perform(context))
     temp_people_world = None
-    people_seed = None
     if people_enabled:
         people_file = project_root / "sim" / "worlds" / "football_player.sdf"
         if not people_file.is_file():
@@ -140,9 +241,7 @@ def _build_runtime_actions(context, *args, **kwargs):
         actors = actor_world.findall("actor")
         if not actors:
             raise RuntimeError(f"People scene has no actors: {people_file}")
-        seed_text = os.environ.get("SLUNG_PEOPLE_SEED")
-        people_seed = int(seed_text, 0) if seed_text else random.SystemRandom().getrandbits(32)
-        _randomize_people(actors, people_seed)
+        _configure_people(actors)
         world_text = source_world_file.read_text(encoding="utf-8")
         if world_text.count("</world>") != 1:
             raise RuntimeError("Expected exactly one closing world tag")
@@ -244,7 +343,7 @@ def _build_runtime_actions(context, *args, **kwargs):
         cleanup_people_action,
         LogInfo(msg=f"[uav_slung_sim] project_root: {project_root}"),
         LogInfo(msg=f"[uav_slung_sim] world       : {world_file}"),
-        LogInfo(msg=f"[uav_slung_sim] people      : {people_enabled}, seed: {people_seed}"),
+        LogInfo(msg=f"[uav_slung_sim] people      : {people_enabled}"),
         LogInfo(msg=f"[uav_slung_sim] PX4         : {px4_dir}"),
         LogInfo(msg=f"[uav_slung_sim] model       : {model_name}"),
         LogInfo(msg=f"[uav_slung_sim] runtime     : {runtime_dir}"),
@@ -297,7 +396,7 @@ def generate_launch_description():
             default_value="true",
             description="Start payload_detector.py together with the simulator",
         ),
-        DeclareLaunchArgument("people", default_value="false", choices=["true", "false"], description="Show optional animated walkers and runners"),
+        DeclareLaunchArgument("people", default_value="true", choices=["true", "false"], description="Show optional animated walkers and runners"),
         DeclareLaunchArgument("headless", default_value="false", description="Run without Gazebo/OpenCV windows"),
         DeclareLaunchArgument("runtime_dir", default_value=os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "UAV_slung", "px4"),
                               description="PX4 parameters and logs; must be outside the project directory"),
