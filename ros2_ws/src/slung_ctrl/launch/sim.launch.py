@@ -78,14 +78,14 @@ def _configure_people(actors):
             # Shared in-place walking animation, with speed matched to its stride.
             actor.find("animation[@name='move']/filename").text = (
                 'model://football_player/meshes/players_navy10/walk.dae')
-        if name in ('runner_1', 'runner_2', 'runner_3'):
+        if name in ('runner_1', 'runner_2'):
             for old_animation in actor.findall('animation'):
                 actor.remove(old_animation)
             for tr in script.findall('trajectory'):
                 script.remove(tr)
             add_animation('squat', 'players_navy10/squat.dae')
             add_animation('stretch', 'players_navy10/stretch.dae')
-            if name == 'runner_3':
+            if name == 'runner_2':
                 add_animation('goal_b', 'players_white9/goal_idle_b.dae')
                 parts = [('goal_b', 4.633333), ('squat', 3.733333),
                          ('goal_b', 4.633333), ('stretch', 8.866667)]

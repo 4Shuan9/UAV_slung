@@ -64,6 +64,17 @@
       <uri>model://football_field</uri>
       <pose>54 0 .03 0 0 -1.5707963267948966</pose>
     </include>
+    <!-- Codex-generated: 1.2 m training gates in the negative-Y half of the field. -->
+    <include>
+      <name>single_gate</name>
+      <uri>model://gate</uri>
+      <pose>44 -21 -0.06 0 0 0.349066</pose>
+    </include>
+    <include>
+      <name>double_gate</name>
+      <uri>model://gate/double_gate.sdf</uri>
+      <pose>64 -29 -0.06 0 0 -0.261799</pose>
+    </include>
     <include>
       <name>payload_ball</name>
       <pose>1 0 3.572 0 0 0</pose>

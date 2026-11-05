@@ -95,7 +95,50 @@ class GzCamRaw:
             cv2.destroyAllWindows()
 
 # === [ CV Processing ] ===
-def process_and_find_red(img):
+# Codex-generated: lightweight association of red target candidates.
+class BallTracker:
+    def __init__(self):
+        self.center = None
+        self.missed = 0
+
+    def select(self, contours):
+        candidates = []
+        for seed in contours:
+            seed_center, seed_radius = cv2.minEnclosingCircle(seed)
+            if seed_radius < 2:
+                continue
+            fragments = []
+            for contour in contours:
+                center, radius = cv2.minEnclosingCircle(contour)
+                if np.hypot(center[0] - seed_center[0], center[1] - seed_center[1]) <= seed_radius + radius:
+                    fragments.append(contour)
+            points = np.concatenate(fragments)
+            (cx, cy), radius = cv2.minEnclosingCircle(points)
+            area = sum(cv2.contourArea(c) for c in fragments)
+            x, y, w, h = cv2.boundingRect(points)
+            if area <= 30 or radius <= 0 or min(w, h) / max(w, h) < 0.55:
+                continue
+            fill = area / (np.pi * radius * radius)
+            if fill < 0.30:
+                continue
+            candidates.append((float(cx), float(cy), float(radius), fragments, float(fill)))
+        if not candidates:
+            self.missed += 1
+            return None
+        if self.center is None:
+            chosen = max(candidates, key=lambda c: c[4])
+        else:
+            chosen = min(candidates, key=lambda c: np.hypot(c[0] - self.center[0], c[1] - self.center[1]))
+            # Permit rapid motion, but never jump directly to a distant gate.
+            if np.hypot(chosen[0] - self.center[0], chosen[1] - self.center[1]) > max(45.0, 5.0 * self.center[2]):
+                self.missed += 1
+                return None
+        self.center = chosen[:3]
+        self.missed = 0
+        return chosen
+
+
+def process_and_find_red(img, tracker):
     height, width = img.shape[:2]
     pos = None
     
@@ -108,28 +151,16 @@ def process_and_find_red(img):
     
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
-    if contours:
-        largest_contour = max(contours, key=cv2.contourArea)
-        if cv2.contourArea(largest_contour) > 30:
-            # Codex-generated update: associate fragments of the same ball
-            # by overlapping enclosing circles; preserve observed boundaries.
-            seed_center, seed_radius = cv2.minEnclosingCircle(largest_contour)
-            ball_contours = []
-            for contour in contours:
-                center, radius = cv2.minEnclosingCircle(contour)
-                if np.hypot(center[0] - seed_center[0],
-                            center[1] - seed_center[1]) <= seed_radius + radius:
-                    ball_contours.append(contour)
-            (cx, cy), _ = cv2.minEnclosingCircle(np.concatenate(ball_contours))
-            pos = (cx, cy)  # Keep floating-point circle center for ROS output.
-
-            cv2.drawContours(img, ball_contours, -1, (0, 255, 0), 2)
-            cv2.drawMarker(img, (int(round(cx)), int(round(cy))), (255, 0, 0), cv2.MARKER_CROSS, 15, 2)
-
-            text = f"Pos: ({cx:.2f}, {cy:.2f})"
-            text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)[0]
-            cv2.putText(img, text, ((width - text_size[0]) // 2, height - 15),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+    candidate = tracker.select(contours)
+    if candidate is not None:
+        cx, cy, _, ball_contours, _ = candidate
+        pos = (cx, cy)
+        cv2.drawContours(img, ball_contours, -1, (0, 255, 0), 2)
+        cv2.drawMarker(img, (int(round(cx)), int(round(cy))), (255, 0, 0), cv2.MARKER_CROSS, 15, 2)
+        text = f"Pos: ({cx:.2f}, {cy:.2f})"
+        text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)[0]
+        cv2.putText(img, text, ((width - text_size[0]) // 2, height - 15),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
 
     return img, pos
 
@@ -143,6 +174,7 @@ def main(args=None):
         cv2.namedWindow('UAV Downward Camera', cv2.WINDOW_AUTOSIZE)
     
     cam = GzCamRaw(CAMERA_TOPIC)
+    tracker = BallTracker()
     
     fps_start_time = time.time()
     fps_frame_count = 0
@@ -154,7 +186,7 @@ def main(args=None):
             current_time = time.time()
             
             if img is not None:
-                processed_img, pos = process_and_find_red(img)
+                processed_img, pos = process_and_find_red(img, tracker)
                 
                 if pos is not None and stamp is not None:
                     msg = PointStamped()

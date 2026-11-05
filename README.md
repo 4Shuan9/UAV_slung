@@ -9,7 +9,7 @@ A Gazebo simulation environment for UAV slung-payload operations, with vision-ba
 <!-- Codex-generated scene-description update requested with removal of the basketball court. -->
 * **Football Court Environment:** A 105 × 68 m field, an origin helipad and an entrance 15 m ahead provide visual references for flight and trajectory tracking.
 * **Tether & Payload Dynamics:** A 1-meter tether is represented by 20 articulated segments and connected to a spherical payload.
-* **Swing-Angle Estimation:** Vision measurements, traditional ESO, delay-compensated ESO with historical visual ZOH, two-state EKF and three-state EKF.
+* **Swing-Angle Estimation:** Vision measurements and five observers: ESO, ESO_delay, PESO, EKF2 and EKF3.
 * **Anti-Swing Control:** ADRC and PD control with figure-eight, square and setpoint references.
 
 ## System Requirements
@@ -62,7 +62,7 @@ Open QGroundControl, then run each command in a separate terminal:
 ros2 launch slung_ctrl sim.launch.py
 
 # 2. Vision, ground truth and swing-angle estimation
-ros2 launch slung_ctrl estimation.launch.py estimator:=all
+ros2 launch slung_ctrl estimation.launch.py
 
 # 3. Interactive control and trajectories; enter takeoff to climb to 8 m
 ros2 launch slung_ctrl offboard.launch.py
@@ -73,10 +73,10 @@ ros2 launch slung_ctrl offboard.launch.py
 ros2 run plotjuggler plotjuggler
 ```
 
-For observation-only comparisons, keep simulation and estimation as two separate steps. Start the simulator as above, then start all five observers together in another terminal:
+For observation-only comparisons, keep simulation and estimation as two separate steps. The default estimation launch starts all five observers together:
 
 ```bash
-ros2 launch slung_ctrl estimation.launch.py estimator:=all
+ros2 launch slung_ctrl estimation.launch.py
 ```
 
 ## Options
@@ -87,6 +87,7 @@ ros2 launch slung_ctrl estimation.launch.py estimator:=all
 | ADRC (default: PESO + ADRC) | Offboard terminal: `controller adrc`; `estimator eso`, `eso_delay`, `peso` or `ekf3` |
 | PD for EKF2 | Offboard terminal: `controller pd`, then `estimator ekf2` |
 | Other trajectories | Offboard terminal: `square` or `setpoint N E U` (metres, positive Up) |
+| Scene characters | Enabled by default; disable with `people:=false` |
 | Headless simulation | Simulation: `headless:=true` |
 
 <!-- Codex-generated section: Main Interfaces; added with the owner's permission. -->

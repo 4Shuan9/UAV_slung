@@ -38,7 +38,7 @@ def create_nodes(context):
 
 def generate_launch_description():
     return LaunchDescription([
-        DeclareLaunchArgument('estimator', default_value='peso',
+        DeclareLaunchArgument('estimator', default_value='all',
                               choices=['eso_delay', 'peso', 'ekf3', 'eso', 'ekf2', 'all', 'none'],
                               description='all starts eso, eso_delay, peso, ekf2 and ekf3 once each'),
         DeclareLaunchArgument('use_sim_time', default_value='true', choices=['true', 'false']),

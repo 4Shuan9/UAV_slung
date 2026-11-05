@@ -76,7 +76,7 @@ PESO 的 North 摆角 RMSE 相比 ESO_delay 降低约 **83%**；角速度 RMSE �
 
 ## 启用与数据
 
-`estimation.launch.py estimator:=all` 现在同时启动五种观测器；也可单独选择 `estimator:=peso`。交互终端在稳定起飞点执行 `estimator peso`，沿用原控制配置，默认启动选择为 `peso`，配套 ADRC；其余观测器仍可在起飞点手动切换。
+`estimation.launch.py` 默认同时启动五种观测器；也可使用 `estimator:=peso` 等选项单独启动。交互终端在稳定起飞点执行 `estimator peso`，沿用原控制配置，默认启动选择为 `peso`，配套 ADRC；其余观测器仍可在起飞点手动切换。
 
 `SwingADRCState` 的摆角、角速度字段已改为 `_rad`、`_rad_s`；所有节点需使用同一轮编译结果并重启，旧度制录包需显式换算。PlotJuggler 的原始 ROS 曲线为弧度，显示为角度时应用曲线转换 `return value * 180 / math.pi`；终端已自动转换。
 
