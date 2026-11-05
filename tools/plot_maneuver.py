@@ -24,7 +24,7 @@ def plot(data_path, output):
         ax.plot(*series['maneuver', 'reference_angle'], '--',
                 label='Offline angle reference', lw=1.6)
         ax.axvspan(*meta['hold_interval_s'], color='green', alpha=.12)
-        ax.set_title('maneuver: 20-deg hold for 1.5 s')
+        ax.set_title(meta.get('maneuver_title', 'maneuver: 20-deg hold for 1.5 s'))
         ax.set_ylabel('North angle [deg]')
         pos.plot(*series['maneuver', 'actual_position'],
                  label='PX4 North (home-relative)', lw=1.6)

@@ -13,7 +13,7 @@
 | 起飞台 | [UAV_lumberjack](https://github.com/4Shuan9/UAV_lumberjack)，从 `~/UAV_lumberjack/sim/models/helipad` 复制；位于世界原点，顶面碰撞高度 1.072 m | `helipad/` |
 | 动态人物 | [Goalkeeper Stylized - Rig and Animation](https://sketchfab.com/3d-models/goalkeeper-stylized-rig-and-animation-7de86f9c36f84152a777f27a73646ada)，P-Vi.Art，CC BY 4.0；行走、跑步、门将待命、深蹲和手臂拉伸动作来自 [Mixamo](https://www.mixamo.com/)，由用户下载并适配；部分人物网格文件保留 Quaternius Universal Animation Library（CC0）动作；模型、贴图与动作已调整 | `football_player/meshes/`；路线见 `sim/worlds/football_player.sdf` |
 | 球员座椅 | 从本工程此前的篮球场模型中提取 | `football_field/meshes/player_bench.dae` |
-| 单门、双门 | 工程既有资源，`model.config` 登记作者为 skn256；原始下载页与许可尚未核实 | `single_gate/`、`double_gate/` |
+| 单门、双门 | 工程既有资源，`model.config` 登记作者为 skn256；原始下载页与许可尚未核实 | `gate/single_gate.sdf`、`gate/double_gate.sdf` |
 | 单目相机 | 工程既有模型，`model.config` 登记作者为 Markus Achtelik；采用本工程的相机配置 | `mono_cam/` |
 | 绳索、吊球 | 工程既有 SDF 模型；几何、质量和惯量以当前基准配置为准 | `rope/`、`payload_ball/` |
 
@@ -25,7 +25,7 @@
 - 外部地面：[Gravel Embedded Concrete](https://polyhaven.com/a/gravel_embedded_concrete)，Charlotte Baglioni / Poly Haven，CC0。以原水泥颜色图为基础，生成 2K 贴图并模拟 4 m×4 m 接缝；仅改变颜色和边缘明暗，不增加沟槽或碰撞。运行文件为 `stadium_ground/materials/textures/concrete_tiles_2k.jpg`。
 
 - 看台：随上述三排看台 GLB 一并提取；钢、铝和木材贴图分别为 `football_field/materials/textures/bleacher_steel.png`、`bleacher_aluminum.png`、`bleacher_wood.png`。本轮仅按材质重命名并迁移目录，像素内容未变。
-- 备用门框：`single_gate/materials/textures/a2rl_gate.png`、`double_gate/materials/textures/a2rl_gate.png`，随原门框模型保留；本轮修正 DAE 的相对引用路径，未更改贴图内容。
+- 门框：单门与双门共用用户修改的 `gate/materials/textures/a2rl_gate.png`；原始紫色贴图保留为 `gate/materials/textures/a2rl_original.png`。门框侧面材质调整为红色。
 
 当前草坪和水泥地使用颜色贴图，没有加载法线或位移贴图。未核实许可的既有资源不在此推定为 CC0 或其他授权。
 
