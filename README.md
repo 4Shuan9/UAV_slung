@@ -2,7 +2,7 @@
 
 A Gazebo simulation environment for UAV slung-payload operations, with vision-based swing-angle estimation and anti-swing control.
 
-<img width="800" alt="UAV slung-load simulation" src="images/QSLS.gif" />
+<img width="800" alt="UAV slung-load simulation" src="images/QSLS_F.gif" />
 
 ## Key Features
 

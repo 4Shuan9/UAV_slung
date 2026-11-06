@@ -46,5 +46,3 @@
 2. [PX4-ROS2-Gazebo-Drone-Simulation-Template](https://github.com/SathanBERNARD/PX4-ROS2-Gazebo-Drone-Simulation-Template) — PX4、ROS 2 和 Gazebo 无人机仿真模板。
 3. [rain_ws](https://github.com/RainbowSeeker/rain_ws) — 用户提供的参考仓库；当前未能核实仓库内容。
 4. [gazebo_models](https://github.com/osrf/gazebo_models) — Gazebo 模型库，Gazebo Fuel 模型库的前身。
-
-除已明确说明的起飞台等素材来源外，列出参考项目不表示本工程直接依赖或复制了其代码。
