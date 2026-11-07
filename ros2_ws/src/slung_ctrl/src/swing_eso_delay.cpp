@@ -6,6 +6,7 @@
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include "slung_ctrl/msg/swing_adrc_state.hpp"
 #include "slung_ctrl/eso_delay.hpp"
+#include "slung_ctrl/future_input_queue.hpp"
 #include <deque>
 #include <memory>
 #include <string>
@@ -24,6 +25,7 @@ public:
         if (max_inputs<4) throw std::invalid_argument("max_inputs must be >=4");
         parameters_.max_inputs=static_cast<std::size_t>(max_inputs);
         parameters_.validate();
+        future_inputs_.configure(parameters_.max_inputs, parameters_.history_sec);
         filter_=std::make_unique<slung_ctrl::DelayedSwingESO>(parameters_);
         max_vision_age_=declare_parameter("max_vision_age",.25);
         max_delay_=declare_parameter("max_visual_delay",.5);
@@ -79,7 +81,7 @@ private:
             // Validate the entire transaction before changing any internal state.
             if (model_changed) {
                 filter_=std::make_unique<slung_ctrl::DelayedSwingESO>(next);
-                parameters_=next;pending_.clear();
+                parameters_=next;pending_.clear();discarded_inputs_+=future_inputs_.size();future_inputs_.clear();
                 RCLCPP_WARN(get_logger(),"ESO model/gains changed; historical observer reset, waiting for input + vision");
             }
             result.successful=true;
@@ -87,7 +89,8 @@ private:
         return result;
     }
     void reset(const char *reason) {
-        filter_->reset();pending_.clear();offset_set_=false;
+        discarded_inputs_+=future_inputs_.size();
+        filter_->reset();pending_.clear();future_inputs_.clear();offset_set_=false;
         last_px4_stamp_=0;last_input_=last_published_=-1;
         RCLCPP_WARN(get_logger(),"ESO reset: %s",reason);
     }
@@ -106,9 +109,23 @@ private:
             offset_set_=true;
         }
         const double sample=msg->timestamp_sample*1e-6+input_offset_;
-        if (sample>t+future_tolerance_ || t-sample>max_input_age_) {
+        if (t-sample>max_input_age_) {
             RCLCPP_WARN_THROTTLE(get_logger(),*get_clock(),2000,
                 "ESO acceleration timestamp age %.4fs invalid; check PX4/ROS physical clocks",t-sample);
+            return;
+        }
+        // Codex-generated: queue only abnormally future samples and followers;
+        // normal input remains on the original path with original timestamps.
+        if (!future_inputs_.empty() || sample>t+future_tolerance_) {
+            const auto old_size=future_inputs_.size();
+            if (!future_inputs_.push(sample,msg->ay,msg->ax)) {
+                ++discarded_inputs_;
+                reset("future acceleration queue exceeded existing history limits");return;
+            }
+            queued_inputs_+=future_inputs_.size()-old_size;
+            RCLCPP_WARN_THROTTLE(get_logger(),*get_clock(),2000,
+                "ESO future acceleration queued (age %.4fs)",t-sample);
+            if (flush_future_inputs(t)) process_pending(t);
             return;
         }
         // VehicleLocalPosition acceleration, not raw accelerometer specific force.
@@ -135,7 +152,31 @@ private:
             (!pending_.empty() && capture<=pending_.back().capture+1e-10)) {++rejected_frames_;return;}
         pending_.push_back({capture,east,north});
         if (pending_.size()>128) {pending_.pop_front();++rejected_frames_;}
-        last_delay_=t-capture;process_pending(t);
+        last_delay_=t-capture;
+        if (future_inputs_.empty()) process_pending(t);
+    }
+    bool flush_future_inputs(double t) {
+        using Status=slung_ctrl::FutureInputQueue::Status;
+        const auto status=future_inputs_.status(t,max_input_age_);
+        if (status==Status::empty) return true;
+        if (status==Status::waiting) return false;
+        if (status==Status::expired) {
+            reset("future acceleration queue expired without fresh input/clock");return false;
+        }
+        auto inputs=future_inputs_.take_ready(t);
+        for (const auto &input:inputs) {
+            if (filter_->add_input(input.time,input.east,input.north)) {last_input_=input.time;++released_inputs_;}
+            else ++discarded_inputs_;
+        }
+        ++recovered_batches_;
+        // Even a fresh prefix is not a fresh current state when a later sample
+        // already proves the source exceeds the existing future tolerance.
+        if (!future_inputs_.source_within_tolerance(t,future_tolerance_)) return false;
+        if (future_inputs_.empty()) RCLCPP_INFO(get_logger(),
+            "ESO future queue cleared: queued_samples=%llu released_samples=%llu released_batches=%llu discarded_samples=%llu",
+            static_cast<unsigned long long>(queued_inputs_),static_cast<unsigned long long>(released_inputs_),
+            static_cast<unsigned long long>(recovered_batches_),static_cast<unsigned long long>(discarded_inputs_));
+        return true;
     }
     void process_pending(double t) {
         while (!pending_.empty()) {
@@ -161,6 +202,7 @@ private:
     void publish_estimate() {
         const auto stamp=now();const double t=stamp.seconds();
         if (!clock_ready(t)) return;
+        if (!flush_future_inputs(t)) return;
         process_pending(t);
         if (!filter_->initialized() || t<=last_published_ || last_input_<0 || t<filter_->anchor_time()) return;
         try {
@@ -189,10 +231,12 @@ private:
 
     slung_ctrl::ESOParameters parameters_;
     std::unique_ptr<slung_ctrl::DelayedSwingESO> filter_;
+    slung_ctrl::FutureInputQueue future_inputs_;
     std::deque<Vision> pending_;
     double max_vision_age_,max_delay_,max_input_age_,future_tolerance_,input_delay_;
     double last_clock_=-1,last_input_=-1,last_published_=-1,last_delay_=0,input_offset_=0;
     uint64_t last_px4_stamp_=0,accepted_frames_=0,rejected_frames_=0;
+    uint64_t queued_inputs_=0,released_inputs_=0,recovered_batches_=0,discarded_inputs_=0;
     bool offset_set_=false;
     std::string input_time_mode_;
     rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr vision_subscriber_;

@@ -104,6 +104,8 @@ private:
     std::mutex data_mutex;
 
     double theta_east = 0, theta_north = 0, d_theta_east = 0, d_theta_north = 0;
+    // Codex-generated: same freshness limit as the existing ADRC controller.
+    double angle_stamp = -1.0, rate_stamp = -1.0;
     float current_north = 0, current_east = 0, current_z = 0; 
     float current_v_north = 0, current_v_east = 0;
     float target_north = 0, target_east = 0, target_z = 0; 
@@ -129,18 +131,30 @@ private:
 
     void angle_cb(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {
         std::lock_guard<std::mutex> lock(data_mutex);
-
+        if (msg->header.stamp.sec < 0 || msg->header.stamp.nanosec >= 1000000000u) { angle_stamp = -1.0; return; }
+        const double stamp = rclcpp::Time(msg->header.stamp, get_clock()->get_clock_type()).seconds();
+        const double age = get_clock()->now().seconds() - stamp;
+        if (!std::isfinite(msg->vector.x) || !std::isfinite(msg->vector.y) ||
+            stamp <= 0 || age < 0 || age > 0.1) { angle_stamp = -1.0; return; }
+        if (angle_stamp >= 0 && stamp < angle_stamp) return;
         // ESO Fusion world-frame protocol: vector.x -> East, vector.y -> North
         theta_east = msg->vector.x;
         theta_north = msg->vector.y;
+        angle_stamp = stamp;
     }
 
     void rate_cb(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {
         std::lock_guard<std::mutex> lock(data_mutex);
-
+        if (msg->header.stamp.sec < 0 || msg->header.stamp.nanosec >= 1000000000u) { rate_stamp = -1.0; return; }
+        const double stamp = rclcpp::Time(msg->header.stamp, get_clock()->get_clock_type()).seconds();
+        const double age = get_clock()->now().seconds() - stamp;
+        if (!std::isfinite(msg->vector.x) || !std::isfinite(msg->vector.y) ||
+            stamp <= 0 || age < 0 || age > 0.1) { rate_stamp = -1.0; return; }
+        if (rate_stamp >= 0 && stamp < rate_stamp) return;
         // ESO Fusion world-frame protocol: vector.x -> East rate, vector.y -> North rate
         d_theta_east = msg->vector.x;
         d_theta_north = msg->vector.y;
+        rate_stamp = stamp;
     }
 
     void odom_cb(const px4_msgs::msg::VehicleOdometry::SharedPtr msg) {
@@ -229,12 +243,22 @@ private:
             double a_max = this->get_parameter("max_comp_acc").as_double();
 
             double theta_east_rad, theta_north_rad, rate_east_rad, rate_north_rad;
+            bool swing_ready;
             {
                 std::lock_guard<std::mutex> lock(data_mutex);
+                const double now = get_clock()->now().seconds();
+                const double angle_age = now - angle_stamp, rate_age = now - rate_stamp;
+                swing_ready = angle_stamp > 0 && rate_stamp > 0 && angle_age >= 0 && rate_age >= 0 &&
+                    angle_age <= 0.1 && rate_age <= 0.1 && std::abs(angle_stamp-rate_stamp) <= 0.1;
                 theta_east_rad = theta_east;
                 theta_north_rad = theta_north;
                 rate_east_rad = d_theta_east;
                 rate_north_rad = d_theta_north;
+            }
+            if (!swing_ready) {
+                theta_east_rad = theta_north_rad = rate_east_rad = rate_north_rad = 0.0;
+                RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000,
+                    "Swing angle/rate missing or stale; position PD only");
             }
 
             // North channel: PX4 acceleration[0] <-> theta_north

@@ -302,6 +302,12 @@ class Offboard(Node):
         if not self.backend_receives() or msg.timestamp<int(self.boot_time*1e6):return
         if not (math.isfinite(msg.position[2]) and math.isfinite(msg.yaw)):return
         if any(math.isinf(x) for x in [*msg.position,*msg.velocity,*msg.acceleration]):return
+        # Codex-generated: match PX4's per-axis and paired horizontal validity
+        # rules before forwarding or refreshing the backend watchdog.
+        for field in (msg.position,msg.velocity,msg.acceleration):
+            if math.isfinite(field[0]) != math.isfinite(field[1]):return
+        if not all(any(math.isfinite(field[axis]) for field in
+                       (msg.position,msg.velocity,msg.acceleration)) for axis in range(2)):return
         self.backend_sp_time=self.now_s()
         self.control_ready=math.isfinite(msg.acceleration[0]) and math.isfinite(msg.acceleration[1])
         v=copy.deepcopy(msg)

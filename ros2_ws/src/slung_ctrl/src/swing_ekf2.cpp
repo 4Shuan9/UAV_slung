@@ -118,6 +118,7 @@ private:
     void reset(const char *reason) {
         initialized_ = have_input_ = false;
         state_time_ = last_published_ = -1;
+        last_vision_receipt_ = last_accel_receipt_ = -1;
         accel_.fill(0.0);
         axis_ = {};
         RCLCPP_WARN(get_logger(), "EKF reset: %s; waiting for input + a new visual frame", reason);
@@ -127,6 +128,14 @@ private:
         if (last_clock_ >= 0 && t < last_clock_ - 0.001) reset("ROS clock moved backwards");
         last_clock_ = t;
         return true;
+    }
+    // Codex-generated: availability guard uses receipt time only. EKF2 still
+    // applies valid observations at receipt without alignment or compensation.
+    // Limits match the existing PESO baseline, not new estimator gains.
+    void expire_inputs(double t) {
+        if ((last_vision_receipt_ >= 0 && (t < last_vision_receipt_ || t - last_vision_receipt_ > 0.25)) ||
+            (last_accel_receipt_ >= 0 && (t < last_accel_receipt_ || t - last_accel_receipt_ > 0.05)))
+            reset("vision or acceleration input stale");
     }
     void advance(double t) {
         if (!initialized_) return;
@@ -138,19 +147,23 @@ private:
     void accel_callback(const px4_msgs::msg::VehicleLocalPosition::SharedPtr msg) {
         const double t = now().seconds();
         if (!clock_ready(t) || !std::isfinite(msg->ax) || !std::isfinite(msg->ay)) return;
+        expire_inputs(t);
         try {
             advance(t);  // previous latest input held until this receipt, not its capture stamp
             accel_ = {{msg->ay, msg->ax}};  // East/North from PX4 NED
             have_input_ = true;
+            last_accel_receipt_ = t;
         } catch (const std::exception &e) { reset(e.what()); }
     }
     void vision_callback(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {
         const double t = now().seconds();
         const std::array<double, 2> measurement{{msg->vector.x,
                                                msg->vector.y}};
-        if (!clock_ready(t) || !have_input_ || !std::isfinite(measurement[0]) ||
-            !std::isfinite(measurement[1])) return;
+        if (!clock_ready(t) || !std::isfinite(measurement[0]) || !std::isfinite(measurement[1])) return;
+        expire_inputs(t);
+        if (!have_input_) return;
         try {
+            last_vision_receipt_ = t;
             if (!initialized_) {
                 for (int i = 0; i < 2; ++i) {
                     axis_[i].x << measurement[i], 0.0;
@@ -173,7 +186,9 @@ private:
     void publish_estimate() {
         const auto stamp = now();
         const double t = stamp.seconds();
-        if (!clock_ready(t) || !initialized_ || t <= last_published_) return;
+        if (!clock_ready(t)) return;
+        expire_inputs(t);
+        if (!initialized_ || t <= last_published_) return;
         try {
             advance(t);
             geometry_msgs::msg::Vector3Stamped angle, rate;
@@ -193,6 +208,7 @@ private:
     std::array<double, 2> accel_{{0.0, 0.0}};
     double g_, l_, q_omega_, max_step_, initial_rate_std_, nis_threshold_, vision_std_, time_std_;
     double state_time_ = -1, last_clock_ = -1, last_published_ = -1;
+    double last_vision_receipt_ = -1, last_accel_receipt_ = -1;
     bool initialized_ = false, have_input_ = false;
     rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr sub_vision_;
     rclcpp::Subscription<px4_msgs::msg::VehicleLocalPosition>::SharedPtr sub_accel_;

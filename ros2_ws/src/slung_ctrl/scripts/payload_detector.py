@@ -100,6 +100,10 @@ class BallTracker:
     def __init__(self):
         self.center = None
         self.missed = 0
+        # Codex-generated: require a short, spatially consistent reacquisition
+        # before reporting a target after tracking has been lost.
+        self.reacquire_center = None
+        self.reacquire_count = 0
 
     def select(self, contours):
         candidates = []
@@ -124,6 +128,8 @@ class BallTracker:
             candidates.append((float(cx), float(cy), float(radius), fragments, float(fill)))
         if not candidates:
             self.missed += 1
+            self.reacquire_center = None
+            self.reacquire_count = 0
             return None
         if self.center is None:
             chosen = max(candidates, key=lambda c: c[4])
@@ -132,9 +138,37 @@ class BallTracker:
             # Permit rapid motion, but never jump directly to a distant gate.
             if np.hypot(chosen[0] - self.center[0], chosen[1] - self.center[1]) > max(45.0, 5.0 * self.center[2]):
                 self.missed += 1
-                return None
+                if self.missed < 10:
+                    return None
+                # Re-lock only an unambiguous, similarly sized candidate;
+                # duplicated contours from the same target count as one.
+                eligible = []
+                for candidate in sorted(candidates, key=lambda c: c[4], reverse=True):
+                    if not 0.5 * self.center[2] <= candidate[2] <= 2.0 * self.center[2]:
+                        continue
+                    if any(np.hypot(candidate[0]-c[0], candidate[1]-c[1]) <=
+                           max(2.0, 0.25*max(candidate[2], c[2])) for c in eligible):
+                        continue
+                    eligible.append(candidate)
+                if len(eligible) != 1:
+                    self.reacquire_center = None
+                    self.reacquire_count = 0
+                    return None
+                chosen = eligible[0]
+                if (self.reacquire_center is not None and
+                    np.hypot(chosen[0] - self.reacquire_center[0],
+                             chosen[1] - self.reacquire_center[1]) <=
+                        max(45.0, 5.0 * self.reacquire_center[2])):
+                    self.reacquire_count += 1
+                else:
+                    self.reacquire_count = 1
+                self.reacquire_center = chosen[:3]
+                if self.reacquire_count < 3:
+                    return None
         self.center = chosen[:3]
         self.missed = 0
+        self.reacquire_center = None
+        self.reacquire_count = 0
         return chosen
 
 

@@ -9,6 +9,8 @@
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include "slung_ctrl/msg/swing_adrc_state.hpp"
 #include "slung_ctrl/ekf3.hpp"
+#include "slung_ctrl/future_input_queue.hpp"
+#include <deque>
 #include <memory>
 #include <string>
 
@@ -30,6 +32,8 @@ public:
         if (max_events < 4) throw std::invalid_argument("max_events must be >= 4");
         p.max_events = static_cast<std::size_t>(max_events);
         p.validate();
+        future_inputs_.configure(p.max_events, p.history_sec);
+        max_pending_vision_ = p.max_events;
         filter_ = std::make_unique<slung_ctrl::DelayedSwingEKF>(p);
         vision_std_ = declare_parameter("vision_std_deg", 0.5) * M_PI / 180.0;
         time_std_ = declare_parameter("vision_time_std", 0.002);
@@ -94,6 +98,10 @@ private:
     }
     void reset(const char *reason) {
         filter_->reset();
+        discarded_inputs_ += future_inputs_.size();
+        future_inputs_.clear();
+        discarded_vision_ += pending_vision_.size();
+        pending_vision_.clear();
         offset_set_ = false;
         last_px4_stamp_ = 0;
         last_input_ = last_published_ = -1;
@@ -113,9 +121,23 @@ private:
             offset_set_ = true;
         }
         const double sample_time = msg->timestamp_sample * 1e-6 + input_offset_;
-        if (sample_time > t + input_future_tolerance_ || t - sample_time > max_input_age_) {
+        if (t - sample_time > max_input_age_) {
             RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000,
                 "Input timestamp age %.4fs invalid; check PX4/ROS physical clocks", t - sample_time);
+            return;
+        }
+        // Codex-generated: hold exceptionally future-dated input and any
+        // followers until ROS catches up. Preserve the normal input path.
+        if (!future_inputs_.empty() || sample_time > t + input_future_tolerance_) {
+            const auto old_size=future_inputs_.size();
+            if (!future_inputs_.push(sample_time, msg->ay - bias_east_, msg->ax - bias_north_)) {
+                ++discarded_inputs_;
+                reset("future acceleration queue exceeded existing history limits");return;
+            }
+            queued_inputs_+=future_inputs_.size()-old_size;
+            RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000,
+                "EKF future acceleration queued (age %.4fs)", t - sample_time);
+            flush_future_inputs(t);
             return;
         }
         try {
@@ -123,6 +145,33 @@ private:
             const auto result = filter_->add_input(sample_time, msg->ay - bias_east_, msg->ax - bias_north_);
             if (result == slung_ctrl::EventResult::accepted) last_input_ = std::max(last_input_, sample_time);
         } catch (const std::exception &e) { reset(e.what()); }
+    }
+    bool flush_future_inputs(double t) {
+        using Status=slung_ctrl::FutureInputQueue::Status;
+        const auto status=future_inputs_.status(t,max_input_age_);
+        if (status==Status::empty) return true;
+        if (status==Status::waiting) return false;
+        if (status==Status::expired) {
+            reset("future acceleration queue expired without fresh input/clock");return false;
+        }
+        auto inputs=future_inputs_.take_ready(t);
+        try {
+            for (const auto &input:inputs) {
+                const auto result=filter_->add_input(input.time,input.east,input.north);
+                if (result==slung_ctrl::EventResult::accepted) {last_input_=std::max(last_input_,input.time);++released_inputs_;}
+                else ++discarded_inputs_;
+            }
+        } catch (const std::exception &e) { reset(e.what()); return false; }
+        ++recovered_batches_;
+        // Do not publish a prefix as current while the known source tail is
+        // still ahead by more than the existing future tolerance.
+        if (!future_inputs_.source_within_tolerance(t,0.0)) return false;
+        if (!process_deferred_vision(t)) return false;
+        if (future_inputs_.empty()) RCLCPP_INFO(get_logger(),
+            "EKF future queue cleared: queued_samples=%llu released_samples=%llu released_batches=%llu discarded_samples=%llu",
+            static_cast<unsigned long long>(queued_inputs_),static_cast<unsigned long long>(released_inputs_),
+            static_cast<unsigned long long>(recovered_batches_),static_cast<unsigned long long>(discarded_inputs_));
+        return true;
     }
     void vision_callback(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {
         const double t = now().seconds();
@@ -135,7 +184,19 @@ private:
             RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000, "Visual frame rejected: time/domain invalid");
             return;
         }
+        // Codex-generated: while historical acceleration is incomplete, hold
+        // only already-valid vision frames; normal receipt behavior is unchanged.
+        if (!future_inputs_.empty()) {
+            if (pending_vision_.size() >= max_pending_vision_) {
+                pending_vision_.pop_front();++discarded_vision_;
+            }
+            pending_vision_.push_back({capture,east,north});
+            return;
+        }
         last_delay_ = t - capture;
+        apply_vision(capture,east,north);
+    }
+    bool apply_vision(double capture, double east, double north) {
         try {
             const auto result = filter_->add_vision(capture, east, north,
                 vision_std_ * vision_std_, vision_std_ * vision_std_, time_std_);
@@ -143,12 +204,26 @@ private:
                 RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 2000,
                     "Visual frame has no preceding input/checkpoint; skipped");
             }
-        } catch (const std::exception &e) { reset(e.what()); }
+            return true;
+        } catch (const std::exception &e) { reset(e.what()); return false; }
+    }
+    bool process_deferred_vision(double t) {
+        while (!pending_vision_.empty()) {
+            const auto vision=pending_vision_.front();
+            pending_vision_.pop_front();
+            if (vision.capture > t || t-vision.capture > max_delay_) {++discarded_vision_;continue;}
+            last_delay_=t-vision.capture;
+            // An exception resets the filter and clears remaining deferred frames.
+            if (!apply_vision(vision.capture,vision.east,vision.north)) return false;
+        }
+        return true;
     }
     void publish_estimate() {
         const auto stamp = now();
         const double t = stamp.seconds();
-        if (!clock_ready(t) || !filter_->initialized() || t <= last_published_ ||
+        if (!clock_ready(t)) return;
+        if (!flush_future_inputs(t)) return;
+        if (!filter_->initialized() || t <= last_published_ ||
             last_input_ < 0 || t < last_input_ || t - last_input_ > max_input_age_) return;
         try {
             const auto s = filter_->estimate_at(t);
@@ -186,10 +261,16 @@ private:
     }
 
     std::unique_ptr<slung_ctrl::DelayedSwingEKF> filter_;
+    slung_ctrl::FutureInputQueue future_inputs_;
+    struct Vision { double capture, east, north; };
+    std::deque<Vision> pending_vision_;
+    std::size_t max_pending_vision_ = 0;
     double vision_std_, time_std_, max_vision_age_, max_input_age_, max_delay_;
     double input_future_tolerance_, input_delay_, bias_east_, bias_north_, input_offset_ = 0;
     double last_clock_ = -1, last_input_ = -1, last_published_ = -1, last_delay_ = 0;
     uint64_t last_px4_stamp_ = 0;
+    uint64_t queued_inputs_ = 0, released_inputs_ = 0, recovered_batches_ = 0, discarded_inputs_ = 0;
+    uint64_t discarded_vision_ = 0;
     bool offset_set_ = false;
     std::string input_time_mode_;
     rclcpp::Subscription<px4_msgs::msg::VehicleLocalPosition>::SharedPtr sub_accel_;

@@ -103,19 +103,42 @@ private:
 
     void vision_callback(const geometry_msgs::msg::Vector3Stamped::ConstSharedPtr msg) {
         std::lock_guard<std::mutex> lock(data_mutex_);
+        const double t = this->get_clock()->now().seconds();
+        if (t <= 0 || !std::isfinite(msg->vector.x) || !std::isfinite(msg->vector.y)) return;
+        expire_inputs(t);
         y_x_ = msg->vector.x;
         y_y_ = msg->vector.y;
         has_vision_ = true;
+        last_vision_receipt_ = t;
     }
 
     void accel_callback(const px4_msgs::msg::VehicleLocalPosition::ConstSharedPtr msg) {
         std::lock_guard<std::mutex> lock(data_mutex_);
+        const double t = this->get_clock()->now().seconds();
+        if (t <= 0 || !std::isfinite(msg->ax) || !std::isfinite(msg->ay)) return;
+        expire_inputs(t);
         a_x_ = msg->ay;  // visual world x = East, PX4 ay = East
         a_y_ = msg->ax;  // visual world y = North, PX4 ax = North
+        last_accel_receipt_ = t;
+    }
+
+    // Codex-generated: receipt-time availability guard, not time alignment.
+    // Reuse the existing PESO baseline input/vision age limits.
+    void expire_inputs(double t) {
+        if ((last_vision_receipt_ >= 0 && (t < last_vision_receipt_ || t - last_vision_receipt_ > 0.25)) ||
+            (last_accel_receipt_ >= 0 && (t < last_accel_receipt_ || t - last_accel_receipt_ > 0.05))) {
+            state_x_ = {}; state_y_ = {}; has_vision_ = false;
+            last_vision_receipt_ = last_accel_receipt_ = -1.0;
+            RCLCPP_WARN(get_logger(), "ESO inputs stale; reset and wait for new vision and acceleration");
+        }
     }
 
     void eso_step_callback() {
         std::lock_guard<std::mutex> lock(data_mutex_);
+        const double t = this->get_clock()->now().seconds();
+        if (t <= 0) return;
+        expire_inputs(t);
+        if (!has_vision_ || last_accel_receipt_ < 0) return;
 
         // RK4 with the latest received acceleration and visual sample held
         // throughout this step. No acquisition-time alignment or prediction.
@@ -184,7 +207,7 @@ private:
 
     double a_x_ = 0.0, a_y_ = 0.0;     
     double y_x_ = 0.0, y_y_ = 0.0;     
-    rclcpp::Time last_vision_time_;    
+    double last_vision_receipt_ = -1.0, last_accel_receipt_ = -1.0;
     bool has_vision_ = false;
 
     std::mutex data_mutex_;
